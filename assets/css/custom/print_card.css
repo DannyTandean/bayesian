@@ -1,0 +1,23 @@
+#card_background {
+	background-image: url('assets/images/default/card_background.png');
+	background-size: 100%; 
+	height: 420px; 
+	background-repeat: no-repeat;
+}
+
+#fotoKaryawan {
+	margin-top: 110px; 
+	width: 55%; 
+	height: 36%;
+}
+
+#nameJabatan {
+	margin-top: 27px;
+}
+
+#imgQrCode {
+	margin-top: -17px; 
+	margin-left: 173px; 
+	height: 74px; 
+	width: 90px;
+}
