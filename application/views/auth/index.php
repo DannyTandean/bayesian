@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Authentic POI HRD</title>
+    <title>Authentication</title>
     <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -19,7 +19,7 @@
     <meta name="author" content="#">
     <!-- Favicon icon -->
 
-    <link rel="icon" href="<?php echo base_url();?>assets/images/denya.jpeg" type="image/x-icon">
+    <link rel="icon" href="<?php echo base_url();?>assets/images/favicon.png" type="image/x-icon">
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Mada:300,400,500,600,700" rel="stylesheet">
     <!-- Required Fremwork -->
@@ -34,11 +34,16 @@
     <!-- Style.css -->
     <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/css/style.css">
     <!-- color .css -->
-
+    <style>
+      .img-background {
+        background-image: url(<?php echo base_url().'assets/images/ecommerce.jpg'; ?>);
+        background-size: cover;
+      }
+    </style>
 </head>
 
 <body class="fix-menu">
-    <section class="login p-fixed d-flex text-center bg-primary common-img-bg">
+    <section class="login p-fixed d-flex text-center bg-primary img-background">
         <!-- Container-fluid starts -->
         <div class="container">
             <div class="row">
@@ -47,7 +52,6 @@
                     <div class="login-card card-block auth-body m-auto">
                         <form class="md-float-material" method="POST" id="formLogin">
                             <div class="text-center">
-                                <!-- <img src="<?php echo base_url();?>assets/images/logo.png" alt="logo.png"> -->
                             </div>
                             <div class="auth-box">
                                 <div class="row m-b-20">
@@ -68,33 +72,9 @@
                                     <span class="md-line"></span>
                                 </div>
                                 <div id="errorPassword"></div>
-                                <!-- <div class="row m-t-25 text-left">
-                                    <div class="col-sm-7 col-xs-12">
-                                        <div class="checkbox-fade fade-in-primary">
-                                            <label>
-                                                <input type="checkbox" value="">
-                                                <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                                <span class="text-inverse">Remember me</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-5 col-xs-12 forgot-phone text-right">
-                                        <a href="auth-reset-password.html" class="text-right f-w-600 text-inverse"> Forgot Your Password?</a>
-                                    </div>
-                                </div> -->
                                 <div class="row m-t-30">
                                     <div class="col-md-12">
                                         <button type="button" id="btnLogin" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign in</button>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <div class="col-9">
-                                        <p class="text-inverse text-left m-b-0">Thank you and enjoy our website.</p>
-                                        <p class="text-inverse text-left"><b>Prima HRD System</b></p>
-                                    </div>
-                                    <div class="col-3">
-                                        <img src="<?php echo base_url();?>assets/images/auth/denya.jpeg" height="50px" width="50px" alt="denya.jpeg">
                                     </div>
                                 </div>
                             </div>

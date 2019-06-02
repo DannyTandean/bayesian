@@ -23,12 +23,8 @@ class MY_Controller extends CI_Controller {
 		parent::__construct();
 		$this->user = $this->session->admin;
         if ($this->user != null) {
-            $this->user_id = $this->user->id_pengguna;
-            $this->user_level = $this->user->level;
             $this->username = $this->user->username;
         } else {
-            $this->user_id = null;
-            $this->user_level = null;
             $this->username = null;
         }
 

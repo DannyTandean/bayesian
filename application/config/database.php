@@ -74,12 +74,12 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> 'mysql:host=localhost; dbname=poihrd_new; charset=utf8;',
+	'dsn'	=> 'mysql:host=localhost; dbname=bayesian; charset=utf8;',
 	// 'dsn'	=> '',
 	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',
-	'database' => 'poihrd_new',
+	'database' => 'bayesian',
 	'dbdriver' => 'pdo',
 	// 'dbdriver' => 'mysqli',
 	// 'port'	   => 3306,

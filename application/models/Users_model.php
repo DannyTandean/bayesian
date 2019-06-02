@@ -9,8 +9,8 @@ class Users_model extends CI_Model {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->_table = "pengguna";
-		$this->_primary_key = "id_pengguna";
+		$this->_table = "user_admin";
+		$this->_primary_key = "id_user_admin";
 	}
 
 	public function getByWhere($where)
@@ -35,7 +35,7 @@ class Users_model extends CI_Model {
 
 	public function findDataTable($columnsOrderBy,$search)
 	{
-		$input = $this->input;	
+		$input = $this->input;
 		$orderBy = false;
 		if (isset($_POST['order'])) {
 			$valColumnName = $columnsOrderBy[$_POST['order']['0']['column']];
