@@ -106,16 +106,9 @@
                       </a>
                   </li>
                   <li class="<?php echo $aktivitasIzin; ?>">
-                      <a href="<?php echo site_url('aktivitas/izin'); ?>">
+                      <a href="<?php echo site_url('aktivitas/manage_user'); ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Management User</span>
-                          <span class="pcoded-mcaret"></span>
-                      </a>
-                  </li>
-                  <li class="<?php echo $aktivitasCuti; ?>">
-                      <a href="<?php echo site_url('aktivitas/cuti'); ?>">
-                          <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                          <span class="pcoded-mtext" >Cuti Karyawan</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
