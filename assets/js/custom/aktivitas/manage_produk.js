@@ -4,7 +4,7 @@ $(document).ready(function() {
 	btnTambah = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-primary btn-sm' id='btnTambah'><i class='fa fa-plus'></i> Tambah</button>";
 
     btnRefresh = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-success btn-sm' id='btnRefresh'><i class='fa fa-refresh'></i> Refresh</button>";
-	$("#tblDinas").DataTable({
+	$("#tblProduk").DataTable({
 		serverSide:true,
 		responsive:true,
 		processing:true,
@@ -20,7 +20,7 @@ $(document).ready(function() {
         },
 		//load data
 		ajax: {
-			url: base_url+'aktivitas/dinas/ajax_list',
+			url: base_url+'aktivitas/manage_produk/ajax_list',
 			type: 'POST',
 		},
 
@@ -40,67 +40,25 @@ $(document).ready(function() {
 				searchable:false,
 				orderable:false,
 			 },
-			{ data:'tanggal' },
-			{ data:'nama' },
-			{ data:'jabatan' },
+			{ data:'product_name' },
+			{ data:'product_image',
+				searchable:false,
+				orderable:false,
+			},
+			{ data:'product_stock' },
+			{ data:'product_description' },
+			{ data:'product_price' },
 			{ data:'status' },
-			{ data:'departemen' },
-			{ data:'keterangans' },
-			{ data:'tgl_dinas' },
-			{ data:'akhir_dinas' },
-			{ data:'lama' },
 		],
 		dom : "<'row' <'col-md-5'l> <'col-md-3'B> <'col-md-4'f>>" + "<'row' <'col-md-12't>r>" + "<'row' <'col-md-6'i> <'col-md-6'p>>",
     buttons: [
         'colvis'
     ],
 	});
-	$("#tanggal").dateDropper( {
-					dropWidth: 200,
-					init_animation: "bounce",
-					dropPrimaryColor: "#1abc9c",
-					dropBorder: "1px solid #1abc9c",
-					maxYear: "2050",
-					format: "Y-m-d"
-			});
-	$("#mulaiDinas").dateDropper( {
-					dropWidth: 200,
-					init_animation: "bounce",
-					dropPrimaryColor: "#1abc9c",
-					dropBorder: "1px solid #1abc9c",
-					maxYear: "2050",
-					format: "Y-m-d"
-			});
-	$("#akhirDinas").dateDropper( {
-					dropWidth: 200,
-					init_animation: "bounce",
-					dropPrimaryColor: "#1abc9c",
-					dropBorder: "1px solid #1abc9c",
-					maxYear: "2050",
-					format: "Y-m-d"
-			});
-			$("#printing").click(function(){
-				$("#asd").print({
-					globalStyles: true,
-					mediaPrint: false,
-					stylesheet: null,
-					noPrintSelector: ".no-print",
-					iframe: true,
-					append: null,
-					prepend: null,
-					manuallyCopyFormValues: true,
-					deferred: $.Deferred(),
-					timeout: 750,
-					title: null,
-					doctype: '<!doctype html>'
-					});
-			});
-
-
 });
 
 function reloadTable() {
-	$("#tblDinas").DataTable().ajax.reload(null,false);
+	$("#tblProduk").DataTable().ajax.reload(null,false);
 }
 
 var save_method;
@@ -113,7 +71,7 @@ $(document).ready(function(){
 	$("#nama_karyawan").select2({
 		placeholder: '-- Pilih Karyawan --',
 		ajax: {
-		   	url: base_url+"aktivitas/dinas/allKaryawanAjax",
+		   	url: base_url+"aktivitas/manage_produk/allKaryawanAjax",
 		   	type: "post",
 		   	dataType: 'json',
 		   	delay: 250,
@@ -136,7 +94,7 @@ $(document).ready(function(){
 $("#nama_karyawan").change(function() {
 	var val = $(this).val();
 	if (val != "") {
-		$.post(base_url+"/aktivitas/dinas/idKaryawan/"+val,function(json) {
+		$.post(base_url+"/aktivitas/manage_produk/idKaryawan/"+val,function(json) {
 			if (json.status == true) {
 				$("#detailKaryawan").show(800);
 				$("#detail_img_photo").attr("src",json.data.foto);
@@ -221,17 +179,17 @@ function btnPrint(id)
 	$("#Print").modal("show");
 	$(".modal-title").text("Print");
 
-	$.post(base_url+"aktivitas/dinas/getIdForPrint/"+id,function(json) {
+	$.post(base_url+"aktivitas/manage_produk/getIdForPrint/"+id,function(json) {
 		if (json.status == true) {
 				$('#tanggal1').html(json.data.tanggal);
 		    $("#keterangan1").html(json.data.keterangans);
 				$("#karyawan1").html(json.data.nama);
-				$("#mulaiDinas1").html(json.data.tgl_dinas);
-				$("#akhirDinas1").html(json.data.akhir_dinas);
+				$("#mulaiDinas1").html(json.data.tgl_manage_produk);
+				$("#akhirDinas1").html(json.data.akhir_manage_produk);
 				$("#departemen1").html(json.data.departemen);
 				$("#jabatan1").html(json.data.jabatan);
 				$("#status1").html(json.data.status);
-				$("#id_dinas1").html(json.data.id_dinas);
+				$("#id_manage_produk1").html(json.data.id_manage_produk);
 				$("#lama1").html(json.data.lama);
 				//setting
 				$("#logo").attr('src',json.data.setting.logo);
@@ -264,7 +222,7 @@ function btnEdit(id) {
 	$(".modal-title").text("Update Aktivitas Dinas");
 	save_method = "update";
 	$("#tanggal").prop('disabled',true);
-	$.post(base_url+"aktivitas/dinas/getId/"+idData,function(json) {
+	$.post(base_url+"aktivitas/manage_produk/getId/"+idData,function(json) {
 		if (json.status == true) {
 			if (json.data.status == "Diterima") {
 				swal({
@@ -277,8 +235,8 @@ function btnEdit(id) {
 				$("#modalForm").modal("show");
 				$('#tanggal').val(json.data.tanggal);
 		    	$("#keterangan").val(json.data.keterangans);
-				$("#mulaiDinas").val(json.data.tgl_dinas1);
-				$("#akhirDinas").val(json.data.akhir_dinas1);
+				$("#mulaiDinas").val(json.data.tgl_manage_produk1);
+				$("#akhirDinas").val(json.data.akhir_manage_produk1);
 				$("#departemen").val(json.data.departemen);
 				$("#jabatan").val(json.data.jabatan);
 				$("#nama_karyawan").empty().append('<option value="'+json.data.id_karyawan+'">'+json.data.nama+'</option>').val(json.data.id_karyawan).trigger('change');
@@ -311,9 +269,9 @@ function btnEdit(id) {
 $("#modalButtonSave").click(function() {
 	var url;
 	if (save_method == "add") {
-		url = base_url+'aktivitas/dinas/add';
+		url = base_url+'aktivitas/manage_produk/add';
 	} else {
-		url = base_url+'aktivitas/dinas/update/'+idData;
+		url = base_url+'aktivitas/manage_produk/update/'+idData;
 	}
 
 	$("#modalButtonSave").attr("disabled",true);
@@ -353,7 +311,7 @@ $("#modalButtonSave").click(function() {
 				$("#errorMulaiDinas").html(json.error.mulaiDinas);
 				$("#errorAkhirDinas").html(json.error.akhirDinas);
 				$("#errorKeterangan").html(json.error.keterangans);
-				
+
 				  }
 				/*swal({
 			            title: "Error Form.!",
@@ -365,7 +323,7 @@ $("#modalButtonSave").click(function() {
 
 					$("#modalButtonSave").attr("disabled",false);
 					$("#modalButtonSave").html('<i class="fa fa-save"></i> Simpan');
-						
+
 					$("#inputMessage").html("");
 					$("#errorTanggal").html("");
 					$("#errorKaryawan").html("");
@@ -381,7 +339,7 @@ $("#modalButtonSave").click(function() {
 function btnDelete(id) {
 	idData = id;
 
-	$.post(base_url+"aktivitas/dinas/getId/"+idData,function(json) {
+	$.post(base_url+"aktivitas/manage_produk/getId/"+idData,function(json) {
 		if (json.status == true) {
 			if(json.data.status == "Proses") {
 			var pesan = "<hr>";
@@ -394,8 +352,8 @@ function btnDelete(id) {
 				pesan += "<li class='pull-left'><small>Status : <i>"+json.data.status+"</i></small></li><br>";
 				pesan += "<li class='pull-left'><small>Departemen : <i>"+json.data.departemen+"</i></small></li><br>";
 				pesan += "<li class='pull-left'><small>Jabatan : <i>"+json.data.jabatan+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>Mulai Dinas : <i>"+json.data.tgl_dinas+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>Akhir Dinas : <i>"+json.data.akhir_dinas+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>Mulai Dinas : <i>"+json.data.tgl_manage_produk+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>Akhir Dinas : <i>"+json.data.akhir_manage_produk+"</i></small></li><br>";
 
 
 		    swal({
@@ -412,7 +370,7 @@ function btnDelete(id) {
 
 		    }).then((result) => {
 		    	if (result.value) {
-		    		$.post(base_url+"aktivitas/dinas/delete/"+idData,function(json) {
+		    		$.post(base_url+"aktivitas/manage_produk/delete/"+idData,function(json) {
 						if (json.status == true) {
 							swal({
 						            title: json.message,
@@ -443,7 +401,7 @@ function btnDelete(id) {
 									showConfirmButton: false
 							});
 			}else{
-				$.post(base_url+"aktivitas/dinas/getId/"+idData,function(json) {
+				$.post(base_url+"aktivitas/manage_produk/getId/"+idData,function(json) {
 				if (json.status == true) {
 					var pesan = "<hr>";
 						pesan += "<div class='row'>";
@@ -455,8 +413,8 @@ function btnDelete(id) {
 						pesan += "<li class='pull-left'><small>Status : <i>"+json.data.status+"</i></small></li><br>";
 						pesan += "<li class='pull-left'><small>Departemen : <i>"+json.data.departemen+"</i></small></li><br>";
 						pesan += "<li class='pull-left'><small>Jabatan : <i>"+json.data.jabatan+"</i></small></li><br>";
-						pesan += "<li class='pull-left'><small>Mulai Dinas : <i>"+json.data.tgl_dinas+"</i></small></li><br>";
-						pesan += "<li class='pull-left'><small>Akhir Dinas : <i>"+json.data.akhir_dinas+"</i></small></li><br>";
+						pesan += "<li class='pull-left'><small>Mulai Dinas : <i>"+json.data.tgl_manage_produk+"</i></small></li><br>";
+						pesan += "<li class='pull-left'><small>Akhir Dinas : <i>"+json.data.akhir_manage_produk+"</i></small></li><br>";
 					swal({
 						title: "Apakah anda yakin.?",
 						html: "<span style='color:red;'>Data yang di <b>Hapus</b> tidak bisa dikembalikan lagi.</span>"+pesan,
@@ -469,7 +427,7 @@ function btnDelete(id) {
 						closeOnConfirm: false,
 								}).then((result) => {
 						    	if (result.value) {
-						    		$.post(base_url+"aktivitas/dinas/delete/"+idData,function(json) {
+						    		$.post(base_url+"aktivitas/manage_produk/delete/"+idData,function(json) {
 										if (json.status == true) {
 											swal({
 										            title: json.message,

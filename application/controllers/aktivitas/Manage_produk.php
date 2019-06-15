@@ -1,14 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Dinas extends MY_Controller {
+class Manage_produk extends MY_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('aktivitas/Dinas_model',"dinasModel");
-		$this->load->model('master/Karyawan_model',"karyawanModel");
-		parent::checkLoginOwner();
+		$this->load->model('aktivitas/Manage_produk_model',"productModel");
 
 	}
 
@@ -16,19 +14,13 @@ class Dinas extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Aktivitas Data > Perjalanan Dinas","Aktivitas Data","Perjalanan Dinas");
+		parent::headerTitle("Aktivitas Data > Produk","Aktivitas Data","Produk");
 		$breadcrumbs = array(
-							"Aktivitas"	=>	site_url('aktivitas/dinas'),
-							"Dinas"		=>	"",
+							"Aktivitas"	=>	site_url('aktivitas/manage_produk'),
+							"Produk"		=>	"",
 						);
 		parent::breadcrumbs($breadcrumbs);
-		$data = array();
-		$data['karyawan'] = $this->dinasModel->getKaryawan();
-		parent::viewData($data);
-
 		parent::viewAktivitas();
-
-
 	}
 
 	public function ajax_list()
@@ -38,35 +30,25 @@ class Dinas extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,null,null,"tanggal","nama","status","jabatan","departemen","keterangans","tgl_dinas","akhir_dinas","lama");
-			$search = array("nama","departemen","jabatan");
+			$orderBy = array(null,null,"product_name",null,"product_stock","product_description","product_price","status");
+			$search = array("product_name","product_description");
 
-			$result = $this->dinasModel->findDataTable($orderBy,$search);
+			$result = $this->productModel->findDataTable($orderBy,$search);
 			foreach ($result as $item) {
-				if($item->status == "Proses")
-				{
-					$btnTools = '<button class="btn btn-warning btn-outline-default btn-mini"><i class="fa fa-print"></i>Print</button>';
-					$item->status = '<label class="label label-info">'.$item->status.'</label>';
+				$srcPhoto = base_url().'assets/images/default/no_file_.png';
+				if ($item->product_image != "") {
+					$srcPhoto = base_url()."uploads/aktivitas	/produk/".$item->product_image;
 				}
-				else if($item->status == "Diterima")
-				{
-					$btnTools = '<button class="btn btn-default btn-outline-default btn-mini" onclick="btnPrint('.$item->id_dinas.')"><i class="fa fa-print"></i>Print</button>';
-					$item->status = '<label class="label label-success">'.$item->status.'</label>';
-				}
-				else {
-					$item->status = '<label class="label label-danger">'.$item->status.'</label>';
-					$btnTools = '<button class="btn btn-warning btn-outline-default btn-mini"><i class="fa fa-print"></i>Print</button>';
-				}
-				$btnAction = '<button class="btn btn-warning  btn-mini" onclick="btnEdit('.$item->id_dinas.')"><i class="fa fa-pencil-square-o"></i>Edit</button>';
-				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-mini" onclick="btnDelete('.$item->id_dinas.')"><i class="fa fa-trash-o"></i>Hapus</button>';
-				$item->tanggal = date_ind("d M Y",$item->tanggal);
-				$item->tgl_dinas = date_ind("d M Y",$item->tgl_dinas);
-				$item->akhir_dinas = date_ind("d M Y",$item->akhir_dinas);
-				$item->button_tool = $btnTools;
+				$dataPhoto = '<a href="'.$srcPhoto.'" data-toggle="lightbox" data-title="Photo Karyawan" data-footer="">
+                    <img src="'.$srcPhoto.'" class="img-circle" style="height:60px; width:60px;" alt="photo "'.$item->product_name.'>
+                </a>';
+				$btnAction = '<button class="btn btn-warning  btn-mini" onclick="btnEdit('.$item->product_id.')"><i class="fa fa-pencil-square-o"></i>Edit</button>';
+				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-mini" onclick="btnDelete('.$item->product_id.')"><i class="fa fa-trash-o"></i>Hapus</button>';
+				$item->product_price = "Rp.".number_format($item->product_price,0,",",",");
 				$item->button_action = $btnAction;
 				$data[] = $item;
 			}
-			return $this->dinasModel->findDataTableOutput($data,$search);
+			return $this->productModel->findDataTableOutput($data,$search);
 		}
 	}
 
@@ -90,7 +72,7 @@ class Dinas extends MY_Controller {
 			$this->form_validation->set_rules('keterangan', 'Keterangan', 'trim|required');
 
 			if ($this->form_validation->run() == TRUE) {
-				$checkDataJadwal =  $this->dinasModel->checkDataJadwal($tanggal,$karyawan);
+				$checkDataJadwal =  $this->productModel->checkDataJadwal($tanggal,$karyawan);
 				if (sizeof($checkDataJadwal) >0 && $checkDataJadwal[0]->id_karyawan == $karyawan) {
 
 					$this->response->status = false;
@@ -110,7 +92,7 @@ class Dinas extends MY_Controller {
 									"level"		=>	"hrd",
 									"url_direct"=>	"approval/dinas",
 								);
-				$insert = $this->dinasModel->insert($data,$dataNotif);
+				$insert = $this->productModel->insert($data,$dataNotif);
 				if ($insert) {
 					//notif firebase
 					parent::insertNotif($dataNotif);
@@ -141,10 +123,10 @@ class Dinas extends MY_Controller {
 
 		if ($this->isPost()) {
 			if (!isset($_POST["searchTerm"])) {
-				$dataKaryawan = $this->dinasModel->getAllKaryawanAjax();
+				$dataKaryawan = $this->productModel->getAllKaryawanAjax();
 			} else {
 				$searchTerm = $this->input->post("searchTerm");
-				$dataKaryawan = $this->dinasModel->getAllKaryawanAjaxSearch($searchTerm);
+				$dataKaryawan = $this->productModel->getAllKaryawanAjaxSearch($searchTerm);
 			}
 
 			$data = array();
@@ -169,7 +151,7 @@ class Dinas extends MY_Controller {
 		parent::checkLoginUser(); // user login autentic checking
 
 		if ($this->isPost()) {
-			$data = $this->dinasModel->getIdKaryawan($id);
+			$data = $this->productModel->getIdKaryawan($id);
 			if ($data) {
 				if ($data->foto != "") {
 					$data->foto = base_url("/")."uploads/master/karyawan/orang/".$data->foto;
@@ -189,7 +171,7 @@ class Dinas extends MY_Controller {
 		parent::checkLoginUser(); // user login autentic checking
 
 		if ($this->isPost()) {
-			$getById = $this->dinasModel->getDataKaryawanSelect($id);
+			$getById = $this->productModel->getDataKaryawanSelect($id);
 			if ($getById) {
 				$this->response->status = true;
 				$this->response->message = "Data dinas get by id";
@@ -205,7 +187,7 @@ class Dinas extends MY_Controller {
 		parent::checkLoginUser(); // user login autentic checking
 
 		if ($this->isPost()) {
-			$getById = $this->dinasModel->getById($id);
+			$getById = $this->productModel->getById($id);
 			if ($getById) {
 				$getById->tgl_dinas1 = $getById->tgl_dinas;
 				$getById->akhir_dinas1 = $getById->akhir_dinas;
@@ -232,8 +214,8 @@ class Dinas extends MY_Controller {
 		parent::checkLoginUser(); // user login autentic checking
 
 		if ($this->isPost()) {
-			$getById = $this->dinasModel->getById($id);
-			$setting = $this->dinasModel->get_setting();
+			$getById = $this->productModel->getById($id);
+			$setting = $this->productModel->get_setting();
 			if ($getById) {
 				if ($setting->logo != "") {
 					$setting->logo = base_url("/")."uploads/setting/".$setting->logo;
@@ -260,7 +242,7 @@ class Dinas extends MY_Controller {
 		parent::checkLoginUser(); // user login autentic checking
 
 		if ($this->isPost()) {
-			$getById = $this->dinasModel->getById($id);
+			$getById = $this->productModel->getById($id);
 			// $tanggal = $this->input->post("tanggal");
 			$karyawan = $this->input->post('karyawan');
 			$mulaiDinas = $this->input->post('mulaiDinas');
@@ -292,7 +274,7 @@ class Dinas extends MY_Controller {
 									"level"		=>	"hrd",
 									"url_direct"=>	"approval/dinas",
 								);
-				$update = $this->dinasModel->update($id,$data,$dataNotif);
+				$update = $this->productModel->update($id,$data,$dataNotif);
 				if ($update) {
 					//notif firebase
 					parent::insertNotif($dataNotif);
@@ -321,7 +303,7 @@ class Dinas extends MY_Controller {
 		parent::checkLoginUser(); // user login autentic checking
 
 		if ($this->isPost()) {
-			$getById = $this->dinasModel->getById($id);
+			$getById = $this->productModel->getById($id);
 			$getkaryawan = $this->karyawanModel->getById($getById->id_karyawan);
 			$getById->tgl_dinas = date_ind("d M Y",$getById->tgl_dinas);
 			$getById->akhir_dinas = date_ind("d M Y",$getById->akhir_dinas);
@@ -332,7 +314,7 @@ class Dinas extends MY_Controller {
 									"level"		=>	"hrd",
 									"url_direct"=>	"approval/dinas",
 								);
-				$delete = $this->dinasModel->delete($id,$dataNotif);
+				$delete = $this->productModel->delete($id,$dataNotif);
 				if ($delete) {
 					//notif firebase
 					parent::insertNotif($dataNotif);

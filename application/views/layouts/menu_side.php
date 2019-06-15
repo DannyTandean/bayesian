@@ -78,7 +78,7 @@
                       </a>
                   </li>
                   <li class="<?php echo $aktivitasThr; ?>">
-                      <a href="<?php echo site_url('aktivitas/thr') ?>">
+                      <a href="<?php echo site_url('aktivitas/manage_produk') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Management Produk</span>
                           <span class="pcoded-mcaret"></span>
