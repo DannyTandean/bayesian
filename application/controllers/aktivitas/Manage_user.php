@@ -7,7 +7,7 @@ class Manage_user extends MY_Controller {
 	{
 		parent::__construct();
 		$this->load->model('aktivitas/Manage_user_model',"userModel");
-		parent::checkLoginOwner();
+		parent::checkLoginUser();
 
 	}
 

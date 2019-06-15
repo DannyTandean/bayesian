@@ -120,7 +120,6 @@
                       </a>
                   </li>
             </ul>
-            <div class="pcoded-navigatio-lavel " data-i18n="nav.category.navigation" menu-title-theme="theme2">Support</div>
 
             <div class="pcoded-navigatio-lavel" data-i18n="nav.category.support" >End Menu</div>
             <div class="">&nbsp;</div>

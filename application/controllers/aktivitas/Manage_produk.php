@@ -30,14 +30,14 @@ class Manage_produk extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,null,"product_name",null,"product_stock","product_description","product_price","status");
+			$orderBy = array(null,null,"product_name",null,"product_stock","product_description","product_price");
 			$search = array("product_name","product_description");
 
 			$result = $this->productModel->findDataTable($orderBy,$search);
 			foreach ($result as $item) {
 				$srcPhoto = base_url().'assets/images/default/no_file_.png';
 				if ($item->product_image != "") {
-					$srcPhoto = base_url()."uploads/aktivitas	/produk/".$item->product_image;
+					$srcPhoto = base_url()."uploads/aktivitas/produk/".$item->product_image;
 				}
 				$dataPhoto = '<a href="'.$srcPhoto.'" data-toggle="lightbox" data-title="Photo Karyawan" data-footer="">
                     <img src="'.$srcPhoto.'" class="img-circle" style="height:60px; width:60px;" alt="photo "'.$item->product_name.'>
@@ -46,10 +46,22 @@ class Manage_produk extends MY_Controller {
 				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-mini" onclick="btnDelete('.$item->product_id.')"><i class="fa fa-trash-o"></i>Hapus</button>';
 				$item->product_price = "Rp.".number_format($item->product_price,0,",",",");
 				$item->button_action = $btnAction;
+				$item->product_image = $dataPhoto;
 				$data[] = $item;
 			}
 			return $this->productModel->findDataTableOutput($data,$search);
 		}
+	}
+
+	public function _do_upload_produk()
+	{
+		$config['upload_path']      = 	'uploads/aktivitas/produk/';
+				$config['allowed_types']    = 	'gif|jpg|jpeg|png';
+				$config['max_size']         = 	1024; // 1mb
+				$config['encrypt_name']		=	true;
+
+				$this->load->library('upload', $config);
+				$this->upload->initialize($config);
 	}
 
 	public function add()
@@ -57,60 +69,55 @@ class Manage_produk extends MY_Controller {
 		parent::checkLoginUser(); // user login autentic checking
 
 		if ($this->isPost()) {
-			$tanggal = $this->input->post("tanggal");
-			$karyawan = $this->input->post('karyawan');
-			$mulaiDinas = $this->input->post('mulaiDinas');
-			$akhirDinas = $this->input->post('akhirDinas');
-			$keterangan = $this->input->post("keterangan");
-			$date1=strtotime($mulaiDinas);
-			$date2=strtotime($akhirDinas);
-			$lama=abs($date1 - $date2)/86400+1;
-			$this->form_validation->set_rules('tanggal', 'Tanggal', 'trim|required');
-			$this->form_validation->set_rules('karyawan', 'Karyawan', 'trim|required');
-			$this->form_validation->set_rules('mulaiDinas', 'Mulai Dinas', 'trim|required');
-			$this->form_validation->set_rules('akhirDinas', 'Akhir Dinas', 'trim|required');
-			$this->form_validation->set_rules('keterangan', 'Keterangan', 'trim|required');
+			$namaProduk = $this->input->post("product_name");
+			$stokProduk = $this->input->post('product_stock');
+			$hargaProduk = $this->input->post('product_price');
+			$deskripsi = $this->input->post('deskripsi');
+
+			$this->form_validation->set_rules('product_name', 'Nama Produk', 'trim|required');
+			$this->form_validation->set_rules('product_stock', 'Stok kProduk', 'trim|required');
+			$this->form_validation->set_rules('product_price', 'Harga Produk', 'trim|required');
+			$this->form_validation->set_rules('deskripsi', 'Deskripsi', 'trim|required');
 
 			if ($this->form_validation->run() == TRUE) {
-				$checkDataJadwal =  $this->productModel->checkDataJadwal($tanggal,$karyawan);
-				if (sizeof($checkDataJadwal) >0 && $checkDataJadwal[0]->id_karyawan == $karyawan) {
-
-					$this->response->status = false;
-					$this->response->message = alertDanger("Data Karyawan Yang Di Input dengan tanggal yang anda pilih sudah ada.!");
-				} else {
 				$data = array(
-								"id_karyawan" => $karyawan,
-								"tanggal"	=>	$tanggal,
-								"tgl_dinas" => $mulaiDinas,
-								"akhir_dinas" => $akhirDinas,
-								"keterangans"=>	$keterangan,
-								"lama" => $lama
+								"product_name" => $namaProduk,
+								"product_stock"	=>	$stokProduk,
+								"product_price" => $hargaProduk,
+								"product_description" => $deskripsi,
 							);
-				$dataNotif = array(
-									"keterangan"=> 	" Tambah data Dinas baru.",
-									"user_id"	=>	$this->user->id_pengguna,
-									"level"		=>	"hrd",
-									"url_direct"=>	"approval/dinas",
-								);
-				$insert = $this->productModel->insert($data,$dataNotif);
-				if ($insert) {
-					//notif firebase
-					parent::insertNotif($dataNotif);
-					parent::sendNotifTopic("hrd","Pengajuan Dinas","Karyawan mengajukan dinas baru","003");
-					$this->response->status = true;
-					$this->response->message = alertSuccess("Berhasil proses Tambah Data Dinas dan menunggu approval dari hrd.");
+				$error_photo_produk = "";
+				/*for foto Pengumuman*/
+				if (!empty($_FILES["photo_produk"]["name"])) {
+					// config upload
+					self::_do_upload_produk();
+
+					if (!$this->upload->do_upload("photo_produk")) {
+						$this->response->message = "error_file";
+						$error_uploadfile = $this->upload->display_errors('<small style="color:red;">', '</small>');
+						$this->response->error_uploadfile = $error_uploadfile;
+					} else {
+						$uploadfile = $this->upload->data();
+						$data["product_image"]	= $uploadfile["file_name"];
+					}
+
 				} else {
-					$this->response->message = alertDanger("Gagal, tambah data Dinas.");
+					$data["product_image"]	= "";
 				}
-			  }
+				$insert = $this->productModel->insert($data);
+				if ($insert) {
+					$this->response->status = true;
+					$this->response->message = alertSuccess("Berhasil Tambah Data Produk.");
+				} else {
+					$this->response->message = alertDanger("Gagal, tambah data Produk.");
+				}
 			} else {
 				// $this->response->message = validation_errors('<span style="color:red;">', '</span><br>');
 				$this->response->error = array(
-									"karyawan"	=> form_error("karyawan",'<span style="color:red;">','</span>'),
-									"tanggal"	=> form_error("tanggal",'<span style="color:red;">','</span>'),
-									"mulaiDinas"	=> form_error("mulaiDinas",'<span style="color:red;">','</span>'),
-									"akhirDinas"	=> form_error("akhirDinas",'<span style="color:red;">','</span>'),
-									"keterangans"	=> form_error("keterangan",'<span style="color:red;">','</span>'),
+									"product_name"	=> form_error("product_name",'<span style="color:red;">','</span>'),
+									"product_stock"	=> form_error("product_stock",'<span style="color:red;">','</span>'),
+									"product_price"	=> form_error("product_price",'<span style="color:red;">','</span>'),
+									"deskripsi"	=> form_error("deskripsi",'<span style="color:red;">','</span>'),
 								);
 			}
 		}

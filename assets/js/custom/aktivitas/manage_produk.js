@@ -24,7 +24,7 @@ $(document).ready(function() {
 			type: 'POST',
 		},
 
-		order:[[3,'DESC']],
+		order:[[2,'DESC']],
 		columns:[
 			{
 				data:'no',
@@ -36,10 +36,6 @@ $(document).ready(function() {
 				searchable:false,
 				orderable:false,
 			},
-			{ data:'button_tool',
-				searchable:false,
-				orderable:false,
-			 },
 			{ data:'product_name' },
 			{ data:'product_image',
 				searchable:false,
@@ -48,7 +44,7 @@ $(document).ready(function() {
 			{ data:'product_stock' },
 			{ data:'product_description' },
 			{ data:'product_price' },
-			{ data:'status' },
+			// { data:'status' },
 		],
 		dom : "<'row' <'col-md-5'l> <'col-md-3'B> <'col-md-4'f>>" + "<'row' <'col-md-12't>r>" + "<'row' <'col-md-6'i> <'col-md-6'p>>",
     buttons: [
@@ -142,29 +138,6 @@ $(document).on('click', '#btnRefresh', function(e) {
 	}, 1000);
 });
 
-//validasi tanggal
-$("#mulaiDinas, #akhirDinas").change(function() {
-	if($("#mulaiDinas").val() != "" && $("#akhirDinas").val() != ""){
-		var startDate = new Date($('#mulaiDinas').val());
-		var expiredDate = new Date($('#akhirDinas').val());
-		if (startDate > expiredDate){
-			swal({
-		            title: "Information Notice!",
-		            html: "<span style='color:orange'>Tanggal Akhir Dinas harus sama atau setelah hari dari Mulai Dinas</span>",
-		            type: "warning",
-		    //         background : '100%',
-		    //         backdrop: `
-				  //   rgba(0,0,123,0.4)
-				  //   url("https://media0.giphy.com/media/AsNxyHoYDcCXe/giphy.gif")
-				  //   center
-				  // `
-		        });
-			$("#akhirDinas").val("");
-		}
-	}
-});
-
-
 $(document).on('click', '#btnTambah', function (e) {
 	e.preventDefault();
 	$("#modalForm").modal("show");
@@ -174,48 +147,70 @@ $(document).on('click', '#btnTambah', function (e) {
 	$("#nama_karyawan").val("").trigger("change");
 	save_method = "add";
 });
-function btnPrint(id)
+
+/* prosessing photo Pengumuman change*/
+$("#btnZoomImg").click(function() {
+	$("#popUpPhotoOut").click();
+});
+
+$("#ganti_photo").click(function() {
+	$("#photo_produk").click();
+});
+
+$("#photo_produk").change(function(event){
+	readURL(document.getElementById('photo_produk'));
+	$('#is_delete_photo').val(0);
+});
+
+$("#hapus_photo").click(function() {
+
+		$('#img_photo').attr('src','assets/images/default/no_file_.png');
+		$('#popUpImgOut').attr('href','assets/images/default/no_file_.png');
+		$('#popUpImgIn').attr('src','assets/images/default/no_file_.png');
+   	$("#photo_produk").val("");
+   	$('#is_delete_photo').val(1);
+});
+
+function readURL(input)
 {
-	$("#Print").modal("show");
-	$(".modal-title").text("Print");
+   	var filePath = input.value;
+    var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+    if(!allowedExtensions.exec(filePath)){ // validate format extension file
+        // alert('Please upload file having extensions .jpeg/.jpg/.png/.gif only.');
+        swal({
+	            title: "<h2 style='color:red;'>Error Photo!</h2>",
+	            html: "Photo Pengumuman :  <small><span style='color:red;'> Jenis file yang Anda upload tidak diperbolehkan.</span> <br> Harap hanya upload file yang memiliki ekstensi <br> .jpeg | .jpg | .png | .gif </small>",
+	            type: "error",
+	        });
 
-	$.post(base_url+"aktivitas/manage_produk/getIdForPrint/"+id,function(json) {
-		if (json.status == true) {
-				$('#tanggal1').html(json.data.tanggal);
-		    $("#keterangan1").html(json.data.keterangans);
-				$("#karyawan1").html(json.data.nama);
-				$("#mulaiDinas1").html(json.data.tgl_manage_produk);
-				$("#akhirDinas1").html(json.data.akhir_manage_produk);
-				$("#departemen1").html(json.data.departemen);
-				$("#jabatan1").html(json.data.jabatan);
-				$("#status1").html(json.data.status);
-				$("#id_manage_produk1").html(json.data.id_manage_produk);
-				$("#lama1").html(json.data.lama);
-				//setting
-				$("#logo").attr('src',json.data.setting.logo);
-				$("#emailPerusahaan").attr('href','mailto:'+json.data.setting.email_perusahaan);
-				$("#emailPerusahaan").html(json.data.setting.email_perusahaan);
-				$("#namaPerusahaan").html(json.data.setting.nama_perusahaan);
-				$("#alamat").html(json.data.setting.alamat);
-				$("#noTelp").html(json.data.setting.no_telp);
-				$("#noFax").html(json.data.setting.no_fax);
-				$("#tanggal").prop('disabled',true);
-		} else {
-			$("#inputMessage").html(json.message);
+        input.value = '';
+        return false;
 
-			$('#tanggal').val("");
-			$("#keterangan").val("");
-			$("#karyawan").val("");
-			$("#mulaiDinas").val("");
-			$("#akhirDinas").val("");
-			$("#status1").val("");
-			// setTimeout(function() {
-			// 	reloadTable();
-			// 	$("#Print").modal("hse");
-			// },1000);
-		}
-	});
+    } else if (input.files[0].size > 1048576) { // validate size file 1 mb
+		// alert("file size lebih besar dari 1 mb, file size yang di upload = "+input.files[0].size);
+		swal({
+	            title: "<h2 style='color:red;'>Error Photo!</h2>",
+	            html: "Photo Pengumuman : <small style='color:red;'>File yang diupload melebihi ukuran maksimal diperbolehkan yaitu 1 mb.</small>",
+	            type: "error",
+	        });
+        input.value = '';
+		return false;
+
+	} else {
+	   	if (input.files && input.files[0])
+	   	{
+		    var reader = new FileReader();
+		    reader.onload = function (e)
+		    {
+		       $('#img_photo').attr('src',e.target.result);
+		       $('#popUpPhotoIn').attr('src',e.target.result);
+		       $('#popUpPhotoOut').attr('href',e.target.result);
+		    };
+		    reader.readAsDataURL(input.files[0]);
+	   	}
+	}
 }
+
 function btnEdit(id) {
 	idData = id;
 
@@ -277,10 +272,14 @@ $("#modalButtonSave").click(function() {
 	$("#modalButtonSave").attr("disabled",true);
 	$("#modalButtonSave").html("Prosessing...<i class='fa fa-spinner fa-spin'></i>");
 
+	var formData = new FormData($("#formData")[0]);
+
 	$.ajax({
 		url: url,
 		type:'POST',
-		data:$("#formData").serialize(),
+		data: formData,
+		contentType:false,
+		processData:false,
 		dataType:'JSON',
 		success: function(json) {
 			if (json.status == true) {
@@ -306,11 +305,10 @@ $("#modalButtonSave").click(function() {
 			} else {
 				$("#inputMessage").html(json.message);
 				 if (json.message == '') {
-				$("#errorTanggal").html(json.error.tanggal);
-				$("#errorKaryawan").html(json.error.karyawan);
-				$("#errorMulaiDinas").html(json.error.mulaiDinas);
-				$("#errorAkhirDinas").html(json.error.akhirDinas);
-				$("#errorKeterangan").html(json.error.keterangans);
+				$("#error_product_name").html(json.error.product_name);
+				$("#error_product_stock").html(json.error.product_stock);
+				$("#error_product_price").html(json.error.product_price);
+				$("#error_product_deskripsi").html(json.error.deskripsi);
 
 				  }
 				/*swal({
@@ -325,12 +323,11 @@ $("#modalButtonSave").click(function() {
 					$("#modalButtonSave").html('<i class="fa fa-save"></i> Simpan');
 
 					$("#inputMessage").html("");
-					$("#errorTanggal").html("");
-					$("#errorKaryawan").html("");
-					$("#errorMulaiDinas").html("");
-					$("#errorAkhirDinas").html("");
-					$("#errorKeterangan").html("");
-				},5000);
+					$("#error_product_name").html("");
+					$("#error_product_stock").html("");
+					$("#error_product_price").html("");
+					$("#error_product_deskripsi").html("");
+				},3000);
 			}
 		}
 	});
