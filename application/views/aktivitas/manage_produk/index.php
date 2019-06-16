@@ -59,7 +59,7 @@
             </div>
 
             <div class="form-group col-md-12">
-              <label class="label-form">Upload Photo Produk</label>
+              <label class="label-form">Upload Foto Produk</label>
                 <div class="col-sm-8">
                   <?php $defaultPhoto = base_url("/")."assets/images/default/no_file_.png"; ?>
                       <div class="card rounded-card user-card" style="height: 180px; width: 180px;">
@@ -83,7 +83,7 @@
                                 <input name="photo_produk" id="photo_produk" type="file" style="display: none;">
                                 <input type="hidden" name="is_delete_photo" id="is_delete_photo" value="0">
 
-                                  <a href="<?php echo $defaultPhoto;?>" style="display: none;" data-toggle="lightbox" id="popUpPhotoOut" data-title="Photo Karyawan" data-footer="">
+                                  <a href="<?php echo $defaultPhoto;?>" style="display: none;" data-toggle="lightbox" id="popUpPhotoOut" data-title="Foto Produk" data-footer="">
                                 <img src="<?php echo $defaultPhoto;?>" id="popUpPhotoIn" class="img-fluid" alt="">
                                 </a>
                               </div>

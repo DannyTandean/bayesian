@@ -60,71 +60,6 @@ function reloadTable() {
 var save_method;
 var idData;
 
-//Select2 Karyawan
-
-$(document).ready(function(){
-
-	$("#nama_karyawan").select2({
-		placeholder: '-- Pilih Karyawan --',
-		ajax: {
-		   	url: base_url+"aktivitas/manage_produk/allKaryawanAjax",
-		   	type: "post",
-		   	dataType: 'json',
-		   	delay: 250,
-		   	data: function (params) {
-		    	return {
-		      		searchTerm: params.term // search term
-		    	};
-		   	},
-		   	processResults: function (response) {
-		     	return {
-		        	results: response
-		     	};
-		   	},
-		   	cache: true
-		},
-		dropdownParent: $('#modalForm')
-	});
-});
-
-$("#nama_karyawan").change(function() {
-	var val = $(this).val();
-	if (val != "") {
-		$.post(base_url+"/aktivitas/manage_produk/idKaryawan/"+val,function(json) {
-			if (json.status == true) {
-				$("#detailKaryawan").show(800);
-				$("#detail_img_photo").attr("src",json.data.foto);
-			   	$('#detailPopUpPhotoOut').attr('href',json.data.foto);
-			   	$('#detailPopUpPhotoIn').attr('src',json.data.foto);
-			   	$("#kode_karyawan").val(json.data.kode_karyawan);
-				$("#departemen").val(json.data.departemen);
-				$("#jabatan").val(json.data.jabatan);
-			} else {
-				$("#detailKaryawan").hide(800);
-				$("#errorDetailKaryawan").html(json.message);
-				var srcPhotoDefault = base_url+"assets/images/default/no_user.png";
-				$("#detail_img_photo").attr("src",srcPhotoDefault);
-			   	$('#detailPopUpPhotoOut').attr('href',srcPhotoDefault);
-			   	$('#detailPopUpPhotoIn').attr('src',srcPhotoDefault);
-			   	$("#kode_karyawan").val("");
-				$("#departemen").val("");
-				$("#jabatan").val("");
-			}
-		});
-	} else {
-		$("#detailKaryawan").hide(800);
-		$("#errorDetailKaryawan").html("");
-		var srcPhotoDefault = base_url+"assets/images/default/no_user.png";
-		$("#detail_img_photo").attr("src",srcPhotoDefault);
-	   	$('#detailPopUpPhotoOut').attr('href',srcPhotoDefault);
-	   	$('#detailPopUpPhotoIn').attr('src',srcPhotoDefault);
-	   	$("#kode_karyawan").val("");
-		$("#departemen").val("");
-		$("#jabatan").val("");
-	}
-	$("#modalForm").css('overflow-y', 'scroll');
-});
-
 $("#btnDetailZoomImg").click(function() {
 	$("#detailPopUpPhotoOut").click();
 });
@@ -142,9 +77,10 @@ $(document).on('click', '#btnTambah', function (e) {
 	e.preventDefault();
 	$("#modalForm").modal("show");
 	$("#formData")[0].reset();
-	$(".modal-title").text("Tambah Aktivitas Dinas");
-	$("#tanggal").prop('disabled',false);
-	$("#nama_karyawan").val("").trigger("change");
+	$(".modal-title").text("Tambah Aktivitas Produk");
+	$('#img_photo').attr('src',base_url+"/assets/images/default/no_file_.png");
+		$('#popUpPhotoOut').attr('href',base_url+"/assets/images/default/no_file_.png");
+		$('#popUpPhotoIn').attr('src',base_url+"/assets/images/default/no_file_.png");
 	save_method = "add";
 });
 
@@ -211,47 +147,29 @@ function readURL(input)
 	}
 }
 
+
 function btnEdit(id) {
 	idData = id;
 
-	$(".modal-title").text("Update Aktivitas Dinas");
+	$(".modal-title").text("Update Aktivitas Produk");
 	save_method = "update";
-	$("#tanggal").prop('disabled',true);
+	$("#modalForm").modal("show");
+
 	$.post(base_url+"aktivitas/manage_produk/getId/"+idData,function(json) {
 		if (json.status == true) {
-			if (json.data.status == "Diterima") {
-				swal({
-			            title: "<h2 style='color:#f1c40f;'>Data yang <u style='color:green'>Diterima</u> tidak bisa di update.!</h2>",
-			            type: "warning",
-			            timer: 4000,
-			            showConfirmButton: false
-			        });
-			} else if (json.data.status == "Proses") {
-				$("#modalForm").modal("show");
-				$('#tanggal').val(json.data.tanggal);
-		    	$("#keterangan").val(json.data.keterangans);
-				$("#mulaiDinas").val(json.data.tgl_manage_produk1);
-				$("#akhirDinas").val(json.data.akhir_manage_produk1);
-				$("#departemen").val(json.data.departemen);
-				$("#jabatan").val(json.data.jabatan);
-				$("#nama_karyawan").empty().append('<option value="'+json.data.id_karyawan+'">'+json.data.nama+'</option>').val(json.data.id_karyawan).trigger('change');
+				$('#product_name').val(json.data.product_name);
+		    $("#product_stock").val(json.data.product_stock);
+				$("#product_price").val(json.data.product_price);
+				$("#deskripsi").val(json.data.product_description);
+				$('#img_photo').attr('src',json.data.product_image);
+			   	$('#popUpPhotoOut').attr('href',json.data.product_image);
+			   	$('#popUpPhotoIn').attr('src',json.data.product_image);
 
-			}else{
-				swal({
-			           title: "<h2 style='color:#f1c40f;'>Data yang <u style='color:green'>Ditolak</u> tidak bisa di update.!</h2>",
-			            type: "warning",
-			            timer: 4000,
-			            showConfirmButton: false
-			        });
-			}
 		} else {
-			$("#inputMessage").html(json.message);
-
-			$('#tanggal').val("");
-			$("#keterangan").val("");
-			$("#karyawan").val("");
-			$("#mulaiDinas").val("");
-			$("#akhirDinas").val("");
+			$('#product_name').val("");
+			$("#product_stock").val("");
+			$("#product_price").val("");
+			$("#deskripsi").val("");
 			setTimeout(function() {
 				reloadTable();
 				$("#modalForm").modal("hide");
@@ -338,20 +256,16 @@ function btnDelete(id) {
 
 	$.post(base_url+"aktivitas/manage_produk/getId/"+idData,function(json) {
 		if (json.status == true) {
-			if(json.data.status == "Proses") {
 			var pesan = "<hr>";
 				pesan += "<div class='row'>";
 				pesan += "<div class='col-md-4'>";
-				pesan += '<img class="img-fluid img-circle" src="'+json.data.foto+'" alt="user-img" style="height: 100px; width: 100px;">';
+				pesan += '<img class="img-fluid img-circle" src="'+json.data.product_image+'" alt="user-img" style="height: 100px; width: 100px;">';
 				pesan += "</div>";
 				pesan += "<div class='col-md-8'>";
-				pesan += "<li class='pull-left'><small>Nama : <i>"+json.data.nama+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>Status : <i>"+json.data.status+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>Departemen : <i>"+json.data.departemen+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>Jabatan : <i>"+json.data.jabatan+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>Mulai Dinas : <i>"+json.data.tgl_manage_produk+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>Akhir Dinas : <i>"+json.data.akhir_manage_produk+"</i></small></li><br>";
-
+				pesan += "<li class='pull-left'><small>Nama Produk : <i>"+json.data.product_name+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>Stock Produk : <i>"+json.data.product_stock+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>Harga Produk : <i>"+json.data.product_price+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>Deskripsi Produk : <i>"+json.data.product_description+"</i></small></li><br>";
 
 		    swal({
 		        title: "Apakah anda yakin.?",
@@ -390,76 +304,7 @@ function btnDelete(id) {
 					});
 		    	}
 		    });
-			}else if(json.data.status == "Diterima"){
-				swal({
-									title: "<h2 style='color:#c82333;'>Data yang sudah <u style='color:green'>Diterima</u> tidak bisa di Hapus.!</h2>",
-									type: "warning",
-									timer: 4000,
-									showConfirmButton: false
-							});
-			}else{
-				$.post(base_url+"aktivitas/manage_produk/getId/"+idData,function(json) {
-				if (json.status == true) {
-					var pesan = "<hr>";
-						pesan += "<div class='row'>";
-						pesan += "<div class='col-md-4'>";
-						pesan += '<img class="img-fluid img-circle" src="'+json.data.foto+'" alt="user-img" style="height: 100px; width: 100px;">';
-						pesan += "</div>";
-						pesan += "<div class='col-md-8'>";
-						pesan += "<li class='pull-left'><small>Nama : <i>"+json.data.nama+"</i></small></li><br>";
-						pesan += "<li class='pull-left'><small>Status : <i>"+json.data.status+"</i></small></li><br>";
-						pesan += "<li class='pull-left'><small>Departemen : <i>"+json.data.departemen+"</i></small></li><br>";
-						pesan += "<li class='pull-left'><small>Jabatan : <i>"+json.data.jabatan+"</i></small></li><br>";
-						pesan += "<li class='pull-left'><small>Mulai Dinas : <i>"+json.data.tgl_manage_produk+"</i></small></li><br>";
-						pesan += "<li class='pull-left'><small>Akhir Dinas : <i>"+json.data.akhir_manage_produk+"</i></small></li><br>";
-					swal({
-						title: "Apakah anda yakin.?",
-						html: "<span style='color:red;'>Data yang di <b>Hapus</b> tidak bisa dikembalikan lagi.</span>"+pesan,
-						type: "question",
-						width: 400,
-						showCloseButton: true,
-						showCancelButton: true,
-						confirmButtonColor: "#DD6B55",
-						confirmButtonText: "Iya, Hapus",
-						closeOnConfirm: false,
-								}).then((result) => {
-						    	if (result.value) {
-						    		$.post(base_url+"aktivitas/manage_produk/delete/"+idData,function(json) {
-										if (json.status == true) {
-											swal({
-										            title: json.message,
-										            type: "success",
-										            // html: true,
-										            timer: 2000,
-										            showConfirmButton: false
-										        });
-											reloadTable();
-										} else {
-											swal({
-										            title: json.message,
-										            type: "error",
-										            // html: true,
-										            timer: 1500,
-										            showConfirmButton: false
-										        });
-											reloadTable();
-										}
-									});
-						    	}
-						    });
-					reloadTable();
-				} else {
-					swal({
-										title: json.message,
-										type: "error",
-										// html: true,
-										timer: 1500,
-										showConfirmButton: false
-								});
-					reloadTable();
-				}
-			});
-			}
+
 		} else {
 			reloadTable();
 			swal({

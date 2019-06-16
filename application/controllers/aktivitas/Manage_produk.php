@@ -124,71 +124,6 @@ class Manage_produk extends MY_Controller {
 		parent::json();
 	}
 
-	public function allKaryawanAjax()
-	{
-		parent::checkLoginUser(); // user login autentic checking
-
-		if ($this->isPost()) {
-			if (!isset($_POST["searchTerm"])) {
-				$dataKaryawan = $this->productModel->getAllKaryawanAjax();
-			} else {
-				$searchTerm = $this->input->post("searchTerm");
-				$dataKaryawan = $this->productModel->getAllKaryawanAjaxSearch($searchTerm);
-			}
-
-			$data = array();
-			// $data[] = array("id"=>"0", "text"=> "--Pilih Karyawan--");
-			foreach ($dataKaryawan as $val) {
-				// $row = array();
-				$data[] = array("id"=>$val->id, "text"=>$val->nama);
-				// $data[] = $row;
-			}
-			/*if ($dataKaryawan) {
-				$this->response->status = true;
-				$this->response->message = "Data All karyawan";
-				$this->response->data = $dataKaryawan;
-			}*/
-			parent::json($data);
-		}
-
-	}
-
-	public function idKaryawan($id)
-	{
-		parent::checkLoginUser(); // user login autentic checking
-
-		if ($this->isPost()) {
-			$data = $this->productModel->getIdKaryawan($id);
-			if ($data) {
-				if ($data->foto != "") {
-					$data->foto = base_url("/")."uploads/master/karyawan/orang/".$data->foto;
-				} else {
-					$data->foto = base_url("/")."assets/images/default/no_user.png";
-				}
-				$this->response->status = true;
-				$this->response->message = "data karyawan by id";
-				$this->response->data = $data;
-			}
-		}
-		parent::json();
-	}
-
-	public function getNama($id)
-	{
-		parent::checkLoginUser(); // user login autentic checking
-
-		if ($this->isPost()) {
-			$getById = $this->productModel->getDataKaryawanSelect($id);
-			if ($getById) {
-				$this->response->status = true;
-				$this->response->message = "Data dinas get by id";
-				$this->response->data = $getById;
-			} else {
-				$this->response->message = alertDanger("Data tidak ada.");
-			}
-		}
-		parent::json();
-	}
 	public function getId($id)
 	{
 		parent::checkLoginUser(); // user login autentic checking
@@ -196,48 +131,15 @@ class Manage_produk extends MY_Controller {
 		if ($this->isPost()) {
 			$getById = $this->productModel->getById($id);
 			if ($getById) {
-				$getById->tgl_dinas1 = $getById->tgl_dinas;
-				$getById->akhir_dinas1 = $getById->akhir_dinas;
-				$getById->tgl_dinas = date_ind("d M Y",$getById->tgl_dinas);
-				$getById->akhir_dinas = date_ind("d M Y",$getById->akhir_dinas);
-				if ($getById->foto != "") {
-					$getById->foto = base_url("/")."uploads/master/karyawan/orang/".$getById->foto;
+				if ($getById->product_image != "") {
+					$getById->product_image = base_url("/")."uploads/aktivitas/produk/".$getById->product_image;
 				} else {
-					$getById->foto = base_url("/")."assets/images/default/no_user.png";
+					$getById->product_image = base_url("/")."assets/images/default/no_file_.png";
 				}
 				$this->response->status = true;
-				$this->response->message = "Data dinas get by id";
+				$this->response->message = "Data produk get by id";
 				$this->response->data = $getById;
 			} else {
-				$this->response->message = alertDanger("Data tidak ada.");
-			}
-		}
-		parent::json();
-	}
-
-
-	public function getIdForPrint($id)
-	{
-		parent::checkLoginUser(); // user login autentic checking
-
-		if ($this->isPost()) {
-			$getById = $this->productModel->getById($id);
-			$setting = $this->productModel->get_setting();
-			if ($getById) {
-				if ($setting->logo != "") {
-					$setting->logo = base_url("/")."uploads/setting/".$setting->logo;
-				} else {
-					$setting->logo = base_url("/")."assets/images/default/no_file_.png";
-				}
-				$getById->setting = $setting;
-				$getById->tgl_dinas = date_ind("d M Y",$getById->tgl_dinas);
-				$getById->akhir_dinas = date_ind("d M Y",$getById->akhir_dinas);
-				$getById->tanggal = date_ind("d M Y",$getById->tanggal);
-				$this->response->status = true;
-				$this->response->message = "data print by id";
-				$this->response->data = $getById;
-			}
-			else {
 				$this->response->message = alertDanger("Data tidak ada.");
 			}
 		}
@@ -250,56 +152,55 @@ class Manage_produk extends MY_Controller {
 
 		if ($this->isPost()) {
 			$getById = $this->productModel->getById($id);
-			// $tanggal = $this->input->post("tanggal");
-			$karyawan = $this->input->post('karyawan');
-			$mulaiDinas = $this->input->post('mulaiDinas');
-			$akhirDinas = $this->input->post('akhirDinas');
-			$keterangan = $this->input->post("keterangan");
-			$date1=strtotime($mulaiDinas);
-			$date2=strtotime($akhirDinas);
-			$lama=abs($date1 - $date2)/86400+1;
-			// $this->form_validation->set_rules('tanggal', 'Tanggal', 'trim|required');
-			// $this->form_validation->set_rules('karyawan', 'Karyawan', 'trim|required');
-			$this->form_validation->set_rules('mulaiDinas', 'Mulai Dinas', 'trim|required');
-			$this->form_validation->set_rules('akhirDinas', 'Akhir Dinas', 'trim|required');
-			$this->form_validation->set_rules('keterangan', 'Keterangan', 'trim|required');
+			$namaProduk = $this->input->post("product_name");
+			$stokProduk = $this->input->post('product_stock');
+			$hargaProduk = $this->input->post('product_price');
+			$deskripsi = $this->input->post('deskripsi');
 
-			$getkaryawan = $this->karyawanModel->getById($karyawan);
+			$this->form_validation->set_rules('product_name', 'Nama Produk', 'trim|required');
+			$this->form_validation->set_rules('product_stock', 'Stok kProduk', 'trim|required');
+			$this->form_validation->set_rules('product_price', 'Harga Produk', 'trim|required');
+			$this->form_validation->set_rules('deskripsi', 'Deskripsi', 'trim|required');
 
 			if ($this->form_validation->run() == TRUE) {
-				$data = array(
-								"id_karyawan" => $karyawan,
-								"tanggal"	=>	$getById->tanggal,
-								"tgl_dinas" => $mulaiDinas,
-								"akhir_dinas" => $akhirDinas,
-								"keterangans"=>	$keterangan,
-								"lama" => $lama
-							);
-				$dataNotif = array(
-									"keterangan"=> 	"Edit/update data dinas dengan Nama : <u>".$getkaryawan->nama."</u> dan No Karyawan : <u>".$getkaryawan->idfp."</u>.",
-									"user_id"	=>	$this->user->id_pengguna,
-									"level"		=>	"hrd",
-									"url_direct"=>	"approval/dinas",
+					$data = array(
+									"product_name" => $namaProduk,
+									"product_stock"	=>	$stokProduk,
+									"product_price" => $hargaProduk,
+									"product_description" => $deskripsi,
 								);
-				$update = $this->productModel->update($id,$data,$dataNotif);
+					/*for foto produk*/
+					if (!empty($_FILES["photo_produk"]["name"])) {
+						// config upload
+						self::_do_upload_produk();
+						$getById = $this->productModel->getById($id);
+						if (!$this->upload->do_upload("photo_produk")) {
+							$this->response->message = "error_foto";
+							$error_photo_produk = $this->upload->display_errors('<small style="color:red;">', '</small>');
+							$this->response->error_photo_produk = $error_photo_produk;
+						} else {
+							$photo_produk = $this->upload->data();
+							$data["product_image"]	= $photo_produk["file_name"];
+							if (file_exists("uploads/aktivitas/produk/".$getById->product_image) && $getById->product_image) {
+								unlink("uploads/aktivitas/produk/".$getById->product_image);
+							}
+						}
+					}
+				$update = $this->productModel->update($id,$data);
 				if ($update) {
-					//notif firebase
-					parent::insertNotif($dataNotif);
-					parent::sendNotifTopic("hrd","Informasi","Perubahan dinas ".$getkaryawan->nama,"035");
 					$this->response->status = true;
-					$this->response->message = alertSuccess("Berhasil proses update Data Dinas");
+					$this->response->message = alertSuccess("Berhasil proses update Data Produk");
 				} else {
-					$this->response->message = alertDanger("Gagal, update data Dinas.");
+					$this->response->message = alertDanger("Gagal, update data Produk.");
 				}
 			} else {
 				// $this->response->message = validation_errors('<span style="color:red;">', '</span><br>');
 				$this->response->error = array(
-									"karyawan"	=> form_error("karyawan",'<span style="color:red;">','</span>'),
-									"tanggal"	=> form_error("tanggal",'<span style="color:red;">','</span>'),
-									"mulaiDinas"	=> form_error("mulaiDinas",'<span style="color:red;">','</span>'),
-									"akhirDinas"	=> form_error("akhirDinas",'<span style="color:red;">','</span>'),
-									"keterangans"	=> form_error("keterangan",'<span style="color:red;">','</span>'),
-								);
+																			"product_name"	=> form_error("product_name",'<span style="color:red;">','</span>'),
+																			"product_stock"	=> form_error("product_stock",'<span style="color:red;">','</span>'),
+																			"product_price"	=> form_error("product_price",'<span style="color:red;">','</span>'),
+																			"deskripsi"	=> form_error("deskripsi",'<span style="color:red;">','</span>'),
+																						);
 			}
 		}
 		parent::json();
@@ -311,23 +212,14 @@ class Manage_produk extends MY_Controller {
 
 		if ($this->isPost()) {
 			$getById = $this->productModel->getById($id);
-			$getkaryawan = $this->karyawanModel->getById($getById->id_karyawan);
-			$getById->tgl_dinas = date_ind("d M Y",$getById->tgl_dinas);
-			$getById->akhir_dinas = date_ind("d M Y",$getById->akhir_dinas);
 			if ($getById) {
-				$dataNotif = array(
-									"keterangan"=> 	" Hapus data Dinas dengan Nama : <u>".$getkaryawan->nama."</u> dan No Karyawan : <u>".$getkaryawan->idfp."</u>",
-									"user_id"	=>	$this->user->id_pengguna,
-									"level"		=>	"hrd",
-									"url_direct"=>	"approval/dinas",
-								);
-				$delete = $this->productModel->delete($id,$dataNotif);
+				$delete = $this->productModel->delete($id);
 				if ($delete) {
-					//notif firebase
-					parent::insertNotif($dataNotif);
-					parent::sendNotifTopic("hrd","Informasi","Data Dinas ini telah di hapus","036");
+					if (file_exists("uploads/aktivitas/produk/".$getById->product_image) && $getById->product_image) {
+						unlink("uploads/aktivitas/produk/".$getById->product_image);
+					}
 					$this->response->status = true;
-					$this->response->message = alertSuccess("Berhasil proses hapus Data Dinas");
+					$this->response->message = alertSuccess("Berhasil proses hapus Data Produk");
 				} else {
 					$this->response->message = alertDanger("Gagal, hapus data..");
 				}

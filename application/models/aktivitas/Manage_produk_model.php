@@ -50,64 +50,6 @@ class Manage_produk_model extends CI_Model {
 		return $data;
 	}
 
-	public function getKaryawan()
-	{
-		$this->db->select('id,nama');
-		$this->db->from("master_karyawan");
-
-		$result = $this->db->get()->result_array();
-		return $result;
-	}
-	public function getDataKaryawanSelect($id)
-	{
-		$this->db->from("master_karyawan");
-		$this->db->join('master_departemen', 'master_karyawan.id_departemen = master_departemen.id_departemen');
-		$this->db->join('master_jabatan', 'master_karyawan.id_jabatan = master_jabatan.id_jabatan');
-		$this->db->where('id', $id);
-		$result = $this->db->get()->row();
-
-		return $result;
-	}
-
-	public function getAllKaryawanAjax()
-	{
-		$this->db->select("id, nama,status_kerja");
-		$this->db->where('status_kerja', "aktif");
-		$query = $this->db->get("master_karyawan");
-		return $query->result();
-	}
-
-	public function getAllKaryawanAjaxSearch($search)
-	{
-		$this->db->select("id, nama,status_kerja");
-		$this->db->where('status_kerja', "aktif");
-		$this->db->like('nama', $search)->limit(10);
-		$query = $this->db->get("master_karyawan");
-		return $query->result();
-	}
-
-	public function getIdKaryawan($id)
-	{
-		$this->db->where(array("master_karyawan.id" => $id));
-		$this->db->select("master_karyawan.kode_karyawan, master_karyawan.nama, master_karyawan.foto, master_departemen.departemen, master_jabatan.jabatan");
-		$this->db->from("master_karyawan");
-		$this->db->join("master_departemen","master_departemen.id_departemen = master_karyawan.id_departemen","LEFT");
-		$this->db->join("master_jabatan","master_jabatan.id_jabatan = master_karyawan.id_jabatan","LEFT");
-		return $this->db->get()->row();
-	}
-
-	public function checkDataJadwal($tanggal,$kode) // check data jadwal yang sudah di input
-	{
-		$where = array(
-						"tanggal"	=>	$tanggal,
-						"id_karyawan"	=>	$kode
-					);
-		$this->db->where($where);
-		$this->db->group_by(array("tanggal","id_karyawan"));
-		$data = $this->db->get($this->_table);
-		return $data->result();
-	}
-
 	public function findDataTableOutput($data=null,$search=false)
 	{
 		$input = $this->input;
@@ -171,19 +113,9 @@ class Manage_produk_model extends CI_Model {
 		}
 	}
 
-	public function get_setting()
-	{
-		$query = $this->db->get('settings_general');
-		return $query->row();
-	}
-
 	public function getById($id)
 	{
 		$this->db->where($this->_primary_key,$id);
-		$this->db->select("aktivitas_dinas.*,master_karyawan.id,master_karyawan.kode_karyawan, master_karyawan.nama, master_karyawan.foto, master_departemen.departemen, master_jabatan.jabatan");
-		$this->db->join('master_karyawan', 'aktivitas_dinas.id_karyawan = master_karyawan.id');
-		$this->db->join('master_departemen', 'master_karyawan.id_departemen = master_departemen.id_departemen');
-		$this->db->join('master_jabatan', 'master_karyawan.id_jabatan = master_jabatan.id_jabatan');
 		$query = $this->db->get($this->_table);
 		return $query->row();
 	}
