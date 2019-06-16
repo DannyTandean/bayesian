@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Sakit_model extends CI_Model {
+class Report_model extends CI_Model {
 
 	public $_table;
 	public $_primary_key;
@@ -9,8 +9,8 @@ class Sakit_model extends CI_Model {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->_table = "aktivitas_sakit";
-		$this->_primary_key = "id_sakit";
+		$this->_table = "report";
+		$this->_primary_key = "report_id";
 	}
 
 	public function setQueryDataTable($search,$after=null,$before=null)
@@ -19,15 +19,9 @@ class Sakit_model extends CI_Model {
 		foreach ($search as $val) {
 			$dataSearch[$val] = $this->input->post("search")["value"];
 		}
+		$this->db->join('user', 'user.id_user = report.report_user');
 		$search = $dataSearch;
 		$this->db->from($this->_table);
-		if ($after && $before) {
-			$this->db->where('tanggal >=', $before);
-			$this->db->where('tanggal <=', $after);
-		}
-		$this->db->join('master_karyawan', 'aktivitas_sakit.id_karyawan = master_karyawan.id');
-		$this->db->join('master_departemen', 'master_karyawan.id_departemen = master_departemen.id_departemen');
-		$this->db->join('master_jabatan', 'master_karyawan.id_jabatan = master_jabatan.id_jabatan');
 		$this->db->group_start()->or_like($search)->group_end();
 
 	}
@@ -55,38 +49,6 @@ class Sakit_model extends CI_Model {
 			$item->no = $no;
 		}
 		return $data;
-	}
-
-	public function getKaryawan()
-	{
-		$this->db->select('id,nama');
-		$this->db->from("master_karyawan");
-
-		$result = $this->db->get()->result_array();
-		return $result;
-	}
-
-	public function getDataKaryawanSelect($id)
-	{
-		$this->db->from("master_karyawan");
-		$this->db->join('master_departemen', 'master_karyawan.id_departemen = master_departemen.id_departemen');
-		$this->db->join('master_jabatan', 'master_karyawan.id_jabatan = master_jabatan.id_jabatan');
-		$this->db->where('id', $id);
-		$result = $this->db->get()->row();
-
-		return $result;
-	}
-
-	public function checkDataJadwal($tanggal,$kode){
-		$where = array(
-						"tanggal" => $tanggal,
-						"id_karyawan" => $kode
-
-		);
-		$this->db->where($where);
-		$this->db->group_by(array("tanggal","id_karyawan"));
-		$data = $this->db->get($this->_table);
-		return $data->result();
 	}
 
 	public function findDataTableOutput($data=null,$search=false,$after=null,$before=null)
@@ -117,10 +79,7 @@ class Sakit_model extends CI_Model {
 	public function getById($id)
 	{
 		$this->db->where($this->_primary_key,$id);
-		$this->db->select("aktivitas_sakit.*,master_karyawan.id, master_karyawan.kode_karyawan, master_karyawan.nama, master_karyawan.foto, master_departemen.departemen, master_jabatan.jabatan");
-		$this->db->join('master_karyawan', 'aktivitas_sakit.id_karyawan = master_karyawan.id');
-		$this->db->join('master_departemen', 'master_karyawan.id_departemen = master_departemen.id_departemen');
-		$this->db->join('master_jabatan', 'master_karyawan.id_jabatan = master_jabatan.id_jabatan');
+		$this->db->join('user', 'user.id_user = report.report_user');
 		$query = $this->db->get($this->_table);
 		return $query->row();
 	}
@@ -191,37 +150,12 @@ class Sakit_model extends CI_Model {
 		}
 	}
 
-	// public function getById($id)
-	// {
-
-	// 	$this->db->where($this->_primary_key,$id);
-	// 	$this->db->join('master_karyawan', 'aktivitas_sakit.id_karyawan = master_karyawan.id');
-	// 	$this->db->join('master_departemen', 'master_karyawan.id_departemen = master_departemen.id_departemen');
-	// 	$this->db->join('master_jabatan', 'master_karyawan.id_jabatan = master_jabatan.id_jabatan');
-
-	// 	$query = $this->db->get($this->_table);
-	// 	return $query->row();
-	// }
-
-
 	public function delete($id,$dataNotif)
 	{
 		$this->db->trans_start();
 
 		$this->db->where($this->_primary_key,$id);
 		$this->db->delete($this->_table);
-
-		/*notif pemberitahuan*/
-		$dataPemberitahuan = array(
-									"keterangan"	=>	$dataNotif["keterangan"],
-									"tanggal"		=>	date("Y-m-d"),
-									"jam"			=>	date("H:i"),
-									"url_direct"	=>	$dataNotif["url_direct"],
-									"user_id"		=>	$dataNotif["user_id"],
-									"level"			=>	$dataNotif["level"],
-									"status"		=>	1, // aktif
-								);
-		$dataNotif = $this->db->insert("pemberitahuan",$dataPemberitahuan);
 
 		$this->db->trans_complete();
 
@@ -235,5 +169,5 @@ class Sakit_model extends CI_Model {
 	}
 }
 
-/* End of file Sakit_model.php */
-/* Location: ./application/models/aktivitas/Sakit_model.php */
+/* End of file Report_model.php */
+/* Location: ./application/models/aktivitas/Report_model.php */

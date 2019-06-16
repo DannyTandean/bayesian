@@ -9,7 +9,7 @@ class MY_Controller extends CI_Controller {
 	var $user;
 	var $user_level;
 	var $user_id;
-    var $username;
+  var $username;
 
 	var $data = array(
         "all"  => array(),
@@ -42,27 +42,6 @@ class MY_Controller extends CI_Controller {
             // echo "<script> window.location.href = '".site_url('auth')."'; </script>";
 		}
 	}
-
-    public function checkLoginHRD()
-    {
-        if ($this->user != null && $this->user_level == "hrd") {
-            redirect("/");
-        }
-    }
-
-    public function checkLoginOwner()
-    {
-        if ($this->user != null && $this->user_level == "owner") {
-            redirect("/");
-        }
-    }
-
-    public function checkLoginAdmin()
-    {
-        if ($this->user != null && $this->user_level == "admin") {
-            redirect("/");
-        }
-    }
 
 	public function view($directory = false,$use_layout = true)
     {

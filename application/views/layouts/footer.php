@@ -68,17 +68,15 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/bower_components/jquery-slimscroll/js/jquery.slimscroll.js"></script>
 <!-- modernizr js -->
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/bower_components/modernizr/js/modernizr.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/bower_components/modernizr/js/css-scrollbars.js"></script>
+<!-- <script type="text/javascript" src="<?php echo base_url(); ?>assets/bower_components/modernizr/js/css-scrollbars.js"></script> -->
 <!-- Calender js -->
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/bower_components/moment/js/moments.min.js"></script>
-<script type="text/javascript" src="assets/pages/widget/calender/pignose.calendar.min.js"></script>
 <!-- classie js -->
 
 <!-- multi select -->
 
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assetsbower_components/multiselect/js/jquery.multi-select.js"></script>
 
 
 
@@ -99,7 +97,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/pages/widget/jquery.sparkline.js"></script>
 <!-- Rickshow Chart js -->
 <script src="<?php echo base_url(); ?>assets/bower_components/d3/js/d3.js"></script>
-<script src="<?php echo base_url(); ?>assets/bower_components/rickshaw/js/rickshaw.js"></script>
+<!-- <script src="<?php echo base_url(); ?>assets/bower_components/rickshaw/js/rickshaw.js"></script> -->
 <!-- Morris Chart js -->
 <script src="<?php echo base_url(); ?>assets/bower_components/raphael/js/raphael.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/bower_components/morris.js/js/morris.js"></script>
@@ -139,19 +137,6 @@
 <!-- Color picker js -->
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/bower_components/spectrum/js/spectrum.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/bower_components/jscolor/js/jscolor.js"></script>
-<!-- Masking js -->
-<script src="<?php echo base_url(); ?>assets/pages/form-masking/inputmask.js"></script>
-<script src="<?php echo base_url(); ?>assets/pages/form-masking/jquery.inputmask.js"></script>
-<script src="<?php echo base_url(); ?>assets/pages/form-masking/autoNumeric.js"></script>
-<script src="<?php echo base_url(); ?>assets/pages/form-masking/form-mask.js"></script>
-
-<!-- Multiselect js -->
-<!-- <script type="text/javascript" src="<?php echo base_url(); ?>assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js">
-</script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.quicksearch.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/pages/advance-elements/select2-custom.js"></script> -->
-
 
 
 <!-- list-scroll js -->

@@ -78,7 +78,7 @@
                       </a>
                   </li>
                   <li class="<?php echo $aktivitasThr; ?>">
-                      <a href="<?php echo site_url('aktivitas/thr') ?>">
+                      <a href="<?php echo site_url('aktivitas/manage_produk') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Management Produk</span>
                           <span class="pcoded-mcaret"></span>
@@ -92,14 +92,14 @@
                       </a>
                   </li>
                   <li class="<?php echo $aktivitasPenilaian; ?>">
-                      <a href="<?php echo site_url('aktivitas/penilaian') ?>">
+                      <a href="<?php echo site_url('aktivitas/manage_ip') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Management IP</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
                   <li class="<?php echo $aktivitasSakit; ?>">
-                      <a href="<?php echo site_url('aktivitas/sakit') ?>">
+                      <a href="<?php echo site_url('aktivitas/report') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Laporan Pengguna</span>
                           <span class="pcoded-mcaret"></span>
@@ -120,7 +120,6 @@
                       </a>
                   </li>
             </ul>
-            <div class="pcoded-navigatio-lavel " data-i18n="nav.category.navigation" menu-title-theme="theme2">Support</div>
 
             <div class="pcoded-navigatio-lavel" data-i18n="nav.category.support" >End Menu</div>
             <div class="">&nbsp;</div>
