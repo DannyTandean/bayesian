@@ -25,14 +25,14 @@ app.post('/login',(req,res)=>{
         var sqldat = "select * from user where username = ? and password = ?"
          conn.query(sqldat,[username,password],(err,resdata)=>{
           if(err){
-            log.info(err);
+            console.log(err);
           }
           else{
             if(resdata.length==0){
               res.json({status:false,message:"Username or password doesnt match any record",resdata})
             }
             else{
-              res.json({status:true,message:"login success",resdata})
+              res.json({status:true,message:"login success",email:resdata[0].email})
             }
 
           }
@@ -45,20 +45,34 @@ app.post('/register',(req,res)=>{
   var username = req.body.username;
   var password = req.body.password;
   var email = req.body.email;
-  var jk = req.body.jk;
+  var gender = req.body.gender;
   var nama = req.body.nama;
   var hp = req.body.hp;
   var limit = req.body.limit;
   pool.getConnection(function(err, conn) {
-        var sqldat = "insert into user (email,jenis_kelamin,nama,no_telp,password,transaction_limit,username) values (?,?,?,?,?,?,?)"
-         conn.query(sqldat,[email,jk,nama,hp,password,limit,username],(err,resdata)=>{
-          if(err){
-            log.info(err);
+    var check = "select * from user where username = ?"
+     conn.query(check,[username],(err,rescheck)=>{
+        if(err){
+          console.log(err);
+        }
+        else {
+          if(rescheck.length==0){
+            var sqldat = "insert into user (email,jenis_kelamin,nama,no_telp,password,transaction_limit,username) values (?,?,?,?,?,?,?)"
+             conn.query(sqldat,[email,gender,nama,hp,password,limit,username],(err,resdata)=>{
+              if(err){
+                console.log(err);
+              }
+              else{
+                res.json({status:true,message:"register success",resdata})
+              }
+            })
           }
           else{
-            res.json({status:true,message:"register success",resdata})
+            res.json({status:false,message:"username is already registered"})
           }
-        })
+        }
+     })
+
     }
 )
 })
@@ -74,10 +88,10 @@ app.post('/register/card',(req,res)=>{
   var year = req.body.year;
 
   pool.getConnection(function(err, conn) {
-        var sqldat = "insert into credit_card (card_type,card_number,card_cvv,card_month,card_year,card_name,card_user,status,verified) values (?,?,?,?,?,?,?,?,?) where ? in(select username from user where password=?)"
-        conn.query(sqldat,[type,number,cvv,month,year,name,username,"1","1",username,password],(err,resdata)=>{
+        var sqldat = "insert into credit_card (card_type,card_number,card_cvv,card_month,card_year,card_name,card_user,status,verified) values (?,?,?,?,?,?,?,?,?)"
+        conn.query(sqldat,[type,number,cvv,month,year,name,username,"1","1"],(err,resdata)=>{
           if(err){
-            log.info(err);
+            console.log(err);
           }
           else{
             res.json({status:true,message:"login success",resdata})
@@ -93,7 +107,7 @@ app.get('/products',(req,res)=>{
         var sqldat = "select * from product"
         conn.query(sqldat,[],(err,resdata)=>{
           if(err){
-            log.info(err);
+            console.log(err);
           }
           else{
             res.json({status:true,message:"success products",data:resdata})
@@ -109,7 +123,7 @@ app.get('/transaction',(req,res)=>{
         var sqldat = "select * from transaction"
         conn.query(sqldat,[],(err,resdata)=>{
           if(err){
-            log.info(err);
+            console.log(err);
           }
           else{
             res.json({status:true,message:"succes transactions",data:resdata})
@@ -125,7 +139,23 @@ app.post('/payment',(req,res)=>{
         var sqldat = "select * from transaction"
         conn.query(sqldat,[],(err,resdata)=>{
           if(err){
-            log.info(err);
+            console.log(err);
+          }
+          else{
+            res.json({status:true,message:"succes transactions",data:resdata})
+          }
+        })
+    }
+)
+})
+
+app.post('/payment',(req,res)=>{
+  var trans_id = req.body.trans_id;
+  pool.getConnection(function(err, conn) {
+        var sqldat = "select * from transaction"
+        conn.query(sqldat,[],(err,resdata)=>{
+          if(err){
+            console.log(err);
           }
           else{
             res.json({status:true,message:"succes transactions",data:resdata})
