@@ -6,7 +6,7 @@ class Transaction extends MY_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('aktivitas/Report_model',"reportModel");
+		$this->load->model('aktivitas/Transaction_model',"transactionModel");
 
 	}
 
@@ -14,10 +14,10 @@ class Transaction extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Aktivitas Data > Laporan User","Aktivitas Data","Laporan User");
+		parent::headerTitle("Aktivitas Data > Transaksi User","Aktivitas Data","Transaksi User");
 		$breadcrumbs = array(
-							"Aktivitas Data"	=>	site_url('aktivitas/report'),
-							"Laporan"		=>	"",
+							"Aktivitas Data"	=>	site_url('aktivitas/transaction'),
+							"Transaksi"		=>	"",
 						);
 		parent::breadcrumbs($breadcrumbs);
 		parent::viewAktivitas();
@@ -30,19 +30,22 @@ class Transaction extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,null,"nama","email","no_telp","transaction_limit","report_message");
-			$search = array("nama","email","no_telp");
+			$orderBy = array(null,null,"nama","transaction_amount","payment_amount","payment_card");
+			$search = array("nama");
 
-			$result = $this->reportModel->findDataTable($orderBy,$search);
+			$result = $this->transactionModel->findDataTable($orderBy,$search);
 			foreach ($result as $item) {
 
-				$btnAction = '<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->report_id.')"><i class="fa fa-pencil-square-o"></i>Detail</button>';
-				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnDelete('.$item->report_id.')"><i class="fa fa-trash-o"></i>Hapus</button>';
+				$btnAction = '<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Detail</button>';
+				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnDelete('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Hapus</button>';
+
+				$item->transaction_amount = "Rp.".number_format($item->transaction_amount,0,",",",");
+				$item->payment_amount = "Rp.".number_format($item->payment_amount,0,",",",");
 
 				$item->button_action = $btnAction;
 				$data[] = $item;
 			}
-			return $this->reportModel->findDataTableOutput($data,$search);
+			return $this->transactionModel->findDataTableOutput($data,$search);
 		}
 	}
 
@@ -51,7 +54,7 @@ class Transaction extends MY_Controller {
 		parent::checkLoginUser(); // user login autentic checking
 
 		if ($this->isPost()) {
-			$getById = $this->reportModel->getById($id);
+			$getById = $this->transactionModel->getById($id);
 			if ($getById->image != "") {
 				$getById->image = base_url("/")."uploads/aktivitas/orang/".$getById->image;
 			} else {
@@ -73,10 +76,10 @@ class Transaction extends MY_Controller {
 		parent::checkLoginUser(); // user login autentic checking
 
 		if ($this->isPost()) {
-			$checkData = $this->reportModel->getById($id);
+			$checkData = $this->transactionModel->getById($id);
 
 			if ($checkData) {
-				$delete = $this->reportModel->delete($id);
+				$delete = $this->transactionModel->delete($id);
 				if ($delete) {
 					$this->response->status = true;
 					$this->response->message = alertSuccess("Data laporan user Berhasil di hapus.");

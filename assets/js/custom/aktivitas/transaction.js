@@ -4,13 +4,13 @@ $(document).ready(function() {
 	btnTambah = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-primary btn-sm' id='btnTambah'><i class='fa fa-plus'></i> Tambah</button>";
 
     btnRefresh = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-success btn-sm' id='btnRefresh'><i class='fa fa-refresh'></i> Refresh</button>";
-	$("#tblReport").DataTable({
+	$("#tblTransaksi").DataTable({
 		serverSide:true,
 		responsive:true,
 		processing:true,
 		oLanguage: {
             sZeroRecords: "<center>Data tidak ditemukan</center>",
-            sLengthMenu: "Tampilkan _MENU_ data   "+btnRefresh,
+            sLengthMenu: "Tampilkan _MENU_ data  "+btnRefresh,
             sSearch: "Cari data:",
             sInfo: "Menampilkan: _START_ - _END_ dari total: _TOTAL_ data",
             oPaginate: {
@@ -20,7 +20,7 @@ $(document).ready(function() {
         },
 		//load data
 		ajax: {
-			url: base_url+'aktivitas/report/ajax_list',
+			url: base_url+'aktivitas/transaction/ajax_list',
 			type: 'POST',
 		},
 
@@ -37,10 +37,9 @@ $(document).ready(function() {
 				orderable:false,
 			},
 			{ data:'nama' },
-			{ data:'email' },
-			{ data:'no_telp' },
-			{ data:'transaction_limit' },
-			{ data:'report_message' },
+			{ data:'transaction_amount' },
+			{ data:'payment_amount' },
+			{ data:'payment_card' },
 		],
 		dom : "<'row' <'col-md-5'l> <'col-md-3'B> <'col-md-4'f>>" + "<'row' <'col-md-12't>r>" + "<'row' <'col-md-6'i> <'col-md-6'p>>",
     buttons: [
@@ -50,7 +49,7 @@ $(document).ready(function() {
 });
 
 function reloadTable() {
-	$("#tblReport").DataTable().ajax.reload(null,false);
+	$("#tblTransaksi").DataTable().ajax.reload(null,false);
 }
 
 var save_method;
@@ -70,7 +69,7 @@ function btnDetail(id) {
 
 	$(".modal-title").text("Laporan Detail");
 
-	$.post(base_url+"aktivitas/report/getId/"+idData,function(json) {
+	$.post(base_url+"aktivitas/transaction/getId/"+idData,function(json) {
 		if (json.status == true) {
 			var pesan = "<hr>";
 				pesan += "<div class='row'>";
@@ -82,7 +81,7 @@ function btnDetail(id) {
 				pesan += "<li class='pull-left'><small>Email : <i>"+json.data.email+"</i></small></li><br>";
 				pesan += "<li class='pull-left'><small>No Telepon : <i>"+json.data.no_telp+"</i></small></li><br>";
 				pesan += "<li class='pull-left'><small>Transaction Limit : <i>"+moneyFormat.to(parseInt(json.data.transaction_limit))+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>Report Message : <i>"+json.data.report_message+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>Report Message : <i>"+json.data.transaction_message+"</i></small></li><br>";
 
 				swal({
 						title: "Laporan Detail",
@@ -102,7 +101,7 @@ function btnDetail(id) {
 function btnDelete(id) {
 	idData = id;
 
-	$.post(base_url+"aktivitas/report/getId/"+idData,function(json) {
+	$.post(base_url+"aktivitas/transaction/getId/"+idData,function(json) {
 		if (json.status == true) {
 			var pesan = "<hr>";
 				pesan += "<div class='row'>";
@@ -114,7 +113,7 @@ function btnDelete(id) {
 				pesan += "<li class='pull-left'><small>Email : <i>"+json.data.email+"</i></small></li><br>";
 				pesan += "<li class='pull-left'><small>No Telepon : <i>"+json.data.no_telp+"</i></small></li><br>";
 				pesan += "<li class='pull-left'><small>Transaction Limit : <i>"+moneyFormat.to(parseInt(json.data.transaction_limit))+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>Report Message : <i>"+json.data.report_message+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>Report Message : <i>"+json.data.transaction_message+"</i></small></li><br>";
 
 		    swal({
 		        title: "Apakah anda yakin.?",
@@ -130,7 +129,7 @@ function btnDelete(id) {
 
 		    }).then((result) => {
 		    	if (result.value) {
-		    		$.post(base_url+"aktivitas/report/delete/"+idData,function(json) {
+		    		$.post(base_url+"aktivitas/transaction/delete/"+idData,function(json) {
 						if (json.status == true) {
 							swal({
 						            title: json.message,

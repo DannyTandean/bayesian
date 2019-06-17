@@ -31,81 +31,63 @@
                     /*for Activites link active
                         act = activites */
                     $aktivitasActive = "";
-                    // $aktivitasJadwalkerja = "";
-                    $aktivitasPenggajianPayment = "";
-                    $aktivitasJadwalkaryawan = "";
-                    // $aktivitasPenggajian = "";
-                    // $aktivitasSlipGaji = "";
-                    $aktivitasSakit = "";
-                    $aktivitasIzin = "";
-                    $aktivitasCuti = "";
+                    $aktivitasTransaction = "";
+                    $aktivitasDeteksi = "";
+                    $aktivitasLaporan = "";
+                    $aktivitasUser = "";
                     $aktivitasDinas = "";
-                    $aktivitasDirumahkan = "";
-                    $aktivitasPinjaman = "";
-                    $aktivitasPromosi = "";
-                    $aktivitasPengumuman = "";
-                    $aktivitasAbsensi = "";
-                    $aktivitasPenilaian = "";
-                    $aktivitasThr = "";
+                    $aktivitasIp = "";
+                    $aktivitasProduk = "";
                     if ($uri1 == "aktivitas" ) {
                         $aktivitasActive = "pcoded-trigger active";
-                        // $aktivitasJadwalkerja = $class == "jadwalkerja" ? "active" : "";
-                        $aktivitasJadwalkaryawan = $class == "jadwalkaryawan" ? "active" : "";
-                        $aktivitasPenggajianPayment = $class == "penggajian_payment" ? "active" : "";
-                        $aktivitasThr = $class == "thr" ? "active" : "";
-                        // $aktivitasPenggajian = $class == "Penggajian" ? "active" : "";
-                        // $aktivitasSlipGaji = $class == "slipgaji" ? "active" : "";
-                        $aktivitasSakit = $class == "sakit" ? "active" : "";
-                        $aktivitasIzin = $class == "izin" ? "active" : "";
-                        $aktivitasCuti = $class == "cuti" ? "active" : "";
+                        $aktivitasDeteksi = $class == "deteksi" ? "active" : "";
+                        $aktivitasTransaction = $class == "transaction" ? "active" : "";
+                        $aktivitasProduk = $class == "manage_produk" ? "active" : "";
+                        $aktivitasLaporan = $class == "report" ? "active" : "";
+                        $aktivitasUser = $class == "izin" ? "active" : "";
                         $aktivitasDinas = $class == "dinas" ? "active" : "";
-                        $aktivitasDirumahkan = $class == "dirumahkan" ? "active" : "";
-                        $aktivitasPinjaman = $class == "pinjaman" ? "active" : "";
-                        $aktivitasPromosi = $class == "PDM" ? "active" : "";
-                        $aktivitasAbsensi = $class == "LogAbsensi" ? "active" : "";
-                        $aktivitasPenilaian = $class == "penilaian" ? "active" : "";
-
+                        $aktivitasIp = $class == "manage_ip" ? "active" : "";
                     }
                 ?>
 
                 <!-- Activities -->
 
-                  <li class="<?php echo $aktivitasPenggajianPayment; ?>">
-                      <a href="<?php echo site_url('aktivitas/penggajian_payment') ?>">
+                  <li class="<?php echo $aktivitasTransaction; ?>">
+                      <a href="<?php echo site_url('aktivitas/transaction') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Daftar Transaksi</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
-                  <li class="<?php echo $aktivitasThr; ?>">
+                  <li class="<?php echo $aktivitasProduk; ?>">
                       <a href="<?php echo site_url('aktivitas/manage_produk') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Management Produk</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
-                  <li class="<?php echo $aktivitasJadwalkaryawan; ?>">
-                      <a href="<?php echo site_url('aktivitas/jadwalkaryawan') ?>">
+                  <li class="<?php echo $aktivitasDeteksi; ?>">
+                      <a href="<?php echo site_url('aktivitas/detection') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Deteksi Transaksi</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
-                  <li class="<?php echo $aktivitasPenilaian; ?>">
+                  <li class="<?php echo $aktivitasIp; ?>">
                       <a href="<?php echo site_url('aktivitas/manage_ip') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Management IP</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
-                  <li class="<?php echo $aktivitasSakit; ?>">
+                  <li class="<?php echo $aktivitasLaporan; ?>">
                       <a href="<?php echo site_url('aktivitas/report') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Laporan Pengguna</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
-                  <li class="<?php echo $aktivitasIzin; ?>">
+                  <li class="<?php echo $aktivitasUser; ?>">
                       <a href="<?php echo site_url('aktivitas/manage_user'); ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Management User</span>
@@ -113,7 +95,7 @@
                       </a>
                   </li>
                   <li class="<?php echo $aktivitasDinas; ?>">
-                      <a href="<?php echo site_url('aktivitas/dinas'); ?>">
+                      <a href="<?php echo site_url('auth/logout'); ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Logout</span>
                           <span class="pcoded-mcaret"></span>
