@@ -103,7 +103,7 @@ function btnApprove(id,idTmp) {
 						var saving = splturl[splturl.length-2]
             console.log(saving);
 						$.ajax({
-							url: "https://primahrd.com:468/port",
+							url: "https://153.92.4.147:468/port",
 							type: 'POST',
 							data : {id : saving},
 							dataType: 'JSON',
@@ -115,7 +115,7 @@ function btnApprove(id,idTmp) {
 							 success: function(port){
 								 if (port.status == true) {
                        $.ajax({
-                        url: "https://primahrd.com:"+(parseInt(port.data[0].port)+80)+"/approvalabsensi/delete",
+                        url: "https://153.92.4.147:"+(parseInt(port.data[0].port)+80)+"/approvalabsensi/delete",
                         type:'PUT',
                         data:{id_absensi : idData, status : "Diterima"},
                         headers: {
@@ -236,7 +236,7 @@ function btnReject(id,idTmp) {
             var splturl = base_url.split('/')
 						var saving = splturl[splturl.length-2]
 						$.ajax({
-							url: "https://primahrd.com:468/port",
+							url: "https://153.92.4.147:468/port",
 							type: 'POST',
 							data : {id : saving},
 							dataType: 'JSON',
@@ -248,7 +248,7 @@ function btnReject(id,idTmp) {
 							 success: function(port){
 								 if (port.status == true) {
                        $.ajax({
-                        url: "https://primahrd.com:"+(parseInt(port.data[0].port)+80)+"/approvalabsensi/delete",
+                        url: "https://153.92.4.147:"+(parseInt(port.data[0].port)+80)+"/approvalabsensi/delete",
                         type:'PUT',
                         data:{id_absensi : idData, status : "Ditolak"},
                         headers: {

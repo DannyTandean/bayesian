@@ -36,8 +36,10 @@ class Transaction extends MY_Controller {
 			$result = $this->transactionModel->findDataTable($orderBy,$search);
 			foreach ($result as $item) {
 
-				$btnAction = '<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Detail</button>';
-				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnDelete('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Hapus</button>';
+				$btnAction = '<button class="btn btn-default btn-default btn-mini" onclick="btnPayment('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Cek Pembayaran</button>';
+				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Detail</button>';
+				$btnAction .= '<br><br><button class="btn btn-info btn-info btn-mini" onclick="btnPembeli('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Detail Pembeli</button>';
+				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-default btn-default btn-mini" onclick="btnLokasi('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Cek lokasi</button>';
 
 				$item->transaction_amount = "Rp.".number_format($item->transaction_amount,0,",",",");
 				$item->payment_amount = "Rp.".number_format($item->payment_amount,0,",",",");
