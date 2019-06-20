@@ -18,9 +18,10 @@
                             <th>Action</th>
                             <th>Nama</th>
                             <th>Email</th>
-                            <th>No Telepon</th>
-                            <th>Transaction limit</th>
-                            <th>Report Message</th>
+                            <th>IP Address</th>
+                            <th>Status</th>
+                            <th>Tipe</th>
+                            <th>Create At</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

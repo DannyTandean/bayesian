@@ -21,7 +21,7 @@ class Manage_ip_model extends CI_Model {
 		}
 		$search = $dataSearch;
 		$this->db->from($this->_table);
-		$this->db->join('user', 'user.user_id = ip.user_id', 'left');
+		$this->db->join('user', 'user.id_user = ip.user_id', 'left');
 		$this->db->group_start()->or_like($search)->group_end();
 
 	}
@@ -117,6 +117,7 @@ class Manage_ip_model extends CI_Model {
 	public function getById($id)
 	{
 		$this->db->where($this->_primary_key,$id);
+		$this->db->join("user", 'user.id_user = ip.user_id', 'left');
 		$query = $this->db->get($this->_table);
 		return $query->row();
 	}

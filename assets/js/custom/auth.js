@@ -19,7 +19,7 @@ $(document).ready(function() {
 						$("#btnLogin").attr("disabled",false);
 						$("#btnLogin").html(' Sign in');
 						window.location.href = base_url+"aktivitas/transaction";
-					},2000);
+					},1000);
 				} else {
 					$("#errorUsername").html(json.error.username);
 					$("#errorPassword").html(json.error.password);

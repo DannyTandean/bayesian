@@ -18,14 +18,7 @@
 
             <div class="pcoded-navigatio-lavel " data-i18n="nav.category.navigation" menu-title-theme="theme2">Menu Utama</div>
             <ul class="pcoded-item pcoded-left-item">
-                <li class="<?php echo $class == 'dashboard' ? 'active' : ''; ?>">
-                    <a href="<?php echo site_url('dashboard'); ?>">
-                        <span class="pcoded-micon"><i class="ti-dashboard"></i></span>
-                        <span class="pcoded-mtext">Dashboard</span>
-                        <!-- <span class="pcoded-badge label label-danger">100+</span> -->
-                        <span class="pcoded-mcaret"></span>
-                    </a>
-                </li>
+            
 
                <?php
                     /*for Activites link active
