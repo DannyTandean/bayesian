@@ -18,8 +18,8 @@ $(document).ready(function() {
 					setTimeout(function() {
 						$("#btnLogin").attr("disabled",false);
 						$("#btnLogin").html(' Sign in');
-						window.location.href = base_url;
-					},2000);
+						window.location.href = base_url+"aktivitas/transaction";
+					},1000);
 				} else {
 					$("#errorUsername").html(json.error.username);
 					$("#errorPassword").html(json.error.password);
@@ -32,7 +32,6 @@ $(document).ready(function() {
 						  position: 'top',
 						  showConfirmButton: false,
 							width: 430,
-
 						  timer: 1500
 						});
 

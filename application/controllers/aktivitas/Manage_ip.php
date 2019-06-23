@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Transaction extends MY_Controller {
+class Manage_ip extends MY_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('aktivitas/Transaction_model',"transactionModel");
+		$this->load->model('aktivitas/Manage_ip_model',"ipModel");
 
 	}
 
@@ -14,10 +14,10 @@ class Transaction extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Aktivitas Data > Transaksi User","Aktivitas Data","Transaksi User");
+		parent::headerTitle("Aktivitas Data > IP","Aktivitas Data","IP");
 		$breadcrumbs = array(
-							"Aktivitas Data"	=>	site_url('aktivitas/transaction'),
-							"Transaksi"		=>	"",
+							"Aktivitas Data"	=>	site_url('aktivitas/manage_ip'),
+							"IP"		=>	"",
 						);
 		parent::breadcrumbs($breadcrumbs);
 		parent::viewAktivitas();
@@ -30,24 +30,35 @@ class Transaction extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,null,"nama","transaction_amount","payment_amount","payment_card");
-			$search = array("nama");
+			$orderBy = array(null,null,"nama","email","ip_address","tipe","status","create_at");
+			$search = array("nama","email","ip_address");
 
-			$result = $this->transactionModel->findDataTable($orderBy,$search);
+			$result = $this->ipModel->findDataTable($orderBy,$search);
 			foreach ($result as $item) {
 
-				$btnAction = '<button class="btn btn-default btn-default btn-mini" onclick="btnPayment('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Cek Pembayaran</button>';
-				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Detail</button>';
-				$btnAction .= '<br><br><button class="btn btn-info btn-info btn-mini" onclick="btnPembeli('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Detail Pembeli</button>';
-				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-default btn-default btn-mini" onclick="btnLokasi('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Cek lokasi</button>';
+				$btnAction = '<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->ip_id.')"><i class="fa fa-pencil-square-o"></i>Detail</button>';
+				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlock('.$item->ip_id.')"><i class="fa fa-remove"></i>Block</button>';
+				$btnAction .= '<br><br>&emsp;&emsp;&emsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnDelete('.$item->ip_id.')"><i class="fa fa-trash-o"></i>Hapus</button>';
 
-				$item->transaction_amount = "Rp.".number_format($item->transaction_amount,0,",",",");
-				$item->payment_amount = "Rp.".number_format($item->payment_amount,0,",",",");
+				if ($item->status == 0) {
+					$item->status = '<label class="label label-success">Normal</label>';
+				}
+				else if ($item->status == 1) {
+					$item->status = '<label class="label label-danger">Block</label>';
+				}
 
+				if ($item->tipe == 0) {
+					$item->tipe = "Transaksi";
+				}
+				else if ($item->tipe == 1) {
+					$item->tipe = "Pembayaran";
+				}
+
+				$item->create_at = date_ind("d M Y",$item->create_at);
 				$item->button_action = $btnAction;
 				$data[] = $item;
 			}
-			return $this->transactionModel->findDataTableOutput($data,$search);
+			return $this->ipModel->findDataTableOutput($data,$search);
 		}
 	}
 
@@ -56,7 +67,7 @@ class Transaction extends MY_Controller {
 		parent::checkLoginUser(); // user login autentic checking
 
 		if ($this->isPost()) {
-			$getById = $this->transactionModel->getById($id);
+			$getById = $this->ipModel->getById($id);
 			if ($getById->image != "") {
 				$getById->image = base_url("/")."uploads/aktivitas/orang/".$getById->image;
 			} else {
@@ -78,10 +89,10 @@ class Transaction extends MY_Controller {
 		parent::checkLoginUser(); // user login autentic checking
 
 		if ($this->isPost()) {
-			$checkData = $this->transactionModel->getById($id);
+			$checkData = $this->ipModel->getById($id);
 
 			if ($checkData) {
-				$delete = $this->transactionModel->delete($id);
+				$delete = $this->ipModel->delete($id);
 				if ($delete) {
 					$this->response->status = true;
 					$this->response->message = alertSuccess("Data laporan user Berhasil di hapus.");

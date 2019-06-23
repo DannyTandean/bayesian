@@ -13,14 +13,15 @@ class Users extends MY_Controller {
 	{
 		parent::checkLoginUser(); // check login user
 
-		parent::headerTitle("Pengguna","Pengguna");
-
-		$breadcrumbs = array(
-							"Pengguna"	=>	site_url('users'),
-						);
-		parent::breadcrumbs($breadcrumbs);
-
-		parent::view();
+		// parent::headerTitle("Pengguna","Pengguna");
+		//
+		// $breadcrumbs = array(
+		// 					"Pengguna"	=>	site_url('users'),
+		// 				);
+		// parent::breadcrumbs($breadcrumbs);
+		//
+		// parent::view();
+		redirect(base_url()."aktivitas/transaction");
 	}
 
 	public function ajax_list()
@@ -125,7 +126,7 @@ class Users extends MY_Controller {
 						$insert = $this->usersModel->insert($data);
 						if ($insert) {
 							$this->response->status = true;
-							$this->response->message = alertSuccess("Berhasil tambah data Pengguna.");	
+							$this->response->message = alertSuccess("Berhasil tambah data Pengguna.");
 						} else {
 							$this->response->message = alertDanger("Gagal tambah data Pengguna.");
 						}
@@ -135,13 +136,13 @@ class Users extends MY_Controller {
 					$insert = $this->usersModel->insert($data);
 					if ($insert) {
 						$this->response->status = true;
-						$this->response->message = alertSuccess("Berhasil tambah data Pengguna.");	
+						$this->response->message = alertSuccess("Berhasil tambah data Pengguna.");
 						// $this->response->data = $data;
 					} else {
 						$this->response->message = alertDanger("Gagal tambah data Pengguna.");
 					}
 				}
-				
+
 			} else {
 				$this->response->message = validation_errors('<span style="color:red;">', '</span><br>');
 				$this->response->error = array(
@@ -194,12 +195,12 @@ class Users extends MY_Controller {
 			if ($password != "") {
 				$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]');
 				$this->form_validation->set_rules('ulangi_password', 'ulangi Password', 'trim|required|matches[password]');
-				
+
 			}
 			$this->form_validation->set_rules('level', 'Level', 'trim|required');
 
 			if ($this->form_validation->run() == TRUE) {
-				
+
 				// config upload photo
 				self::_do_upload();
 				$getById = $this->usersModel->getById($id); // check user id;
@@ -226,7 +227,7 @@ class Users extends MY_Controller {
 							$update = $this->usersModel->update($id,$data);
 							if ($update) {
 								$this->response->status = true;
-								$this->response->message = alertSuccess("Berhasil update data Pengguna.");	
+								$this->response->message = alertSuccess("Berhasil update data Pengguna.");
 							} else {
 								$this->response->message = alertDanger("Gagal update data Pengguna.");
 							}
@@ -265,7 +266,7 @@ class Users extends MY_Controller {
 	public function delete($id)
 	{
 		parent::checkLoginUser(); // user login autentic checking
-		
+
 		if ($this->isPost()) {
 			$data = $this->usersModel->getById($id);
 			if($data){

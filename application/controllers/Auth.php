@@ -10,7 +10,7 @@ class Auth extends MY_Controller {
 	{
 		parent::__construct();
 		$this->user = $this->session->admin;
-		
+
 		$this->response = new stdClass();
 		$this->response->status = false;
 		$this->response->message = "";
