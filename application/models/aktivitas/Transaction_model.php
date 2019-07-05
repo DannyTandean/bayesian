@@ -80,11 +80,36 @@ class Transaction_model extends CI_Model {
 	public function getById($id)
 	{
 		$this->db->where($this->_primary_key,$id);
-		$this->db->join('user', 'user.id_user = report.report_user');
+		// $this->db->join('user', 'user.id_user = report.report_user');
 		$query = $this->db->get($this->_table);
 		return $query->row();
 	}
 
+	public function getByIdPembeli($id)
+	{
+		$this->db->where($this->_primary_key,$id);
+		$this->db->join('user', 'user.id_user = '.$this->_table.'.user_id', 'left');
+		$query = $this->db->get($this->_table);
+		return $query->row();
+	}
+
+	public function getByIdCart($id)
+	{
+		$this->db->where($this->_primary_key,$id);
+		$this->db->join('cart', 'cart.cart_id = '.$this->_table.'.cart_id', 'left');
+		$this->db->join('user', 'user.id_user = '.$this->_table.'.user_id', 'left');
+		$this->db->join('product', 'product.product_id = cart.product_id', 'left');
+		$query = $this->db->get($this->_table);
+		return $query->row();
+	}
+
+	public function getByIdPayment($id)
+	{
+		$this->db->where($this->_primary_key,$id);
+		$this->db->join('payment', 'payment.payment_id = '.$this->_table.'.transaction_payment', 'left');
+		$query = $this->db->get($this->_table);
+		return $query->row();
+	}
 
 	public function insert($data,$dataNotif)
 	{
