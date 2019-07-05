@@ -21,9 +21,8 @@ app.get('/', (req, res) => res.send('Hello World!'))
 app.post('/login',(req,res)=>{
   var username = req.body.username;
   var password = req.body.password;
-  pool.getConnection(function(err, conn) {
         var sqldat = "select * from user where username = ? and password = ?"
-         conn.query(sqldat,[username,password],(err,resdata)=>{
+         pool.query(sqldat,[username,password],(err,resdata)=>{
           if(err){
             console.log(err);
           }
@@ -37,8 +36,6 @@ app.post('/login',(req,res)=>{
 
           }
         })
-    }
-)
 })
 
 app.post('/register',(req,res)=>{
@@ -49,16 +46,15 @@ app.post('/register',(req,res)=>{
   var nama = req.body.nama;
   var hp = req.body.hp;
   var limit = req.body.limit;
-  pool.getConnection(function(err, conn) {
     var check = "select * from user where username = ?"
-     conn.query(check,[username],(err,rescheck)=>{
+     pool.query(check,[username],(err,rescheck)=>{
         if(err){
           console.log(err);
         }
         else {
           if(rescheck.length==0){
             var sqldat = "insert into user (email,jenis_kelamin,nama,no_telp,password,transaction_limit,username) values (?,?,?,?,?,?,?)"
-             conn.query(sqldat,[email,gender,nama,hp,password,limit,username],(err,resdata)=>{
+             pool.query(sqldat,[email,gender,nama,hp,password,limit,username],(err,resdata)=>{
               if(err){
                 console.log(err);
               }
@@ -73,8 +69,6 @@ app.post('/register',(req,res)=>{
         }
      })
 
-    }
-)
 })
 
 app.post('/register/card',(req,res)=>{
@@ -87,9 +81,8 @@ app.post('/register/card',(req,res)=>{
   var type = req.body.type;
   var year = req.body.year;
 
-  pool.getConnection(function(err, conn) {
         var sqldat = "insert into credit_card (card_type,card_number,card_cvv,card_month,card_year,card_name,card_user,status,verified) values (?,?,?,?,?,?,?,?,?)"
-        conn.query(sqldat,[type,number,cvv,month,year,name,username,"1","1"],(err,resdata)=>{
+        pool.query(sqldat,[type,number,cvv,month,year,name,username,"1","1"],(err,resdata)=>{
           if(err){
             console.log(err);
           }
@@ -97,31 +90,25 @@ app.post('/register/card',(req,res)=>{
             res.json({status:true,message:"login success",resdata})
           }
         })
-    }
-)
 })
 
 app.get('/products',(req,res)=>{
 
-  pool.getConnection(function(err, conn) {
         var sqldat = "select * from product"
-        conn.query(sqldat,[],(err,resdata)=>{
+        pool.query(sqldat,[],(err,resdata)=>{
           if(err){
             console.log(err);
           }
           else{
-            res.json({status:true,message:"success products",data:resdata})
+            res.json({status:true,message:"success products",data:resdata,total:resdata.length})
           }
         })
-    }
-)
 })
 
 app.get('/transaction',(req,res)=>{
 
-  pool.getConnection(function(err, conn) {
         var sqldat = "select * from transaction"
-        conn.query(sqldat,[],(err,resdata)=>{
+        pool.query(sqldat,[],(err,resdata)=>{
           if(err){
             console.log(err);
           }
@@ -129,15 +116,165 @@ app.get('/transaction',(req,res)=>{
             res.json({status:true,message:"succes transactions",data:resdata})
           }
         })
-    }
-)
 })
+
+app.post('/cart',(req,res)=>{
+  var username = req.body.username;
+        var sqldat = "select cart.product_id,cart_id,qty,p.product_name,p.product_image,total from cart join product as p on p.product_id = cart.product_id where id_user in (select id_user from user where username = ?)"
+        console.log(username);
+        pool.query(sqldat,[username],(err,resdata)=>{
+          if(err){
+            console.log(err);
+          }
+          else{
+              res.json({status:true,message:"success get cart",data:resdata});
+
+
+          }
+        })
+})
+
+app.post('/cart/add',(req,res)=>{
+  var product_id = req.body.id;
+  var username = req.body.username;
+  var price = req.body.price;
+
+        var sqldat = "select * from cart where cart_id = ? and id_user in (select id_user from user where username = ?)"
+        pool.query(sqldat,[product_id,username],(err,resdata)=>{
+          if(err){
+            console.log(err);
+          }
+          else{
+            if(resdata.length==1){
+              var sqldat = "update cart set qty = qty+1,total = ?*qty where cart_id = ? and id_user in (select id_user from user where username = ?)"
+              pool.query(sqldat,[price,product_id,username],(err,resdata)=>{
+                if(err){
+                  console.log(err);
+                }
+                else{
+                  res.json({status:true,message:"added cart",resdata})
+                }
+              })
+            }
+            else{
+              var sqldat = "insert into cart (id_user,product_id,qty,total,cart_checkout,status) values ((select id_user from user where username = ?),?,?,?,?,?)"
+              pool.query(sqldat,[username,product_id,"1",price,"0","0"],(err,resdata)=>{
+                if(err){
+                  console.log(err);
+                }
+                else{
+                  res.json({status:true,message:"added to cart",resdata})
+                }
+              })
+            }
+          }
+        })
+})
+
+app.post('/cart/minus',(req,res)=>{
+  var product_id = req.body.id;
+  var username = req.body.username;
+  var price = req.body.price;
+
+        var sqldat = "select * from cart where cart_id = ? and id_user in (select id_user from user where username = ?)"
+        pool.query(sqldat,[product_id,username],(err,resdata)=>{
+          if(err){
+            console.log(err);
+          }
+          else{
+            if(resdata.length==1){
+              if(resdata[0].qty=1){
+                var sqldat = "update cart set qty = qty-1,total = ?*qty where cart_id = ? and id_user in (select id_user from user where username = ?)"
+                pool.query(sqldat,[price,product_id,username],(err,resdata)=>{
+                  if(err){
+                    console.log(err);
+                  }
+                  else{
+                    res.json({status:true,message:"substracted product",resdata})
+                  }
+                })
+              }
+              else{
+                var sqldat = "delete from cart where product_id=? and id_user in (select id_user from user where username = ?)"
+                pool.query(sqldat,[price,product_id,username],(err,resdata)=>{
+                  if(err){
+                    console.log(err);
+                  }
+                  else{
+                    res.json({status:true,message:"removed from cart",resdata})
+                  }
+                })
+              }
+
+          }
+          else{
+            res.json({status:false ,message:"product not found",resdata})
+          }
+        }
+    })
+})
+
+
+app.post('/cart/remove',(req,res)=>{
+  var product_id = req.body.id;
+  var username = req.body.username;
+  var sqldat = "delete from cart where cart_id = ? and id_user in (select id_user from user where username = ?)"
+  pool.query(sqldat,[product_id,username],(err,resdata)=>{
+    if(err){
+      console.log(err);
+    }
+    else{
+      res.json({status:true,message:"removed from cart",resdata})
+    }
+  })
+})
+
+
+
+app.post('/addtocart',(req,res)=>{
+  var product_id = req.body.id;
+  var username = req.body.username;
+  var price = req.body.price;
+
+  var sqldat = "select * from cart where product_id = ? and id_user in (select id_user from user where username = ?)"
+  pool.query(sqldat,[product_id,username],(err,resdata)=>{
+    if(err){
+      console.log(err);
+    }
+    else{
+      if(resdata.length==1){
+        var sqldat = "update cart set qty = qty+1,total = ?*qty where product_id=? and id_user in (select id_user from user where username = ?)"
+        pool.query(sqldat,[price,product_id,username],(err,resdata)=>{
+          if(err){
+            console.log(err);
+          }
+          else{
+            res.json({status:true,message:"added cart",resdata})
+          }
+        })
+      }
+      else{
+        var sqldat = "insert into cart (id_user,product_id,qty,total,cart_checkout,status) values ((select id_user from user where username = ?),?,?,?,?,?)"
+        pool.query(sqldat,[username,product_id,"1",price,"0","0"],(err,resdata)=>{
+          if(err){
+            console.log(err);
+          }
+          else{
+            res.json({status:true,message:"added to cart",resdata})
+          }
+        })
+      }
+    }
+  })
+})
+
+
+
 
 app.post('/payment',(req,res)=>{
   var trans_id = req.body.trans_id;
-  pool.getConnection(function(err, conn) {
         var sqldat = "select * from transaction"
-        conn.query(sqldat,[],(err,resdata)=>{
+        pool.query(sqldat,[],(err,resdata)=>{
           if(err){
             console.log(err);
           }
@@ -145,24 +282,6 @@ app.post('/payment',(req,res)=>{
             res.json({status:true,message:"succes transactions",data:resdata})
           }
         })
-    }
-)
-})
-
-app.post('/payment',(req,res)=>{
-  var trans_id = req.body.trans_id;
-  pool.getConnection(function(err, conn) {
-        var sqldat = "select * from transaction"
-        conn.query(sqldat,[],(err,resdata)=>{
-          if(err){
-            console.log(err);
-          }
-          else{
-            res.json({status:true,message:"succes transactions",data:resdata})
-          }
-        })
-    }
-)
 })
 
 
