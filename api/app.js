@@ -78,23 +78,100 @@ app.post('/register/card',(req,res)=>{
   var month = req.body.month;
   var name = req.body.cardname;
   var number = req.body.number;
+  var billing = req.body.billing
   var type = req.body.type;
   var year = req.body.year;
+  var limit = req.body.limit;
 
-        var sqldat = "insert into credit_card (card_type,card_number,card_cvv,card_month,card_year,card_name,card_user,status,verified) values (?,?,?,?,?,?,?,?,?)"
-        pool.query(sqldat,[type,number,cvv,month,year,name,username,"1","1"],(err,resdata)=>{
+    var check = "select * from credit_card where card_number=? and card_user=?"
+    pool.query(check,[number,username],(err,rescheck)=>{
+      if(err){
+        console.log(err);
+      }
+      else{
+        if(rescheck.length==1){
+          res.json({status:false,message:"Card Already Exist"})
+        }
+        else{
+          var sqldat = "insert into credit_card (card_type,card_number,card_cvv,card_month,card_billing,card_year,card_name,card_user,status,limits,verified) values (?,?,?,?,?,?,?,?,?,?,?)"
+          pool.query(sqldat,[type,number,cvv,month,billing,year,name,username,"1",limit,"1"],(err,resdata)=>{
+            if(err){
+              console.log(err);
+            }
+            else{
+              res.json({status:true,message:"login success",resdata})
+            }
+          })
+        }
+
+      }
+    })
+
+
+})
+
+app.post('/userreport',(req,res)=>{
+  var username = req.body.username;
+  var password = req.body.password;
+  var cvv = req.body.cvv;
+  var month = req.body.month;
+  var name = req.body.cardname;
+  var number = req.body.number;
+  var billing = req.body.billing
+  var type = req.body.type;
+  var year = req.body.year;
+  var limit = req.body.limit;
+
+
+      var sqldat = "insert into credit_card (card_type,card_number,card_cvv,card_month,card_billing,card_year,card_name,card_user,status,limits,verified) values (?,?,?,?,?,?,?,?,?,?,?)"
+      pool.query(sqldat,[type,number,cvv,month,billing,year,name,username,"1",limit,"1"],(err,resdata)=>{
+        if(err){
+          console.log(err);
+        }
+        else{
+          res.json({status:true,message:"login success",resdata})
+        }
+      })
+
+})
+
+app.post('/creditcard',(req,res)=>{
+    var username = req.body.username
+        var sqldat = "select * from credit_card where status = 1 and card_user= ? "
+        pool.query(sqldat,[username],(err,resdata)=>{
           if(err){
             console.log(err);
           }
           else{
-            res.json({status:true,message:"login success",resdata})
+            if(resdata.length==0){
+              res.json({status:false,message:"fail Credit Card",data:resdata,total:resdata.length})
+            }
+            else{
+              res.json({status:true,message:"success Creditcard",data:resdata,total:resdata.length})
+            }
+
+          }
+        })
+})
+
+app.post('/deletecreditcard',(req,res)=>{
+    var username = req.body.username
+    var id = req.body.id;
+        var sqldat = "delete from credit_card where card_id = ? and card_user=? "
+        pool.query(sqldat,[id,username],(err,resdata)=>{
+          if(err){
+            console.log(err);
+          }
+          else{
+              res.json({status:true,message:"success Creditcard",data:resdata,total:resdata.length})
+
           }
         })
 })
 
 app.get('/products',(req,res)=>{
 
-        var sqldat = "select * from product"
+        var sqldat = "select * from product where status = 1 "
         pool.query(sqldat,[],(err,resdata)=>{
           if(err){
             console.log(err);
@@ -121,7 +198,6 @@ app.get('/transaction',(req,res)=>{
 app.post('/cart',(req,res)=>{
   var username = req.body.username;
         var sqldat = "select cart.product_id,cart_id,qty,p.product_name,p.product_image,total from cart join product as p on p.product_id = cart.product_id where id_user in (select id_user from user where username = ?)"
-        console.log(username);
         pool.query(sqldat,[username],(err,resdata)=>{
           if(err){
             console.log(err);
@@ -139,7 +215,7 @@ app.post('/cart/add',(req,res)=>{
   var username = req.body.username;
   var price = req.body.price;
 
-        var sqldat = "select * from cart where cart_id = ? and id_user in (select id_user from user where username = ?)"
+        var sqldat = "select * from cart where cart_id = ? and status=0 and id_user in (select id_user from user where username = ?)"
         pool.query(sqldat,[product_id,username],(err,resdata)=>{
           if(err){
             console.log(err);
@@ -176,7 +252,7 @@ app.post('/cart/minus',(req,res)=>{
   var username = req.body.username;
   var price = req.body.price;
 
-        var sqldat = "select * from cart where cart_id = ? and id_user in (select id_user from user where username = ?)"
+        var sqldat = "select * from cart where cart_id = ? and status=0 and id_user in (select id_user from user where username = ?)"
         pool.query(sqldat,[product_id,username],(err,resdata)=>{
           if(err){
             console.log(err);
@@ -236,7 +312,7 @@ app.post('/addtocart',(req,res)=>{
   var username = req.body.username;
   var price = req.body.price;
 
-  var sqldat = "select * from cart where product_id = ? and id_user in (select id_user from user where username = ?)"
+  var sqldat = "select * from cart where product_id = ? and status=0 and id_user in (select id_user from user where username = ?)"
   pool.query(sqldat,[product_id,username],(err,resdata)=>{
     if(err){
       console.log(err);
@@ -268,7 +344,56 @@ app.post('/addtocart',(req,res)=>{
   })
 })
 
+app.post('/checkout',(req,res)=>{
+  var cart_username = req.body.username
+  var ipaddress = req.body.ipaddress
+  var total= req.body.amount
 
+  var sqldat = "select * from cart where status=0 and id_user in (select id_user from user where username = ?)"
+  pool.query(sqldat,[cart_username],(err,resdata)=>{
+    if(err){
+      console.log(err);
+    }
+    else{
+      if(resdata.length==1){
+
+        console.log();
+        var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status)"
+        pool.query(sqlpay,[resdata[0].cart_id,cart_username,total,"",0,0,ipaddress,0],(err,respay)=>{
+          if(err){
+            console.log(err);
+          }
+          else{
+            res.json({status:true,message:"Processing"})
+          }
+        })
+      }
+      else if(resdata.length>1){
+        var string="";
+        for(var i=0; i < resdata.length;i++){
+          if(i==0){
+            string = resdata[i].cart_id + ",";
+          }
+          else{
+            string = string + "," + resdata[i].cart_id;
+          }
+        }
+        var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status,create_at)"
+        pool.query(sqlpay,[string,cart_username,total,"",0,0,ipaddress,0],(err,respay)=>{
+          if(err){
+            console.log(err);
+          }
+          else{
+            res.json({status:true,message:"Processing"})
+          }
+        })
+      }
+      else{
+        res.json({status:false,message:"no data",resdata})
+      }
+    }
+  })
+})
 
 
 app.post('/payment',(req,res)=>{
