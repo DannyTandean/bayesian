@@ -73,7 +73,7 @@ function btnDetail(id) {
 
 	$.post(base_url+"aktivitas/manage_ip/getId/"+idData,function(json) {
 		if (json.status == true) {
-			$.get('https://api.ipgeolocation.io/ipgeo?apiKey=4603b07d604e4ef6a1caeb476b83c4d5&'+json.ip_address,function(data) {
+			$.get('https://api.ipgeolocation.io/ipgeo?apiKey=4603b07d604e4ef6a1caeb476b83c4d5&ip='+json.data.ip_address,function(data) {
 				if (data) {
 						var pesan = "<hr>";
 							pesan += "<div class='row'>";

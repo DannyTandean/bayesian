@@ -67,7 +67,76 @@ class Transaction extends MY_Controller {
 				$this->response->message = "Data laporan user get by id";
 				$this->response->data = $getById;
 			} else {
-				$this->response->message = alertDanger("Data laporan user tidak ada.");
+				$this->response->message = alertDanger("Data Transaksi tidak ada.");
+			}
+		}
+		parent::json();
+	}
+
+	public function getPembeliId($id)
+	{
+		parent::checkLoginUser(); // user login autentic checking
+
+		if ($this->isPost()) {
+			$getById = $this->transactionModel->getByIdPembeli($id);
+			if ($getById->image != "") {
+				$getById->image = base_url("/")."uploads/aktivitas/orang/".$getById->image;
+			} else {
+				$getById->image = base_url("/")."assets/images/default/no_user.png";
+			}
+			if ($getById) {
+				$this->response->status = true;
+				$this->response->message = "Data user get by id";
+				$this->response->data = $getById;
+			} else {
+				$this->response->message = alertDanger("Data user tidak ada.");
+			}
+		}
+		parent::json();
+	}
+
+	public function getPaymentId($id)
+	{
+		parent::checkLoginUser(); // user login autentic checking
+
+		if ($this->isPost()) {
+			$getById = $this->transactionModel->getByIdPayment($id);
+
+			if ($getById) {
+				$this->response->status = true;
+				$this->response->message = "Data transaksi get by id";
+				$this->response->data = $getById;
+			} else {
+				$this->response->message = alertDanger("Data transaksi tidak ada.");
+			}
+		}
+		parent::json();
+	}
+
+	public function getCartId($id)
+	{
+		parent::checkLoginUser(); // user login autentic checking
+
+		if ($this->isPost()) {
+			$getById = $this->transactionModel->getByIdCart($id);
+			if ($getById->image != "") {
+				$getById->image = base_url("/")."uploads/aktivitas/orang/".$getById->image;
+			} else {
+				$getById->image = base_url("/")."assets/images/default/no_user.png";
+			}
+
+			if ($getById->product_image != "") {
+				$getById->product_image = base_url("/")."uploads/aktivitas/produk/".$getById->product_image;
+			} else {
+				$getById->product_image = base_url("/")."assets/images/default/no_file_.png";
+			}
+			
+			if ($getById) {
+				$this->response->status = true;
+				$this->response->message = "Data transaksi get by id";
+				$this->response->data = $getById;
+			} else {
+				$this->response->message = alertDanger("Data transaksi tidak ada.");
 			}
 		}
 		parent::json();

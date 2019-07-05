@@ -42,7 +42,7 @@
                     </ul>
                     <ul class="nav-right">
                         <!-- notif -->
-                        <li class="header-notification">
+                        <!-- <li class="header-notification">
                             <audio id="myAudio">
                               <source src="<?php echo base_url();?>assets/audio/notif_web.mp3" type="audio/mpeg">
                             </audio>
@@ -51,7 +51,7 @@
                                 <i class="ti-bell"></i>
                                 <span class="badge" id="badgeCount">0</span>
                             </a>
-                            <!-- <ul class="show-notification" id="showNotif">
+                            <ul class="show-notification" id="showNotif">
                                 <li>
                                     <h6>Pemberitahuan</h6>
                                 </li>
@@ -62,8 +62,8 @@
                                     <button type="button" id="bacaSemuanya" class="btn btn-sm btn-danger">Baca Semuanya</button>
                                     <button type="button" id="lihatSemuanya" class="btn btn-sm btn-primary pull-right">Lihat Selengkapnya</button>
                                 </li>
-                            </ul> -->
-                        </li>
+                            </ul>
+                        </li> -->
 
                         <!-- pemberitahuan -->
                         <!-- <script src="https://www.gstatic.com/firebasejs/5.3.1/firebase.js"></script>
@@ -83,11 +83,11 @@
                                         <i class="ti-settings"></i> Settings
                                     </a>
                                 </li> -->
-                                <li>
+                                <!-- <li>
                                     <a href="<?php echo site_url('users');?>">
                                         <i class="ti-user"></i> Profile
                                     </a>
-                                </li>
+                                </li> -->
                                 <!-- <li>
                                     <a href="email-inbox.html">
                                         <i class="ti-email"></i> My Messages

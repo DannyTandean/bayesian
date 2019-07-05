@@ -64,27 +64,20 @@ $(document).on('click', '#btnRefresh', function(e) {
 	}, 1000);
 });
 
-function btnDetail(id) {
+function btnPayment(id) {
 	idData = id;
 
-	$(".modal-title").text("Laporan Detail");
+	// $(".modal-title").text("Detail Transaksi");
 
-	$.post(base_url+"aktivitas/transaction/getId/"+idData,function(json) {
+	$.post(base_url+"aktivitas/transaction/getPaymentId/"+idData,function(json) {
 		if (json.status == true) {
 			var pesan = "<hr>";
-				pesan += "<div class='row'>";
-				pesan += "<div class='col-md-4'>";
-				pesan += '<img class="img-fluid img-circle" src="'+json.data.image+'" alt="user-img" style="height: 100px; width: 100px;">';
-				pesan += "</div>";
-				pesan += "<div class='col-md-8'>";
-				pesan += "<li class='pull-left'><small>Nama : <i>"+json.data.nama+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>Email : <i>"+json.data.email+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>No Telepon : <i>"+json.data.no_telp+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>Transaction Limit : <i>"+moneyFormat.to(parseInt(json.data.transaction_limit))+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>Report Message : <i>"+json.data.transaction_message+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>Jumlah Transaksi : <i>"+moneyFormat.to(parseInt(json.data.transaction_amount))+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>Jumlah Pembayaran : <i>"+moneyFormat.to(parseInt(json.data.payment_amount))+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>Sisa Transaksi : <i>"+moneyFormat.to(parseInt(json.data.transaction_amount) - parseInt(json.data.payment_amount))+"</i></small></li><br>";
 
 				swal({
-						title: "Laporan Detail",
+						title: "Cek Pembayaran",
 						html: pesan,
 						type: "info",
 						width: 400,
@@ -98,10 +91,41 @@ function btnDetail(id) {
 
 }
 
-function btnDelete(id) {
+function btnDetail(id) {
 	idData = id;
 
-	$.post(base_url+"aktivitas/transaction/getId/"+idData,function(json) {
+	$.post(base_url+"aktivitas/transaction/getCartId/"+idData,function(json) {
+		if (json.status == true) {
+			var pesan = "<hr>";
+			pesan += "<div class='row'>";
+			pesan += "<div class='col-md-4'>";
+			pesan += '<img class="img-fluid img-circle" src="'+json.data.image+'" alt="user-img" style="height: 100px; width: 100px;">';
+			pesan += "</div>";
+			pesan += "<div class='col-md-8'>";
+			pesan += "<li class='pull-left'><small>Nama : <i>"+json.data.nama+"</i></small></li><br>";
+			pesan += "<li class='pull-left'><small>No Telepon : <i>"+json.data.no_telp+"</i></small></li><br>";
+			pesan += "<li class='pull-left'><small>Nama Produk : <i>"+json.data.product_name+"</i></small></li><br>";
+			pesan += "<li class='pull-left'><small>Jumlah : <i>"+json.data.qty+"</i></small></li><br>";
+			pesan += "<li class='pull-left'><small>Harga : <i>"+moneyFormat.to(parseInt(json.data.total))+"</i></small></li><br>";
+				swal({
+						title: "Detail Transaksi",
+						html: pesan,
+						type: "info",
+						width: 400,
+						showConfirmButton : false,
+				})
+
+		} else {
+			$("#inputMessage").html(json.message);
+		}
+	});
+
+}
+
+function btnPembeli(id) {
+	idData = id;
+
+	$.post(base_url+"aktivitas/transaction/getPembeliId/"+idData,function(json) {
 		if (json.status == true) {
 			var pesan = "<hr>";
 				pesan += "<div class='row'>";
@@ -110,48 +134,52 @@ function btnDelete(id) {
 				pesan += "</div>";
 				pesan += "<div class='col-md-8'>";
 				pesan += "<li class='pull-left'><small>Nama : <i>"+json.data.nama+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>Jenis Kelamin : <i>"+json.data.jenis_kelamin+"</i></small></li><br>";
 				pesan += "<li class='pull-left'><small>Email : <i>"+json.data.email+"</i></small></li><br>";
 				pesan += "<li class='pull-left'><small>No Telepon : <i>"+json.data.no_telp+"</i></small></li><br>";
 				pesan += "<li class='pull-left'><small>Transaction Limit : <i>"+moneyFormat.to(parseInt(json.data.transaction_limit))+"</i></small></li><br>";
-				pesan += "<li class='pull-left'><small>Report Message : <i>"+json.data.transaction_message+"</i></small></li><br>";
 
 		    swal({
-		        title: "Apakah anda yakin.?",
-		        html: "<span style='color:red;'>Data yang di <b>Hapus</b> tidak bisa dikembalikan lagi.</span>"+pesan,
-		        type: "warning",
+		        title: "Detail pembeli.",
+		        html: pesan,
+		        type: "info",
 						width: 400,
-	  				showCloseButton: true,
-		        showCancelButton: true,
-		        confirmButtonColor: "#DD6B55",
-		        confirmButtonText: "Iya, Hapus",
-		        closeOnConfirm: false,
-  				// background: '#e9e9e9',
-
-		    }).then((result) => {
-		    	if (result.value) {
-		    		$.post(base_url+"aktivitas/transaction/delete/"+idData,function(json) {
-						if (json.status == true) {
-							swal({
-						            title: json.message,
-						            type: "success",
-						            // html: true,
-						            timer: 2000,
-						            showConfirmButton: false
-						        });
-							reloadTable();
-						} else {
-							swal({
-						            title: json.message,
-						            type: "error",
-						            // html: true,
-						            timer: 1500,
-						            showConfirmButton: false
-						        });
-							reloadTable();
-						}
-					});
-		    	}
+	  				showConfirmButton : false,
 		    });
 			}
+	});
+}
+
+function btnLokasi(id) {
+	idData = id
+	$.post(base_url+"aktivitas/transaction/getPembeliId/"+idData,function(json) {
+		if (json.status == true) {
+			$.get('https://api.ipgeolocation.io/ipgeo?apiKey=4603b07d604e4ef6a1caeb476b83c4d5&ip='+json.data.ip_transaction,function(data) {
+				if (data) {
+						var pesan = "<hr>";
+							pesan += "<div class='row'>";
+							pesan += "<div class='col-md-4'>";
+							pesan += '<img class="img-fluid img-circle" src="'+json.data.image+'" alt="user-img" style="height: 100px; width: 100px;">';
+							pesan += "</div>";
+							pesan += "<div class='col-md-8'>";
+							pesan += "<li class='pull-left'><small>Nama : <i>"+json.data.nama+"</i></small></li><br>";
+							pesan += "<li class='pull-left'><small>Email : <i>"+json.data.email+"</i></small></li><br>";
+							pesan += "<li class='pull-left'><small>No Telepon : <i>"+json.data.no_telp+"</i></small></li><br>";
+							pesan += "<li class='pull-left'><small>Ip Address : <i>"+json.data.ip_transaction+"</i></small></li><br>";
+							pesan += "<li class='pull-left'><small>Provinsi : <i>"+data.state_prov+"</i></small></li><br>";
+							pesan += "<li class='pull-left'><small>Lokasi : <i>"+data.district+"</i></small></li><br>";
+
+							swal({
+									title: "Detail",
+									html: pesan,
+									type: "info",
+									width: 400,
+									showConfirmButton : false,
+							})
+				}
+			});
+		} else {
+			$("#inputMessage").html(json.message);
+		}
 	});
 }
