@@ -1,6 +1,6 @@
     <nav class="navbar header-navbar pcoded-header" >
         <div class="navbar-wrapper">
-            <div class="navbar-logo" data-navbar-theme="theme4">
+            <div class="navbar-logo" data-navbar-theme="theme4" style="background-color:white;">
                 <a class="mobile-menu" id="mobile-collapse" href="#!">
                     <i class="ti-menu"></i>
                 </a>
@@ -9,7 +9,7 @@
                 </a>
                 <div>
                 <a href="<?php base_url();?>">
-                    <img id="profileCompany" height="50" width="50" style="margin-left : -10px;" src="<?php echo base_url(); ?>assets/images/logo.png" alt="Theme-Logo" />
+                    <img id="profileCompany" height="50" width="50" style="margin-left : -10px;" src="<?php echo base_url(); ?>assets/images/default/e-commerce.png" alt="Theme-Logo" />
                 </a>
                 <a href="#"><span id="namaPerusahaan1" style="font-size : 13px;"></span></a>
                 </div>
