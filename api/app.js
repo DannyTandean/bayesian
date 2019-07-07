@@ -190,14 +190,14 @@ app.get('/transaction',(req,res)=>{
             console.log(err);
           }
           else{
-            res.json({status:true,message:"succes transactions",data:resdata})
+            res.json({status:true,message:"succes transactions",data:resdata,total:resdata.length})
           }
         })
 })
 
 app.post('/cart',(req,res)=>{
   var username = req.body.username;
-        var sqldat = "select cart.product_id,cart_id,qty,p.product_name,p.product_image,total from cart join product as p on p.product_id = cart.product_id where id_user in (select id_user from user where username = ?)"
+        var sqldat = "select cart.product_id,cart_id,qty,p.product_name,p.product_image,total from cart join product as p on p.product_id = cart.product_id where cart.status=0 and id_user in (select id_user from user where username = ?)"
         pool.query(sqldat,[username],(err,resdata)=>{
           if(err){
             console.log(err);
@@ -358,13 +358,21 @@ app.post('/checkout',(req,res)=>{
       if(resdata.length==1){
 
         console.log();
-        var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status)"
-        pool.query(sqlpay,[resdata[0].cart_id,cart_username,total,"",0,0,ipaddress,0],(err,respay)=>{
+        var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status) values (?,?,?,?,?,?,?,?)"
+        pool.query(sqlpay,[resdata[0].cart_id,resdata[0].id_user,total,"",null,0,ipaddress,0],(err,respay)=>{
           if(err){
             console.log(err);
           }
           else{
-            res.json({status:true,message:"Processing"})
+            var sqlcleancart = "update cart set status = 1 where id_user=?"
+            pool.query(sqlcleancart,[resdata[0].id_user],(err,restry)=>{
+              if(err){
+                console.log(err);
+              }
+              else{
+                res.json({status:true,message:"Processing"})
+              }
+            })
           }
         })
       }
@@ -372,19 +380,27 @@ app.post('/checkout',(req,res)=>{
         var string="";
         for(var i=0; i < resdata.length;i++){
           if(i==0){
-            string = resdata[i].cart_id + ",";
+            string = resdata[i].cart_id ;
           }
           else{
             string = string + "," + resdata[i].cart_id;
           }
         }
-        var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status,create_at)"
-        pool.query(sqlpay,[string,cart_username,total,"",0,0,ipaddress,0],(err,respay)=>{
+        var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status) values (?,?,?,?,?,?,?,?)"
+        pool.query(sqlpay,[string,resdata[0].id_user,total,"",null,0,ipaddress,0],(err,respay)=>{
           if(err){
             console.log(err);
           }
           else{
-            res.json({status:true,message:"Processing"})
+            var sqlcleancart = "update cart set status = 1 where id_user=?"
+            pool.query(sqlcleancart,[resdata[0].id_user],(err,restry)=>{
+              if(err){
+                console.log(err);
+              }
+              else{
+                res.json({status:true,message:"Processing"})
+              }
+            })
           }
         })
       }
@@ -395,6 +411,137 @@ app.post('/checkout',(req,res)=>{
   })
 })
 
+app.post('/checkoutn',(req,res)=>{
+  var cart_username = req.body.username
+  var ipaddress = req.body.ipaddress
+  var total= req.body.amount
+  var idcc= req.body.idcc
+
+  var sqldat = "select * from cart where status=0 and id_user in (select id_user from user where username = ?)"
+  pool.query(sqldat,[cart_username],(err,resdata)=>{
+    if(err){
+      console.log(err);
+    }
+    else{
+      if(resdata.length==1){
+
+        console.log();
+        var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status) values (?,?,?,?,?,?,?,?)"
+        pool.query(sqlpay,[string,resdata[0].id_user,total,idcc,null,1,ipaddress,0],(err,respay)=>{
+          if(err){
+            console.log(err);
+          }
+          else{
+            var sqladdpayment = "insert into payment(payment_amount,payment_card,payment_type,payment_status,status,id_user) values (?,?,?,?,?,?)"
+            pool.query(sqladdpayment,[total,idcc,0,1,0,resdata[0].iduser],(err,respaids)=>{
+              if(err){
+                console.log(err);
+              }
+              else{
+                var sqlgetpay = "select * from payment where id_user=? and status = 0 order by payment_period desc"
+                pool.query(sqlgetpay,[resdata[0].id_user],(err,resgetpay)=>{
+                  if(err){
+                    console.log(err);
+                  }
+                  else{
+                    var sqlgettrans = "select * from transaction where id_user=? and status = 0 order by create_at desc"
+                    pool.query(sqlgettrans,[resdata[0].id_user],(err,resgettrans)=>{
+                      if(err){
+                        console.log(err);
+                      }
+                      else{
+                        var sqlupdatetrans = "update transaction set transaction_payment=? where transaction_id=?"
+                        pool.query(sqlupdatetrans,[resgetpay[0].payment_id,resgettrans[0].transaction_id],(err,resgetpay)=>{
+                          if(err){
+                            console.log(err);
+                          }
+                          else{
+                            var sqlcleancart = "update cart set status = 1 where id_user=?"
+                            pool.query(sqlcleancart,[resdata[0].id_user],(err,restry)=>{
+                              if(err){
+                                console.log(err);
+                              }
+                              else{
+                                res.json({status:true,message:"Processing"})
+                              }
+                            })
+                          }
+                        })
+                      }
+                    })
+                  }
+                })
+              }
+            })
+          }
+        })
+      }
+      else if(resdata.length>1){
+        var string="";
+        for(var i=0; i < resdata.length;i++){
+          if(i==0){
+            string = resdata[i].cart_id ;
+          }
+          else{
+            string = string + "," + resdata[i].cart_id;
+          }
+        }
+        var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status) values (?,?,?,?,?,?,?,?)"
+        pool.query(sqlpay,[string,resdata[0].id_user,total,idcc,null,1,ipaddress,0],(err,respay)=>{
+          if(err){
+            console.log(err);
+          }
+          else{
+            var sqladdpayment = "insert into payment(payment_amount,payment_card,payment_type,payment_status,status,id_user) values (?,?,?,?,?,?)"
+            pool.query(sqladdpayment,[total,idcc,0,1,0,resdata[0].id_user],(err,respaids)=>{
+              if(err){
+                console.log(err);
+              }
+              else{
+                var sqlgetpay = "select * from payment where id_user=? and status = 0 order by payment_period desc"
+                pool.query(sqlgetpay,[resdata[0].id_user],(err,resgetpay)=>{
+                  if(err){
+                    console.log(err);
+                  }
+                  else{
+                    var sqlgettrans = "select * from transaction where user_id=? and status = 0 order by create_at desc"
+                    pool.query(sqlgettrans,[resdata[0].id_user],(err,resgettrans)=>{
+                      if(err){
+                        console.log(err);
+                      }
+                      else{
+                        var sqlupdatetrans = "update transaction set transaction_payment=? where transaction_id=?"
+                        pool.query(sqlupdatetrans,[resgetpay[0].payment_id,resgettrans[0].transaction_id],(err,resgetpay)=>{
+                          if(err){
+                            console.log(err);
+                          }
+                          else{
+                            var sqlcleancart = "update cart set status = 1 where id_user=?"
+                            pool.query(sqlcleancart,[resdata[0].id_user],(err,restry)=>{
+                              if(err){
+                                console.log(err);
+                              }
+                              else{
+                                res.json({status:true,message:"Processing"})
+                              }
+                            })
+                          }
+                        })
+                      }
+                    })
+                  }
+                })
+              }
+            })
+          }
+        })
+      }
+      else{
+        res.json({status:false,message:"no data",resdata})
+      }
+    }
+  })
+})
 
 app.post('/payment',(req,res)=>{
   var trans_id = req.body.trans_id;
