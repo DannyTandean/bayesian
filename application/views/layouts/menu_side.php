@@ -18,7 +18,7 @@
 
             <div class="pcoded-navigatio-lavel " data-i18n="nav.category.navigation" menu-title-theme="theme2">Menu Utama</div>
             <ul class="pcoded-item pcoded-left-item">
-            
+
 
                <?php
                     /*for Activites link active
@@ -33,7 +33,7 @@
                     $aktivitasProduk = "";
                     if ($uri1 == "aktivitas" ) {
                         $aktivitasActive = "pcoded-trigger active";
-                        $aktivitasDeteksi = $class == "deteksi" ? "active" : "";
+                        $aktivitasDeteksi = $class == "detection" ? "active" : "";
                         $aktivitasTransaction = $class == "transaction" ? "active" : "";
                         $aktivitasProduk = $class == "manage_produk" ? "active" : "";
                         $aktivitasLaporan = $class == "report" ? "active" : "";
@@ -44,7 +44,6 @@
                 ?>
 
                 <!-- Activities -->
-
                   <li class="<?php echo $aktivitasTransaction; ?>">
                       <a href="<?php echo site_url('aktivitas/transaction') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -52,17 +51,17 @@
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
-                  <li class="<?php echo $aktivitasProduk; ?>">
-                      <a href="<?php echo site_url('aktivitas/manage_produk') ?>">
-                          <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                          <span class="pcoded-mtext" >Management Produk</span>
-                          <span class="pcoded-mcaret"></span>
-                      </a>
-                  </li>
                   <li class="<?php echo $aktivitasDeteksi; ?>">
                       <a href="<?php echo site_url('aktivitas/detection') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Deteksi Transaksi</span>
+                          <span class="pcoded-mcaret"></span>
+                      </a>
+                  </li>
+                  <li class="<?php echo $aktivitasProduk; ?>">
+                      <a href="<?php echo site_url('aktivitas/manage_produk') ?>">
+                          <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                          <span class="pcoded-mtext" >Management Produk</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
