@@ -1,8 +1,16 @@
 const express = require('express')
 const app = express()
 const mysql = require('mysql')
+const multer = require('multer')
 const bodyParser = require('body-parser')
 const port = 3000
+
+var facestorage = multer({
+  dest: function (req, file, cb) {
+    cb(null, './report/')
+  },
+ })
+
 
 app.use(bodyParser.urlencoded({ extended: true }))
 // parse application/json
@@ -107,31 +115,6 @@ app.post('/register/card',(req,res)=>{
       }
     })
 
-
-})
-
-app.post('/userreport',(req,res)=>{
-  var username = req.body.username;
-  var password = req.body.password;
-  var cvv = req.body.cvv;
-  var month = req.body.month;
-  var name = req.body.cardname;
-  var number = req.body.number;
-  var billing = req.body.billing
-  var type = req.body.type;
-  var year = req.body.year;
-  var limit = req.body.limit;
-
-
-      var sqldat = "insert into credit_card (card_type,card_number,card_cvv,card_month,card_billing,card_year,card_name,card_user,status,limits,verified) values (?,?,?,?,?,?,?,?,?,?,?)"
-      pool.query(sqldat,[type,number,cvv,month,billing,year,name,username,"1",limit,"1"],(err,resdata)=>{
-        if(err){
-          console.log(err);
-        }
-        else{
-          res.json({status:true,message:"login success",resdata})
-        }
-      })
 
 })
 
@@ -290,7 +273,6 @@ app.post('/cart/minus',(req,res)=>{
     })
 })
 
-
 app.post('/cart/remove',(req,res)=>{
   var product_id = req.body.id;
   var username = req.body.username;
@@ -304,8 +286,6 @@ app.post('/cart/remove',(req,res)=>{
     }
   })
 })
-
-
 
 app.post('/addtocart',(req,res)=>{
   var product_id = req.body.id;
@@ -433,7 +413,7 @@ app.post('/checkoutn',(req,res)=>{
           }
           else{
             var sqladdpayment = "insert into payment(payment_amount,payment_card,payment_type,payment_status,status,id_user) values (?,?,?,?,?,?)"
-            pool.query(sqladdpayment,[total,idcc,0,1,0,resdata[0].iduser],(err,respaids)=>{
+            pool.query(sqladdpayment,[total,idcc,0,1,0,resdata[0].id_user],(err,respaids)=>{
               if(err){
                 console.log(err);
               }
@@ -543,10 +523,64 @@ app.post('/checkoutn',(req,res)=>{
   })
 })
 
+app.post('/checkoutp',(req,res)=>{
+  var trans_id = req.body.trans_id
+  var cart_username = req.body.username
+  var ipaddress = req.body.ipaddress
+  var total= req.body.amount
+  var idcc= req.body.idcc
+
+      var user = "select id_user from user where username = ?"
+      pool.query(user,[cart_username],(err,resuser)=>{
+        if(err){
+          console.log(err);
+        }
+        else{
+          var sqladdpayment = "insert into payment(payment_amount,payment_card,payment_type,payment_status,status,id_user) values (?,?,?,?,?,?)"
+          pool.query(sqladdpayment,[total,idcc,0,1,0,resuser[0].id_user],(err,respaids)=>{
+            if(err){
+              console.log(err);
+            }
+            else{
+              var sqlgetpay = "select * from payment where id_user=? and status = 0 order by payment_period desc"
+              pool.query(sqlgetpay,[resuser[0].id_user],(err,resgetpay)=>{
+                if(err){
+                  console.log(err);
+                }
+                else{
+                  var sqlgettrans = "select * from transaction where transaction_id=? and status = 0 order by create_at desc"
+                  pool.query(sqlgettrans,[trans_id],(err,resgettrans)=>{
+                    if(err){
+                      console.log(err);
+                    }
+                    else{
+                      var sqlupdatetrans = "update transaction set transaction_payment=?,transaction_process=1 where transaction_id=?"
+                      pool.query(sqlupdatetrans,[resgetpay[0].payment_id,resgettrans[0].transaction_id],(err,resgetpay)=>{
+                        if(err){
+                          console.log(err);
+                        }
+                        else{
+                          res.json({status:true,message:"Processing"})
+                        }
+                      })
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
+      })
+
+
+
+
+})
+
 app.post('/payment',(req,res)=>{
   var trans_id = req.body.trans_id;
-        var sqldat = "select * from transaction"
-        pool.query(sqldat,[],(err,resdata)=>{
+        var sqldat = "select c.card_number,p.payment_id,t.transaction_amount,p.payment_period from transaction as t join payment as p on p.payment_id=t.transaction_payment join credit_card as c on c.card_id = p.payment_card  where t.transaction_id = ? "
+        pool.query(sqldat,[trans_id],(err,resdata)=>{
           if(err){
             console.log(err);
           }
@@ -554,6 +588,57 @@ app.post('/payment',(req,res)=>{
             res.json({status:true,message:"succes transactions",data:resdata})
           }
         })
+})
+
+app.post("/userreport",facestorage.single('image'),(req,res)=>{
+     var tr = req.body.transaction;
+     var pa = req.body.payment;
+     var pr = req.body.product;
+     var em = req.body.email;
+     var fn = req.body.fullname;
+     var cc = req.body.creditcard;
+     var msg = req.body.message;
+     var email = req.body.email;
+     var fullname = req.body.fullname;
+     var username = req.body.username;
+     console.log(req.file);
+     if (req.file) {
+
+       var getuser = "select * from user where username = ?"
+       pool.query(getuser,[username],(err,datauser)=>{
+           if(err){
+             log.info(err);
+           }
+           else{
+             if(datauser.length==0){
+               res.json({status:false,message:"data not found"});
+             }
+             else{
+               var getpembagi = "insert into report (user_id,report_user,report_product,report_payment,report_transaction,report_creditcard,report_message,dir,status,email,fullname) values (?,?,?,?,?,?,?,?,?,?,?)"
+               pool.query(getpembagi,[datauser[0].id_user,null,pr,pa,tr,cc,msg,req.file.path,"0",email,fullname],(err,datanumber)=>{
+                   if(err){
+                     log.info(err);
+                   }
+                   else{
+                     if(datanumber.length==0){
+                       res.json({status:false,message:"data not found"});
+                     }
+                     else{
+                       res.json({status:true,message:"Success Reporting"});
+                     }
+                   }
+               })
+             }
+           }
+       })
+
+
+     } else {
+        res.json({status:false,message:"gagal face"});
+     }
+
+
+
 })
 
 
