@@ -30,7 +30,7 @@ class Detection extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,null,"nama","email","no_telp","transaction_limit","report_message");
+			$orderBy = array(null,null,"nama","email","no_telp","transaction_limit");
 			$search = array("nama","email","no_telp");
 
 			$result = $this->detectionModel->findDataTable($orderBy,$search);
@@ -80,7 +80,31 @@ class Detection extends MY_Controller {
 				$transFFT = 0.5;
 				$transFFF = 0.9;
 
-				
+				//P(bb,p,ip,ur,t) = P (BB) x P (p) x P (ur) x P (ip | p , b) x P ( t |ur , ip )
+
+				$fraudTF000 = $persenTransaction * $persenPayment * $persenReport * $ipFFF * $transTFF;
+				$fraudTF001 = $persenTransaction * $persenPayment * $persenReport * $ipFFF * $transTFT;
+				$fraudTF010 = $persenTransaction * $persenPayment * $persenReport * $ipTFF * $transTTF;
+				$fraudTF011 = $persenTransaction * $persenPayment * $persenReport * $ipTFF * $transTTT;
+				$fraudTF100 = $persenTransaction * $persenPayment * $persenReport * $ipFTF * $transTFF;
+				$fraudTF101 = $persenTransaction * $persenPayment * $persenReport * $ipFTF * $transTFT;
+				$fraudTF110 = $persenTransaction * $persenPayment * $persenReport * $ipTTF * $transTTF;
+				$fraudTF111 = $persenTransaction * $persenPayment * $persenReport * $ipTTF * $transTTT;
+
+				$fraudTT000 = $persenTransaction * $persenPayment * $persenReport * $ipFFT * $transTFF;
+				$fraudTT001 = $persenTransaction * $persenPayment * $persenReport * $ipFFT * $transTFT;
+				$fraudTT010 = $persenTransaction * $persenPayment * $persenReport * $ipTFT * $transTTF;
+				$fraudTT011 = $persenTransaction * $persenPayment * $persenReport * $ipTFT * $transTTT;
+				$fraudTT100 = $persenTransaction * $persenPayment * $persenReport * $ipFTT * $transTFF;
+				$fraudTT101 = $persenTransaction * $persenPayment * $persenReport * $ipFTT * $transTFT;
+				$fraudTT110 = $persenTransaction * $persenPayment * $persenReport * $ipTTT * $transTTF;
+				$fraudTT111 = $persenTransaction * $persenPayment * $persenReport * $ipTTT * $transTTT;
+
+				$total1 = $fraudTF000 + $fraudTF001 + $fraudTF010 + $fraudTF011 + $fraudTF100 + $fraudTF101 + $fraudTF110 + $fraudTF111;
+				$total2 = $fraudTT000 +	$fraudTT001 +	$fraudTT010 +	$fraudTT011 +	$fraudTT100 +	$fraudTT101 +	$fraudTT110 +	$fraudTT111;
+
+				$total3 = $total1+$total2;
+
 				$data[] = $item;
 			}
 			return $this->detectionModel->findDataTableOutput($data,$search);
