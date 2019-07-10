@@ -180,17 +180,34 @@ app.get('/transaction',(req,res)=>{
 
 app.post('/cart',(req,res)=>{
   var username = req.body.username;
-        var sqldat = "select cart.product_id,cart_id,qty,p.product_name,p.product_image,total from cart join product as p on p.product_id = cart.product_id where cart.status=0 and id_user in (select id_user from user where username = ?)"
-        pool.query(sqldat,[username],(err,resdata)=>{
-          if(err){
-            console.log(err);
-          }
-          else{
-              res.json({status:true,message:"success get cart",data:resdata});
+  var number = req.body.number;
+  if(number==0 || number == null){
+    var sqldat = "select cart.product_id,cart_id,qty,p.product_name,p.product_image,total from cart join product as p on p.product_id = cart.product_id where cart.status=0 and id_user in (select id_user from user where username = ?)"
+    pool.query(sqldat,[username],(err,resdata)=>{
+      if(err){
+        console.log(err);
+      }
+      else{
+          res.json({status:true,message:"success get cart",data:resdata});
 
 
-          }
-        })
+      }
+    })
+  }
+  else{
+    var sqldat = "select cart.product_id,cart_id,qty,p.product_name,p.product_image,total from cart join product as p on p.product_id = cart.product_id  where (select cart_id from transaction where transaction_id=?) like concat('%',cart.cart_id,'%') "
+    pool.query(sqldat,[number],(err,resdata)=>{
+      if(err){
+        console.log(err);
+      }
+      else{
+          res.json({status:true,message:"success get cart",data:resdata});
+
+
+      }
+    })
+  }
+
 })
 
 app.post('/cart/add',(req,res)=>{
@@ -407,7 +424,7 @@ app.post('/checkoutn',(req,res)=>{
 
         console.log();
         var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status) values (?,?,?,?,?,?,?,?)"
-        pool.query(sqlpay,[string,resdata[0].id_user,total,idcc,null,1,ipaddress,0],(err,respay)=>{
+        pool.query(sqlpay,[resdata[0].cart_id,resdata[0].id_user,total,idcc,null,1,ipaddress,0],(err,respay)=>{
           if(err){
             console.log(err);
           }
@@ -424,7 +441,7 @@ app.post('/checkoutn',(req,res)=>{
                     console.log(err);
                   }
                   else{
-                    var sqlgettrans = "select * from transaction where id_user=? and status = 0 order by create_at desc"
+                    var sqlgettrans = "select * from transaction where user_id=? and status = 0 order by create_at desc"
                     pool.query(sqlgettrans,[resdata[0].id_user],(err,resgettrans)=>{
                       if(err){
                         console.log(err);
