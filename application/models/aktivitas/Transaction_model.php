@@ -96,10 +96,18 @@ class Transaction_model extends CI_Model {
 	public function getByIdCart($id)
 	{
 		$this->db->where($this->_primary_key,$id);
-		$this->db->join('cart', 'cart.cart_id = '.$this->_table.'.cart_id', 'left');
+		// $this->db->join('cart', 'cart.cart_id = '.$this->_table.'.cart_id', 'left');
 		$this->db->join('user', 'user.id_user = '.$this->_table.'.user_id', 'left');
-		$this->db->join('product', 'product.product_id = cart.product_id', 'left');
+		// $this->db->join('product', 'product.product_id = cart.product_id', 'left');
 		$query = $this->db->get($this->_table);
+		return $query->row();
+	}
+
+	public function getCardId($id)
+	{
+		$this->db->where('cart_id',$id);
+		$this->db->join('product', 'product.product_id = cart.product_id', 'left');
+		$query = $this->db->get('cart');
 		return $query->row();
 	}
 

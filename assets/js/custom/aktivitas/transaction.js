@@ -99,19 +99,21 @@ function btnDetail(id) {
 			var pesan = "<hr>";
 			pesan += "<div class='row'>";
 			pesan += "<div class='col-md-4'>";
-			pesan += '<img class="img-fluid img-circle" src="'+json.data.image+'" alt="user-img" style="height: 100px; width: 100px;">';
+			pesan += '<img class="img-fluid img-circle" src="'+json.data.image+'" alt="user-img" style="height: 80px; width: 80px;">';
 			pesan += "</div>";
 			pesan += "<div class='col-md-8'>";
 			pesan += "<li class='pull-left'><small>Nama : <i>"+json.data.nama+"</i></small></li><br>";
+			pesan += "<li class='pull-left'><small>Email : <i>"+json.data.email+"</i></small></li><br>";
 			pesan += "<li class='pull-left'><small>No Telepon : <i>"+json.data.no_telp+"</i></small></li><br>";
-			pesan += "<li class='pull-left'><small>Nama Produk : <i>"+json.data.product_name+"</i></small></li><br>";
-			pesan += "<li class='pull-left'><small>Jumlah : <i>"+json.data.qty+"</i></small></li><br>";
-			pesan += "<li class='pull-left'><small>Harga : <i>"+moneyFormat.to(parseInt(json.data.total))+"</i></small></li><br>";
+			pesan += "</div></div><br>";
+			pesan += "<div class='row'>";
+			pesan += "<table class='table table-hover table-bordered'>";
+			pesan += "<tr><th>No</th><th>Nama Produk</th><th>image</th><th>Qty</th><th>Total</th></tr>"+json.data.table;
 				swal({
 						title: "Detail Transaksi",
 						html: pesan,
 						type: "info",
-						width: 400,
+						width: 600,
 						showConfirmButton : false,
 				})
 

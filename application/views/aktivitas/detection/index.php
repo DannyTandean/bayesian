@@ -11,16 +11,17 @@
         </div>
         <div class="card-block">
             <div class="dt-responsive table-responsive">
-                <table id="tblReport" class="table table-striped table-bordered table-sm nowrap" style="width: 100%;">
+                <table id="tblDetection" class="table table-striped table-bordered table-sm nowrap" style="width: 100%;">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Action</th>
                             <th>Nama</th>
                             <th>Email</th>
                             <th>No Telepon</th>
+                            <th>ID Transaksi</th>
+                            <th>Fraud Probability</th>
+                            <th>Kondisi Fraud</th>
                             <th>Transaction limit</th>
-                            <th>Report Message</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

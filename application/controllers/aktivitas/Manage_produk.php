@@ -39,7 +39,7 @@ class Manage_produk extends MY_Controller {
 				if ($item->product_image != "") {
 					$srcPhoto = base_url()."uploads/aktivitas/produk/".$item->product_image;
 				}
-				$dataPhoto = '<a href="'.$srcPhoto.'" data-toggle="lightbox" data-title="Photo Karyawan" data-footer="">
+				$dataPhoto = '<a href="'.$srcPhoto.'" data-toggle="lightbox" data-title="Photo Produk" data-footer="">
                     <img src="'.$srcPhoto.'" class="img-circle" style="height:60px; width:60px;" alt="photo "'.$item->product_name.'>
                 </a>';
 				$btnAction = '<button class="btn btn-warning  btn-mini" onclick="btnEdit('.$item->product_id.')"><i class="fa fa-pencil-square-o"></i>Edit</button>';

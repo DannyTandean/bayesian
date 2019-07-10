@@ -84,6 +84,12 @@ class Report_model extends CI_Model {
 		return $query->row();
 	}
 
+	public function block($id,$data)
+	{
+		$this->db->where($this->_primary_key,$id);
+		return $this->db->update($this->_table,$data);
+	}
+
 
 	public function insert($data,$dataNotif)
 	{

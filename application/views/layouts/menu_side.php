@@ -37,8 +37,7 @@
                         $aktivitasTransaction = $class == "transaction" ? "active" : "";
                         $aktivitasProduk = $class == "manage_produk" ? "active" : "";
                         $aktivitasLaporan = $class == "report" ? "active" : "";
-                        $aktivitasUser = $class == "izin" ? "active" : "";
-                        $aktivitasDinas = $class == "dinas" ? "active" : "";
+                        $aktivitasUser = $class == "manage_user" ? "active" : "";
                         $aktivitasIp = $class == "manage_ip" ? "active" : "";
                     }
                 ?>

@@ -198,7 +198,7 @@ function btnBlock(id,status) {
 
 		    swal({
 		        title: "Apakah anda yakin.?",
-		        html: "<span style='color:red;'>Data user akan di <b>blokir</b>.</span>"+pesan,
+		        html: "<span style='color:red;'>Data user akan di "+(status == 1 ? "<b>blokir</b>" : "<b>Unblokir</b>")+".</span>"+pesan,
 		        type: "warning",
 						width: 400,
 	  				showCloseButton: true,
