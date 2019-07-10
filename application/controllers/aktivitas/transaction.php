@@ -37,9 +37,21 @@ class Transaction extends MY_Controller {
 			foreach ($result as $item) {
 
 				$btnAction = '<button class="btn btn-default btn-default btn-mini" onclick="btnPayment('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Cek Pembayaran</button>';
+				if ($item->transStatus == 2) {
+					$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlockTransaksi('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Non-Fraud</button>';
+				}
+				else {
+					$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlockTransaksi('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Fraud</button>';
+				}
 				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Detail</button>';
 				$btnAction .= '<br><br><button class="btn btn-info btn-info btn-mini" onclick="btnPembeli('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Detail Pembeli</button>';
-				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-default btn-default btn-mini" onclick="btnLokasi('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Cek lokasi</button>';
+				if ($item->paymentStatus == 2) {
+					$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnLokasi('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Fraud</button>';
+				}
+				else {
+					$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlockTransaksi('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Fraud</button>';
+				}
+				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-success btn-success btn-mini" onclick="btnLokasi('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Cek lokasi</button>';
 
 				$item->transaction_amount = "Rp.".number_format($item->transaction_amount,0,",",",");
 				$item->payment_amount = "Rp.".number_format($item->payment_amount,0,",",",");
