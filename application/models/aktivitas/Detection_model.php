@@ -75,6 +75,14 @@ class Detection_model extends CI_Model {
 	    $this->output->set_output(json_encode($data));
 	}
 
+	public function listTransaction($id)
+	{
+		$this->db->where('user_id',$id);
+		$query = $this->db->get('transaction');
+
+		return $query->result();
+	}
+
 	public function getAllTransaction()
 	{
 		$query = $this->db->get($this->_table);

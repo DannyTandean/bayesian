@@ -101,7 +101,9 @@ class Transaction extends MY_Controller {
 
 		if ($this->isPost()) {
 			$getById = $this->transactionModel->getByIdPayment($id);
-
+			if ($getById->transaction_payment == null) {
+				$getById->payment_amount = 0;
+			}
 			if ($getById) {
 				$this->response->status = true;
 				$this->response->message = "Data transaksi get by id";
@@ -124,13 +126,40 @@ class Transaction extends MY_Controller {
 			} else {
 				$getById->image = base_url("/")."assets/images/default/no_user.png";
 			}
-
-			if ($getById->product_image != "") {
-				$getById->product_image = base_url("/")."uploads/aktivitas/produk/".$getById->product_image;
-			} else {
-				$getById->product_image = base_url("/")."assets/images/default/no_file_.png";
+			$listCardId = array();
+			if ($getById->cart_id == null || $getById->cart_id == "") {
+				$listCardId == null;
 			}
-			
+			else {
+				if (strpos($getById->cart_id, ',') !== false) {
+					$listCardId =  explode(',',$getById->cart_id);
+				}
+				else {
+					$listCardId[0] = $getById->cart_id;
+				}
+			}
+			$tableCart = "";
+			$counter = 1;
+			foreach ($listCardId as $key => $value) {
+				if ($value == null) {
+					continue;
+				}
+				$cart = $this->transactionModel->getCardId($value);
+				if ($cart->product_image != "") {
+					$cart->product_image = base_url("/")."uploads/aktivitas/produk/".$cart->product_image;
+				} else {
+					$cart->product_image = base_url("/")."assets/images/default/no_file_.png";
+				}
+				$tableCart = '<tr>
+											<td>'.$counter.'</td>
+											<td>'.$cart->product_name.'</td>
+											<td><img class="img-fluid img-circle" src="'.$cart->product_image.'" alt="user-img" style="height: 70px; width: 70px;"></td>
+											<td>'.$cart->qty.'</td>
+											<td>Rp.'.number_format($cart->total,0,",",",").'</td>
+											</tr>';
+				$counter++;
+			}
+			$getById->table = $tableCart;
 			if ($getById) {
 				$this->response->status = true;
 				$this->response->message = "Data transaksi get by id";

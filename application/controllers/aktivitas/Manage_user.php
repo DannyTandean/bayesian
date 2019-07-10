@@ -54,7 +54,7 @@ class Manage_user extends MY_Controller {
 				if ($item->image != "") {
 					$srcPhoto = base_url()."uploads/aktivitas	/orang/".$item->image;
 				}
-				$dataPhoto = '<a href="'.$srcPhoto.'" data-toggle="lightbox" data-title="Photo Karyawan" data-footer="">
+				$dataPhoto = '<a href="'.$srcPhoto.'" data-toggle="lightbox" data-title="Photo User" data-footer="">
                     <img src="'.$srcPhoto.'" class="img-circle" style="height:60px; width:60px;" alt="photo "'.$item->nama.'>
                 </a>';
 				$item->create_at = date_ind("d M Y",$item->create_at);

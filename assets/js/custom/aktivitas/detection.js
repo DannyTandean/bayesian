@@ -4,7 +4,7 @@ $(document).ready(function() {
 	btnTambah = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-primary btn-sm' id='btnTambah'><i class='fa fa-plus'></i> Tambah</button>";
 
     btnRefresh = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-success btn-sm' id='btnRefresh'><i class='fa fa-refresh'></i> Refresh</button>";
-	$("#tblReport").DataTable({
+	$("#tblDetection").DataTable({
 		serverSide:true,
 		responsive:true,
 		processing:true,
@@ -20,37 +20,34 @@ $(document).ready(function() {
         },
 		//load data
 		ajax: {
-			url: base_url+'aktivitas/report/ajax_list',
+			url: base_url+'aktivitas/Detection/ajax_list',
 			type: 'POST',
 		},
 
-		order:[[2,'DESC']],
+		order:[[1,'DESC']],
 		columns:[
 			{
 				data:'no',
 				searchable:false,
 				orderable:false,
 			},
-			{
-				data:'button_action',
-				searchable:false,
-				orderable:false,
-			},
 			{ data:'nama' },
 			{ data:'email' },
 			{ data:'no_telp' },
+			{ data:'listTransaksi' },
+			{ data:'Fraudcase' },
+			{ data:'fraudProbability' },
 			{ data:'transaction_limit' },
-			{ data:'report_message' },
 		],
 		dom : "<'row' <'col-md-5'l> <'col-md-3'B> <'col-md-4'f>>" + "<'row' <'col-md-12't>r>" + "<'row' <'col-md-6'i> <'col-md-6'p>>",
     buttons: [
-        'colvis'
+        'colvis','excel'
     ],
 	});
 });
 
 function reloadTable() {
-	$("#tblReport").DataTable().ajax.reload(null,false);
+	$("#tblDetection").DataTable().ajax.reload(null,false);
 }
 
 var save_method;
