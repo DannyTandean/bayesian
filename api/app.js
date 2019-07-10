@@ -429,8 +429,8 @@ app.post('/checkoutn',(req,res)=>{
             console.log(err);
           }
           else{
-            var sqladdpayment = "insert into payment(payment_amount,payment_card,payment_type,payment_status,status,id_user) values (?,?,?,?,?,?)"
-            pool.query(sqladdpayment,[total,idcc,0,1,0,resdata[0].id_user],(err,respaids)=>{
+            var sqladdpayment = "insert into payment(payment_amount,payment_card,payment_type,payment_status,status,id_user,ip_payment) values (?,?,?,?,?,?,?)"
+            pool.query(sqladdpayment,[total,idcc,0,1,0,resdata[0].id_user,ipaddress],(err,respaids)=>{
               if(err){
                 console.log(err);
               }
@@ -489,8 +489,8 @@ app.post('/checkoutn',(req,res)=>{
             console.log(err);
           }
           else{
-            var sqladdpayment = "insert into payment(payment_amount,payment_card,payment_type,payment_status,status,id_user) values (?,?,?,?,?,?)"
-            pool.query(sqladdpayment,[total,idcc,0,1,0,resdata[0].id_user],(err,respaids)=>{
+            var sqladdpayment = "insert into payment(payment_amount,payment_card,payment_type,payment_status,status,id_user,ip_payment) values (?,?,?,?,?,?,?)"
+            pool.query(sqladdpayment,[total,idcc,0,1,0,resdata[0].id_user,ipaddress],(err,respaids)=>{
               if(err){
                 console.log(err);
               }
@@ -553,8 +553,8 @@ app.post('/checkoutp',(req,res)=>{
           console.log(err);
         }
         else{
-          var sqladdpayment = "insert into payment(payment_amount,payment_card,payment_type,payment_status,status,id_user) values (?,?,?,?,?,?)"
-          pool.query(sqladdpayment,[total,idcc,0,1,0,resuser[0].id_user],(err,respaids)=>{
+          var sqladdpayment = "insert into payment(payment_amount,payment_card,payment_type,payment_status,status,id_user,ip_payment) values (?,?,?,?,?,?,?)"
+          pool.query(sqladdpayment,[total,idcc,0,1,0,resuser[0].id_user,ipaddress],(err,respaids)=>{
             if(err){
               console.log(err);
             }
