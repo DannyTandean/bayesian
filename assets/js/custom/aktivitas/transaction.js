@@ -46,6 +46,7 @@ $(document).ready(function() {
         'colvis'
     ],
 	});
+
 });
 
 function reloadTable() {
@@ -63,6 +64,52 @@ $(document).on('click', '#btnRefresh', function(e) {
 	  $("#btnRefresh").children().removeClass("fa-spin");
 	}, 1000);
 });
+
+function btnBlock(id,status,tipe) {
+	idData = id;
+	console.log(id);
+	console.log(status);
+	console.log(tipe);
+		$.post(base_url+"aktivitas/Transaction/getId/"+idData,function(json) {
+			if (json.status == true) {
+			    swal({
+			        title: "Apakah anda yakin.?",
+			        html: "<span style='color:red;'> "+ (status == 0 ? "Data "+tipe+" user ter " : "Membatalkan status ")+" <b> fraud</b>.</span>",
+			        type: "warning",
+							width: 400,
+		  				showCloseButton: true,
+			        showCancelButton: true,
+			        confirmButtonColor: "#DD6B55",
+			        confirmButtonText: "Iya",
+
+			    }).then((result) => {
+			    	if (result.value) {
+			    		$.post(base_url+"aktivitas/Transaction/getPaymentTrans/"+idData+"/"+status+"/"+tipe,function(json1) {
+							if (json1.status == true) {
+								swal({
+							            title: json1.message,
+							            type: "success",
+							            // html: true,
+							            timer: 1500,
+							            showConfirmButton: false
+							        });
+								reloadTable();
+							} else {
+								swal({
+							            title: json1.message,
+							            type: "error",
+							            // html: true,
+							            timer: 1500,
+							            showConfirmButton: false
+							        });
+								reloadTable();
+							}
+						});
+			    	}
+			    });
+				}
+		});
+}
 
 function btnPayment(id) {
 	idData = id;

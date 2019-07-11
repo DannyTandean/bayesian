@@ -19,8 +19,8 @@
                             <th>Email</th>
                             <th>No Telepon</th>
                             <th>ID Transaksi</th>
-                            <th>Fraud Probability</th>
                             <th>Kondisi Fraud</th>
+                            <th>Fraud Probability</th>
                             <th>Transaction limit</th>
                         </tr>
                     </thead>
