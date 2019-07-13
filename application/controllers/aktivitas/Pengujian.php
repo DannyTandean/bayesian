@@ -85,7 +85,7 @@ class Pengujian extends MY_Controller {
 				}
 				$this->response->status = true;
 				$this->response->message = spanGreen("berhasil get data fraud.!");
-				$this->response->data = sizeof($count);
+				$this->response->data = sizeof($fraudData);
 			}
 			else {
 				$this->response->message = spanRed("data tidak ada.!");

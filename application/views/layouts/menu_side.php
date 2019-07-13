@@ -64,6 +64,13 @@
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
+                  <li class="<?php echo $aktivitasUser; ?>">
+                      <a href="<?php echo site_url('aktivitas/manage_user'); ?>">
+                          <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                          <span class="pcoded-mtext" >Management User</span>
+                          <span class="pcoded-mcaret"></span>
+                      </a>
+                  </li>
                   <li class="<?php echo $aktivitasIp; ?>">
                       <a href="<?php echo site_url('aktivitas/manage_ip') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -75,13 +82,6 @@
                       <a href="<?php echo site_url('aktivitas/report') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                           <span class="pcoded-mtext" >Laporan Pengguna</span>
-                          <span class="pcoded-mcaret"></span>
-                      </a>
-                  </li>
-                  <li class="<?php echo $aktivitasUser; ?>">
-                      <a href="<?php echo site_url('aktivitas/manage_user'); ?>">
-                          <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                          <span class="pcoded-mtext" >Management User</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
