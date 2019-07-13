@@ -2,7 +2,7 @@
 	<!-- Zero config.table start -->
     <div class="card">
         <div class="card-header">
-            <h5>Data Table Management User</h5>
+            <h5>Data Table Manajemen User</h5>
             <div class="card-header-right">
                 <i class="icofont icofont-rounded-down"></i>
                 <!-- <i class="icofont icofont-refresh"></i> -->

@@ -60,21 +60,21 @@
                   <li class="<?php echo $aktivitasProduk; ?>">
                       <a href="<?php echo site_url('aktivitas/manage_produk') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                          <span class="pcoded-mtext" >Management Produk</span>
+                          <span class="pcoded-mtext" >Manajemen Produk</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
                   <li class="<?php echo $aktivitasUser; ?>">
                       <a href="<?php echo site_url('aktivitas/manage_user'); ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                          <span class="pcoded-mtext" >Management User</span>
+                          <span class="pcoded-mtext" >Manajemen User</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
                   <li class="<?php echo $aktivitasIp; ?>">
                       <a href="<?php echo site_url('aktivitas/manage_ip') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                          <span class="pcoded-mtext" >Management IP</span>
+                          <span class="pcoded-mtext" >Manajemen IP</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
