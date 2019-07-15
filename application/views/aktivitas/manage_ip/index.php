@@ -16,11 +16,11 @@
                         <tr>
                             <th>No</th>
                             <th>Action</th>
-                            <th>Nama</th>
+                            <th>Name</th>
                             <th>Email</th>
                             <th>IP Address</th>
                             <th>Status</th>
-                            <th>Tipe</th>
+                            <th>Type</th>
                             <th>Create At</th>
                         </tr>
                     </thead>

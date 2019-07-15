@@ -14,9 +14,9 @@ class Detection extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Aktivitas Data > Detection Fraud","Aktivitas Data","Detection Fraud");
+		parent::headerTitle("Activity > Detection Fraud","Activity","Detection Fraud");
 		$breadcrumbs = array(
-							"Aktivitas Data"	=>	site_url('aktivitas/detection'),
+							"Activity"	=>	site_url('aktivitas/detection'),
 							"Detection Fraud"		=>	"",
 						);
 		parent::breadcrumbs($breadcrumbs);

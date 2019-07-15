@@ -15,7 +15,7 @@ class Manage_user extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Aktivitas data > User","Aktivitas Data","User");
+		parent::headerTitle("Activity > User","Activity","User");
 		$breadcrumbs = array(
 							"Aktivitas"	=>	site_url('aktivitas/manage_user'),
 							"User"		=>	"",

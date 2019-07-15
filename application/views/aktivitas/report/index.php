@@ -2,7 +2,7 @@
   <!-- Zero config.table start -->
     <div class="card">
         <div class="card-header">
-            <h5>Data Table Laporan Pengguna</h5>
+            <h5>Data Table User Report</h5>
             <div class="card-header-right">
                 <i class="icofont icofont-rounded-down"></i>
                 <!-- <i class="icofont icofont-refresh"></i> -->

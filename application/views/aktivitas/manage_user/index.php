@@ -2,7 +2,7 @@
 	<!-- Zero config.table start -->
     <div class="card">
         <div class="card-header">
-            <h5>Data Table Manajemen User</h5>
+            <h5>Data Table User</h5>
             <div class="card-header-right">
                 <i class="icofont icofont-rounded-down"></i>
                 <!-- <i class="icofont icofont-refresh"></i> -->
@@ -17,13 +17,13 @@
                             <th>No</th>
                             <th>Action</th>
                             <th>Image</th>
-                            <th>Nama</th>
-                            <th>Jenis Kelamin</th>
+                            <th>Name</th>
+                            <th>Gender</th>
                             <th>Status</th>
-                            <th>No Telepon</th>
+                            <th>Phone Number</th>
                             <th>Email</th>
                             <th>Limit Transaction</th>
-                            <th>Tanggal Bergabung</th>
+                            <th>Join Date</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

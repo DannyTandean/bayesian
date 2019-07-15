@@ -14,9 +14,9 @@ class Manage_ip extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Aktivitas Data > IP","Aktivitas Data","IP");
+		parent::headerTitle("Activity > IP","Activity","IP");
 		$breadcrumbs = array(
-							"Aktivitas Data"	=>	site_url('aktivitas/manage_ip'),
+							"Activity"	=>	site_url('aktivitas/manage_ip'),
 							"IP"		=>	"",
 						);
 		parent::breadcrumbs($breadcrumbs);
@@ -48,10 +48,10 @@ class Manage_ip extends MY_Controller {
 				}
 
 				if ($item->tipe == 0) {
-					$item->tipe = "Transaksi";
+					$item->tipe = "Transaction";
 				}
 				else if ($item->tipe == 1) {
-					$item->tipe = "Pembayaran";
+					$item->tipe = "Payment";
 				}
 
 				$item->create_at = date_ind("d M Y",$item->create_at);

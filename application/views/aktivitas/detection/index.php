@@ -15,11 +15,11 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama</th>
+                            <th>Name</th>
                             <th>Email</th>
-                            <th>No Telepon</th>
-                            <th>ID Transaksi</th>
-                            <th>Kondisi Fraud</th>
+                            <th>Phone Number</th>
+                            <th>ID Transaction</th>
+                            <th>Fraud Condition</th>
                             <th>Fraud Probability</th>
                             <th>Transaction limit</th>
                         </tr>

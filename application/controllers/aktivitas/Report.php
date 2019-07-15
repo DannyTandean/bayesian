@@ -14,10 +14,10 @@ class Report extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Aktivitas Data > Laporan User","Aktivitas Data","Laporan User");
+		parent::headerTitle("Activity > User Report","Activity","User Report");
 		$breadcrumbs = array(
-							"Aktivitas Data"	=>	site_url('aktivitas/report'),
-							"Laporan"		=>	"",
+							"Activity"	=>	site_url('aktivitas/report'),
+							"User Report"		=>	"",
 						);
 		parent::breadcrumbs($breadcrumbs);
 		parent::viewAktivitas();

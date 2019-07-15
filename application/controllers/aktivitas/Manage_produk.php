@@ -14,10 +14,10 @@ class Manage_produk extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Aktivitas Data > Produk","Aktivitas Data","Produk");
+		parent::headerTitle("Activity > Product","Activity","Product");
 		$breadcrumbs = array(
 							"Aktivitas"	=>	site_url('aktivitas/manage_produk'),
-							"Produk"		=>	"",
+							"Product"		=>	"",
 						);
 		parent::breadcrumbs($breadcrumbs);
 		parent::viewAktivitas();

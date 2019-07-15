@@ -14,9 +14,9 @@ class Pengujian extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Aktivitas Data > Detection Fraud","Aktivitas Data","Detection Fraud");
+		parent::headerTitle("Activity > Detection Fraud","Activity","Detection Fraud");
 		$breadcrumbs = array(
-							"Aktivitas Data"	=>	site_url('aktivitas/Pengujian'),
+							"Activity"	=>	site_url('aktivitas/Pengujian'),
 							"Detection Fraud"		=>	"",
 						);
 		parent::breadcrumbs($breadcrumbs);
