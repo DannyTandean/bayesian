@@ -56,7 +56,7 @@
                             <div class="auth-box">
                                 <div class="row m-b-20">
                                     <div class="col-md-12">
-                                        <h3 class="text-left txt-primary">Sign In</h3>
+                                        <h3 class="text-left txt-primary">Login</h3>
                                     </div>
                                 </div>
                                 <div id="inputMessage"></div>
@@ -74,7 +74,7 @@
                                 <div id="errorPassword"></div>
                                 <div class="row m-t-30">
                                     <div class="col-md-12">
-                                        <button type="button" id="btnLogin" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign in</button>
+                                        <button type="button" id="btnLogin" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Login</button>
                                     </div>
                                 </div>
                             </div>
