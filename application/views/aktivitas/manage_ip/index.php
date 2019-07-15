@@ -17,7 +17,7 @@
                             <th>No</th>
                             <th>Action</th>
                             <th>Name</th>
-                            <th>Email</th>
+                            <!-- <th>Email</th> -->
                             <th>IP Address</th>
                             <th>Status</th>
                             <th>Type</th>

@@ -40,7 +40,7 @@ $(document).ready(function() {
 			{ data:'email' },
 			{ data:'no_telp' },
 			{ data:'transaction_limit' },
-			{ data:'report_message' },
+			// { data:'report_message' },
 		],
 		dom : "<'row' <'col-md-5'l> <'col-md-3'B> <'col-md-4'f>>" + "<'row' <'col-md-12't>r>" + "<'row' <'col-md-6'i> <'col-md-6'p>>",
     buttons: [

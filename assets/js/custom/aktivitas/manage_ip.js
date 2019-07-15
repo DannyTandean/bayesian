@@ -37,7 +37,7 @@ $(document).ready(function() {
 				orderable:false,
 			},
 			{ data:'nama' },
-			{ data:'email' },
+			// { data:'email' },
 			{ data:'ip_address' },
 			{ data:'status' },
 			{ data:'tipe' },

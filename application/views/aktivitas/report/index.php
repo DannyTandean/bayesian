@@ -20,7 +20,7 @@
                             <th>Email</th>
                             <th>No Telepon</th>
                             <th>Transaction limit</th>
-                            <th>Report Message</th>
+                            <!-- <th>Report Message</th> -->
                         </tr>
                     </thead>
                     <tbody></tbody>

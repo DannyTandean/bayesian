@@ -30,15 +30,15 @@ class Manage_ip extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,null,"nama","email","ip_address","tipe","status","create_at");
-			$search = array("nama","email","ip_address");
+			$orderBy = array(null,null,"nama","ip_address","tipe","status","create_at");
+			$search = array("nama","ip_address");
 
 			$result = $this->ipModel->findDataTable($orderBy,$search);
 			foreach ($result as $item) {
 
 				$btnAction = '<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->ip_id.')"><i class="fa fa-pencil-square-o"></i>Detail</button>';
 				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlock('.$item->ip_id.')"><i class="fa fa-remove"></i>Block</button>';
-				$btnAction .= '<br><br>&emsp;&emsp;&emsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnDelete('.$item->ip_id.')"><i class="fa fa-trash-o"></i>Hapus</button>';
+				$btnAction .= '<br><br>&emsp;&emsp;&emsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnDelete('.$item->ip_id.')"><i class="fa fa-trash-o"></i>Delete</button>';
 
 				if ($item->status == 0) {
 					$item->status = '<label class="label label-success">Normal</label>';
@@ -105,6 +105,21 @@ class Manage_ip extends MY_Controller {
 		}
 		parent::json();
 	}
+
+	public function block($id)
+	{
+		parent::checkLoginUser(); // user login autentic checking
+			$block = $this->ipModel->block($id);
+			if ($delete) {
+				$this->response->status = true;
+				$this->response->message = alertSuccess("Data laporan user Berhasil di hapus.");
+			} else {
+				$this->response->message = alertDanger("Data sudah tidak ada.");
+			}
+		}
+		parent::json();
+	}
+
 
 }
 
