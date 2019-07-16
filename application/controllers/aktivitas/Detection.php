@@ -30,7 +30,7 @@ class Detection extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,"nama","email","no_telp",null,null,"transaction_limit");
+			$orderBy = array(null,"nama","email","no_telp",null,null);
 			$search = array("nama","email","no_telp");
 
 			$result = $this->detectionModel->findDataTable($orderBy,$search);

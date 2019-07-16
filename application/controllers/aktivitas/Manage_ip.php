@@ -37,15 +37,18 @@ class Manage_ip extends MY_Controller {
 			foreach ($result as $item) {
 
 				$btnAction = '<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->ip_id.')"><i class="fa fa-pencil-square-o"></i>Detail</button>';
-				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlock('.$item->ip_id.')"><i class="fa fa-remove"></i>Block</button>';
-				$btnAction .= '<br><br>&emsp;&emsp;&emsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnDelete('.$item->ip_id.')"><i class="fa fa-trash-o"></i>Delete</button>';
+
 
 				if ($item->status == 0) {
 					$item->status = '<label class="label label-success">Normal</label>';
+					$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlock('.$item->ip_id.','."1".')"><i class="fa fa-trash-o"></i>Block</button>';
+
 				}
 				else if ($item->status == 1) {
 					$item->status = '<label class="label label-danger">Block</label>';
+					$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlock('.$item->ip_id.','."0".')"><i class="fa fa-trash-o"></i>Unblock</button>';
 				}
+				$btnAction .= '<br><br>&emsp;&emsp;&emsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnDelete('.$item->ip_id.')"><i class="fa fa-trash-o"></i>Delete</button>';
 
 				if ($item->tipe == 0) {
 					$item->tipe = "Transaction";
@@ -106,20 +109,24 @@ class Manage_ip extends MY_Controller {
 		parent::json();
 	}
 
-	public function block($id)
+	public function block($id,$status)
 	{
 		parent::checkLoginUser(); // user login autentic checking
-			$block = $this->ipModel->block($id);
-			if ($delete) {
-				$this->response->status = true;
-				$this->response->message = alertSuccess("Data laporan user Berhasil di hapus.");
-			} else {
-				$this->response->message = alertDanger("Data sudah tidak ada.");
+		if ($this->isPost()) {
+				$data = array(
+												'status' => $status,
+										 );
+				$update = $this->ipModel->block($id,$data);
+				if ($update) {
+					$this->response->status = true;
+					$this->response->message = "<span style='color:green'>berhasil update data IP.!</span>";
+				}
+				else {
+					$this->response->message = "<span style='color:red'>gagal update data IP.!</span>";
+				}
 			}
-		}
 		parent::json();
 	}
-
 
 }
 

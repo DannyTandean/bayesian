@@ -32,8 +32,8 @@ class Manage_user extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,null,null,"nama","jenis_kelamin",null,"no_telp","email","transaction_limit","create_at");
-			$search = array("nama","jenis_kelamin","email");
+			$orderBy = array(null,null,null,"nama","jenis_kelamin",null,"no_telp");
+			$search = array("nama","jenis_kelamin");
 
 			$result = $this->userModel->findDataTable($orderBy,$search);
 			foreach ($result as $item) {

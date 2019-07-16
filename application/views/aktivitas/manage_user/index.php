@@ -21,9 +21,9 @@
                             <th>Gender</th>
                             <th>Status</th>
                             <th>Phone Number</th>
-                            <th>Email</th>
+                            <!-- <th>Email</th>
                             <th>Limit Transaction</th>
-                            <th>Join Date</th>
+                            <th>Join Date</th> -->
                         </tr>
                     </thead>
                     <tbody></tbody>

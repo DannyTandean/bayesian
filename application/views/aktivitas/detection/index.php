@@ -21,7 +21,7 @@
                             <th>ID Transaction</th>
                             <th>Fraud Condition</th>
                             <th>Fraud Probability</th>
-                            <th>Transaction limit</th>
+                            <!-- <th>Transaction limit</th> -->
                         </tr>
                     </thead>
                     <tbody></tbody>

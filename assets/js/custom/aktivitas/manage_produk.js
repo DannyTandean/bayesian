@@ -9,15 +9,15 @@ $(document).ready(function() {
 		responsive:true,
 		processing:true,
 		oLanguage: {
-            sZeroRecords: "<center>Data tidak ditemukan</center>",
-            sLengthMenu: "Tampilkan _MENU_ data   "+btnTambah+btnRefresh,
-            sSearch: "Cari data:",
-            sInfo: "Menampilkan: _START_ - _END_ dari total: _TOTAL_ data",
-            oPaginate: {
-                sFirst: "Awal", "sPrevious": "Sebelumnya",
-                sNext: "Selanjutnya", "sLast": "Akhir"
-            },
-        },
+						sZeroRecords: "<center>Data not found</center>",
+						sLengthMenu: "Show _MENU_ data   "+btnTambah+btnRefresh,
+						sSearch: "Search data:",
+						sInfo: "Show: _START_ - _END_ from total: _TOTAL_ data",
+						oPaginate: {
+								sFirst: "Start", "sPrevious": "Previous",
+								sNext: "Next", "sLast": "Last"
+						},
+				},
 		//load data
 		ajax: {
 			url: base_url+'aktivitas/manage_produk/ajax_list',
