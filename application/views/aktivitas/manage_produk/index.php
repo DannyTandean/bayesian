@@ -20,8 +20,8 @@
                             <th>Name</th>
                             <th>Image</th>
                             <th>Stock</th>
-                            <th>Description</th>
-                            <th>Price</th>
+                            <!-- <th>Description</th>
+                            <th>Price</th> -->
                             <!-- <th>Status</th> -->
                         </tr>
                     </thead>

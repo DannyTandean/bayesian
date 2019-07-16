@@ -30,8 +30,8 @@ class Manage_produk extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,null,"product_name",null,"product_stock","product_description","product_price");
-			$search = array("product_name","product_description");
+			$orderBy = array(null,null,"product_name",null,"product_stock");
+			$search = array("product_name");
 
 			$result = $this->productModel->findDataTable($orderBy,$search);
 			foreach ($result as $item) {
