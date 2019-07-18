@@ -94,6 +94,30 @@ class Pengujian extends MY_Controller {
 		parent::json();
 	}
 
+	public function getSimulation()
+	{
+		if ($this->isPost()) {
+			$get = $this->pengujianModel->getquery();
+			$dataName = array();
+			$data = array();
+			if ($get) {
+				foreach ($get as $key => $value) {
+					$data[$value->nameDest] = $this->pengujianModel->getByStep($value->nameDest);
+				}
+				// $insert = $this->pengujianModel->insert($data);
+				if ($data) {
+					$this->response->status = true;
+					$this->response->message = spanGreen("berhasil get data fraud.!");
+					$this->response->data = $data;
+				}
+			}
+			else {
+				$this->response->message = spanRed("data tidak ada.!");
+			}
+		}
+		parent::json();
+	}
+
 }
 
 /* End of file Detection.php */

@@ -16,9 +16,9 @@
                         <tr>
                             <th>No</th>
                             <th>Action</th>
-                            <th>Nama</th>
+                            <th>Name</th>
                             <th>Email</th>
-                            <th>No Telepon</th>
+                            <th>Phone Number</th>
                             <th>Transaction limit</th>
                             <!-- <th>Report Message</th> -->
                         </tr>

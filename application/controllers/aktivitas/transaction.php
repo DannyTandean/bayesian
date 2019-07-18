@@ -30,7 +30,7 @@ class Transaction extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,null,"nama","transaction_amount","payment_amount","payment_card");
+			$orderBy = array(null,null,"nama","transaction_amount","payment_amount");
 			$search = array("nama");
 
 			$result = $this->transactionModel->findDataTable($orderBy,$search);

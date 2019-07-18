@@ -75,7 +75,7 @@ class Manage_produk extends MY_Controller {
 			$deskripsi = $this->input->post('deskripsi');
 
 			$this->form_validation->set_rules('product_name', 'Nama Produk', 'trim|required');
-			$this->form_validation->set_rules('product_stock', 'Stok kProduk', 'trim|required');
+			$this->form_validation->set_rules('product_stock', 'Stok Produk', 'trim|required');
 			$this->form_validation->set_rules('product_price', 'Harga Produk', 'trim|required');
 			$this->form_validation->set_rules('deskripsi', 'Deskripsi', 'trim|required');
 

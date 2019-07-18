@@ -39,7 +39,7 @@ $(document).ready(function() {
 			{ data:'nama' },
 			{ data:'transaction_amount' },
 			{ data:'payment_amount' },
-			{ data:'payment_card' },
+			// { data:'payment_card' },
 		],
 		dom : "<'row' <'col-md-5'l> <'col-md-3'B> <'col-md-4'f>>" + "<'row' <'col-md-12't>r>" + "<'row' <'col-md-6'i> <'col-md-6'p>>",
     buttons: [

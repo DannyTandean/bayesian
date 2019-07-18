@@ -103,6 +103,32 @@ class Pengujian_model extends CI_Model {
 		return $query->result();
 	}
 
+
+	public function getquery()
+	{
+		$query = $this->db->query("select nameDest,COUNT(nameDest) as countname from dataset GROUP by nameDest HAVING COUNT(nameDest)>1");
+
+		return $query->result();
+	}
+
+	public function insert($data)
+	{
+		if ($this->db->insert_batch($this->_table,$data)) {
+			return $this->db->insert_id();
+		}
+	}
+
+	public function getByStep($id)
+	{
+		// $this->db->where('nameDest',$id);
+		$where = "nameDest = ".$this->db->escape($id)."or nameOrig = ".$this->db->escape($id);
+		$this->db->where($where);
+		$this->db->order_by('step','asc');
+		$query = $this->db->get($this->_table);
+
+		return $query->result();
+	}
+
 }
 
 /* End of file Detection_model.php */

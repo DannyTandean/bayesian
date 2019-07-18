@@ -19,7 +19,7 @@
                             <th>Name</th>
                             <th>Transaction Amount</th>
                             <th>Payment Amount</th>
-                            <th>Credit Card</th>
+                            <!-- <th>Credit Card</th> -->
                         </tr>
                     </thead>
                     <tbody></tbody>
