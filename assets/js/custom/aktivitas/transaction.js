@@ -9,15 +9,15 @@ $(document).ready(function() {
 		responsive:true,
 		processing:true,
 		oLanguage: {
-            sZeroRecords: "<center>Data tidak ditemukan</center>",
-            sLengthMenu: "Tampilkan _MENU_ data  "+btnRefresh,
-            sSearch: "Cari data:",
-            sInfo: "Menampilkan: _START_ - _END_ dari total: _TOTAL_ data",
-            oPaginate: {
-                sFirst: "Awal", "sPrevious": "Sebelumnya",
-                sNext: "Selanjutnya", "sLast": "Akhir"
-            },
-        },
+						sZeroRecords: "<center>Data not found</center>",
+						sLengthMenu: "Show _MENU_ data   "+btnRefresh,
+						sSearch: "Search data:",
+						sInfo: "Show: _START_ - _END_ from total: _TOTAL_ data",
+						oPaginate: {
+								sFirst: "Start", "sPrevious": "Previous",
+								sNext: "Next", "sLast": "Last"
+						},
+				},
 		//load data
 		ajax: {
 			url: base_url+'aktivitas/transaction/ajax_list',
@@ -39,13 +39,14 @@ $(document).ready(function() {
 			{ data:'nama' },
 			{ data:'transaction_amount' },
 			{ data:'payment_amount' },
-			{ data:'payment_card' },
+			// { data:'payment_card' },
 		],
 		dom : "<'row' <'col-md-5'l> <'col-md-3'B> <'col-md-4'f>>" + "<'row' <'col-md-12't>r>" + "<'row' <'col-md-6'i> <'col-md-6'p>>",
     buttons: [
         'colvis'
     ],
 	});
+
 });
 
 function reloadTable() {
@@ -63,6 +64,52 @@ $(document).on('click', '#btnRefresh', function(e) {
 	  $("#btnRefresh").children().removeClass("fa-spin");
 	}, 1000);
 });
+
+function btnBlock(id,status,tipe) {
+	idData = id;
+	console.log(id);
+	console.log(status);
+	console.log(tipe);
+		$.post(base_url+"aktivitas/Transaction/getId/"+idData,function(json) {
+			if (json.status == true) {
+			    swal({
+			        title: "Apakah anda yakin.?",
+			        html: "<span style='color:red;'> "+ (status == 0 ? "Data "+tipe+" user ter " : "Membatalkan status ")+" <b> fraud</b>.</span>",
+			        type: "warning",
+							width: 400,
+		  				showCloseButton: true,
+			        showCancelButton: true,
+			        confirmButtonColor: "#DD6B55",
+			        confirmButtonText: "Iya",
+
+			    }).then((result) => {
+			    	if (result.value) {
+			    		$.post(base_url+"aktivitas/Transaction/getPaymentTrans/"+idData+"/"+status+"/"+tipe,function(json1) {
+							if (json1.status == true) {
+								swal({
+							            title: json1.message,
+							            type: "success",
+							            // html: true,
+							            timer: 1500,
+							            showConfirmButton: false
+							        });
+								reloadTable();
+							} else {
+								swal({
+							            title: json1.message,
+							            type: "error",
+							            // html: true,
+							            timer: 1500,
+							            showConfirmButton: false
+							        });
+								reloadTable();
+							}
+						});
+			    	}
+			    });
+				}
+		});
+}
 
 function btnPayment(id) {
 	idData = id;

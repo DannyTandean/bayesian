@@ -14,10 +14,10 @@ class Report extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Aktivitas Data > Laporan User","Aktivitas Data","Laporan User");
+		parent::headerTitle("Activity > User Report","Activity","User Report");
 		$breadcrumbs = array(
-							"Aktivitas Data"	=>	site_url('aktivitas/report'),
-							"Laporan"		=>	"",
+							"Activity"	=>	site_url('aktivitas/report'),
+							"User Report"		=>	"",
 						);
 		parent::breadcrumbs($breadcrumbs);
 		parent::viewAktivitas();
@@ -30,7 +30,7 @@ class Report extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,null,"nama","user.email","no_telp","transaction_limit","report_message");
+			$orderBy = array(null,null,"nama","user.email","no_telp","transaction_limit");
 			$search = array("nama","user.email","no_telp");
 
 			$result = $this->reportModel->findDataTable($orderBy,$search);
@@ -43,7 +43,7 @@ class Report extends MY_Controller {
 					$btnAction .='&emsp;&emsp;&emsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlock('.$item->report_id.','."0".')"><i class="fa fa-times"></i>Invalid</button><br><br>';
 				}
 				$btnAction .= '<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->report_id.')"><i class="fa fa-pencil-square-o"></i>Detail</button>';
-				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnDelete('.$item->report_id.')"><i class="fa fa-trash-o"></i>Hapus</button>';
+				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnDelete('.$item->report_id.')"><i class="fa fa-trash-o"></i>Delete</button>';
 				$item->transaction_limit = "Rp.".number_format($item->transaction_limit,0,",",",");
 				$item->button_action = $btnAction;
 				$data[] = $item;

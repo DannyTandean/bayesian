@@ -14,10 +14,10 @@ class Transaction extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Aktivitas Data > Transaksi User","Aktivitas Data","Transaksi User");
+		parent::headerTitle("Activity > Transaction","Activity","Transaction");
 		$breadcrumbs = array(
-							"Aktivitas Data"	=>	site_url('aktivitas/transaction'),
-							"Transaksi"		=>	"",
+							"Activity"	=>	site_url('aktivitas/transaction'),
+							"Transaction"		=>	"",
 						);
 		parent::breadcrumbs($breadcrumbs);
 		parent::viewAktivitas();
@@ -30,16 +30,29 @@ class Transaction extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,null,"nama","transaction_amount","payment_amount","payment_card");
+			$orderBy = array(null,null,"nama","transaction_amount","payment_amount");
 			$search = array("nama");
 
 			$result = $this->transactionModel->findDataTable($orderBy,$search);
 			foreach ($result as $item) {
-
-				$btnAction = '<button class="btn btn-default btn-default btn-mini" onclick="btnPayment('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Cek Pembayaran</button>';
+				$stringTrans = "'" . "transaksi" . "'";
+				$stringPay = "'" . "payment" . "'";
+				$btnAction = '<button class="btn btn-default btn-default btn-mini" onclick="btnPayment('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Payment</button>';
+				if ($item->paymentStatus == "2") {
+					$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnBlock('.$item->transaction_id.','."0,".$stringPay.')" title="Payment"><i class="fa fa-ban"></i>Non-Fraud</button>';
+				}
+				else {
+					$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnBlock('.$item->transaction_id.','."2,".$stringPay.')" title="Payment"><i class="fa fa-ban"></i>Fraud</button>';
+				}
 				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Detail</button>';
-				$btnAction .= '<br><br><button class="btn btn-info btn-info btn-mini" onclick="btnPembeli('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Detail Pembeli</button>';
-				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-default btn-default btn-mini" onclick="btnLokasi('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Cek lokasi</button>';
+				$btnAction .= '<br><br><button class="btn btn-info btn-info btn-mini" onclick="btnPembeli('.$item->transaction_id.')"><i class="fa fa-pencil-square-o"></i>Buyer Detail</button>';
+				if ($item->transStatus == "2") {
+					$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnBlock('.$item->transaction_id.','."0,".$stringTrans.')" title="Transaksi"><i class="fa fa-ban"></i>Non-Fraud</button>';
+				}
+				else {
+					$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnBlock('.$item->transaction_id.','."2,".$stringTrans.')" title="Transaksi"><i class="fa fa-ban"></i>Fraud</button>';
+				}
+				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-success btn-success btn-mini" onclick="btnLokasi('.$item->transaction_id.')"><i class="fa fa-trash-o"></i>Location</button>';
 
 				$item->transaction_amount = "Rp.".number_format($item->transaction_amount,0,",",",");
 				$item->payment_amount = "Rp.".number_format($item->payment_amount,0,",",",");
@@ -57,14 +70,9 @@ class Transaction extends MY_Controller {
 
 		if ($this->isPost()) {
 			$getById = $this->transactionModel->getById($id);
-			if ($getById->image != "") {
-				$getById->image = base_url("/")."uploads/aktivitas/orang/".$getById->image;
-			} else {
-				$getById->image = base_url("/")."assets/images/default/no_user.png";
-			}
 			if ($getById) {
 				$this->response->status = true;
-				$this->response->message = "Data laporan user get by id";
+				$this->response->message = "Data Transaksi get by id";
 				$this->response->data = $getById;
 			} else {
 				$this->response->message = alertDanger("Data Transaksi tidak ada.");
@@ -166,6 +174,49 @@ class Transaction extends MY_Controller {
 				$this->response->data = $getById;
 			} else {
 				$this->response->message = alertDanger("Data transaksi tidak ada.");
+			}
+		}
+		parent::json();
+	}
+
+	public function getPaymentTrans($id,$status,$tipe)
+	{
+		parent::checkLoginUser(); // user login autentic checking
+
+		if ($this->isPost()) {
+			$data = $this->transactionModel->getPaymentTransById($id);
+			$dataUpdate = array(
+														'status' => $status,
+												 );
+			if ($data) {
+				if ($tipe == "payment") {
+					if ($data->transaction_payment == null) {
+						$this->response->message = spanRed("transaksi belum di bayar.!");
+					}
+					else {
+						$payment = $this->transactionModel->blockPayment($data->transaction_payment,$dataUpdate);
+						if ($payment) {
+							$this->response->status = true;
+							$this->response->message = spanGreen("berhasil update data pembayaran.");
+						}
+						else {
+							$this->response->message = spanRed("gagal update data pembayaran.");
+						}
+					}
+				}
+				else if ($tipe == "transaksi") {
+					$transaksi = $this->transactionModel->blockTransaksi($data->transaction_id,$dataUpdate);
+					if ($transaksi) {
+						$this->response->status = true;
+						$this->response->message = spanGreen("berhasil update data transaksi.");
+					}
+					else {
+						$this->response->message = spanRed("gagal update data transaksi.");
+					}
+				}
+			}
+			else {
+				$this->response->message = spanRed("data tidak ada.!");
 			}
 		}
 		parent::json();

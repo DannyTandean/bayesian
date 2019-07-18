@@ -9,15 +9,15 @@ $(document).ready(function() {
 		responsive:true,
 		processing:true,
 		oLanguage: {
-            sZeroRecords: "<center>Data tidak ditemukan</center>",
-            sLengthMenu: "Tampilkan _MENU_ data   "+btnRefresh,
-            sSearch: "Cari data:",
-            sInfo: "Menampilkan: _START_ - _END_ dari total: _TOTAL_ data",
-            oPaginate: {
-                sFirst: "Awal", "sPrevious": "Sebelumnya",
-                sNext: "Selanjutnya", "sLast": "Akhir"
-            },
-        },
+						sZeroRecords: "<center>Data not found</center>",
+						sLengthMenu: "Show _MENU_ data   "+btnRefresh,
+						sSearch: "Search data:",
+						sInfo: "Show: _START_ - _END_ from total: _TOTAL_ data",
+						oPaginate: {
+								sFirst: "Start", "sPrevious": "Previous",
+								sNext: "Next", "sLast": "Last"
+						},
+				},
 		//load data
 		ajax: {
 			url: base_url+'aktivitas/report/ajax_list',
@@ -40,7 +40,7 @@ $(document).ready(function() {
 			{ data:'email' },
 			{ data:'no_telp' },
 			{ data:'transaction_limit' },
-			{ data:'report_message' },
+			// { data:'report_message' },
 		],
 		dom : "<'row' <'col-md-5'l> <'col-md-3'B> <'col-md-4'f>>" + "<'row' <'col-md-12't>r>" + "<'row' <'col-md-6'i> <'col-md-6'p>>",
     buttons: [

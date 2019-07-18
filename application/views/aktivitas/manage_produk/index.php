@@ -2,7 +2,7 @@
 	<!-- Zero config.table start -->
     <div class="card">
         <div class="card-header">
-            <h5>Data Table Manage Produk</h5>
+            <h5>Data Table Product</h5>
             <div class="card-header-right">
                 <i class="icofont icofont-rounded-down"></i>
                 <!-- <i class="icofont icofont-refresh"></i> -->
@@ -17,11 +17,11 @@
                             <th>No</th>
                             <th>Action</th>
                             <!-- <th>Tools</th> -->
-                            <th>Nama Produk</th>
+                            <th>Name</th>
                             <th>Image</th>
-                            <th>Produk Stock</th>
-                            <th>Produk deskripsi</th>
-                            <th>Harga Produk</th>
+                            <th>Stock</th>
+                            <!-- <th>Description</th>
+                            <th>Price</th> -->
                             <!-- <th>Status</th> -->
                         </tr>
                     </thead>

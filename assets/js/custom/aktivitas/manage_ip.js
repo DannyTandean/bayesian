@@ -9,13 +9,13 @@ $(document).ready(function() {
 		responsive:true,
 		processing:true,
 		oLanguage: {
-            sZeroRecords: "<center>Data tidak ditemukan</center>",
-            sLengthMenu: "Tampilkan _MENU_ data   "+btnRefresh,
-            sSearch: "Cari data:",
-            sInfo: "Menampilkan: _START_ - _END_ dari total: _TOTAL_ data",
+            sZeroRecords: "<center>Data not found</center>",
+            sLengthMenu: "Show _MENU_ data   "+btnRefresh,
+            sSearch: "Search data:",
+            sInfo: "Show: _START_ - _END_ from total: _TOTAL_ data",
             oPaginate: {
-                sFirst: "Awal", "sPrevious": "Sebelumnya",
-                sNext: "Selanjutnya", "sLast": "Akhir"
+                sFirst: "Start", "sPrevious": "Previous",
+                sNext: "Next", "sLast": "Last"
             },
         },
 		//load data
@@ -37,7 +37,7 @@ $(document).ready(function() {
 				orderable:false,
 			},
 			{ data:'nama' },
-			{ data:'email' },
+			// { data:'email' },
 			{ data:'ip_address' },
 			{ data:'status' },
 			{ data:'tipe' },
@@ -102,6 +102,63 @@ function btnDetail(id) {
 		}
 	});
 
+}
+
+function btnBlock(id,status) {
+	idData = id;
+
+	$.post(base_url+"aktivitas/manage_ip/getId/"+idData,function(json) {
+		if (json.status == true) {
+			var pesan = "<hr>";
+				pesan += "<div class='row'>";
+				pesan += "<div class='col-md-4'>";
+				pesan += '<img class="img-fluid img-circle" src="'+json.data.image+'" alt="user-img" style="height: 100px; width: 100px;">';
+				pesan += "</div>";
+				pesan += "<div class='col-md-8'>";
+				pesan += "<li class='pull-left'><small>Nama : <i>"+json.data.nama+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>IP Address : <i>"+json.data.ip_address+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>Nomor Telepon : <i>"+json.data.no_telp+"</i></small></li><br>";
+				pesan += "<li class='pull-left'><small>Email : <i>"+json.data.email+"</i></small></li><br>";
+
+		    swal({
+		        title: "Apakah anda yakin.?",
+		        html: "<span style='color:red;'>Data IP akan di "+(status == 1 ? "<b>blokir</b>" : "<b>Unblokir</b>")+".</span>"+pesan,
+		        type: "warning",
+						width: 400,
+	  				showCloseButton: true,
+		        showCancelButton: true,
+		        confirmButtonColor: "#DD6B55",
+		        confirmButtonText: "Iya, Block",
+		        closeOnConfirm: false,
+  				// background: '#e9e9e9',
+
+		    }).then((result) => {
+		    	if (result.value) {
+		    		$.post(base_url+"aktivitas/manage_ip/block/"+idData+"/"+status,function(json) {
+						if (json.status == true) {
+							swal({
+						            title: json.message,
+						            type: "success",
+						            // html: true,
+						            timer: 2000,
+						            showConfirmButton: false
+						        });
+							reloadTable();
+						} else {
+							swal({
+						            title: json.message,
+						            type: "error",
+						            // html: true,
+						            timer: 1500,
+						            showConfirmButton: false
+						        });
+							reloadTable();
+						}
+					});
+		    	}
+		    });
+			}
+	});
 }
 
 function btnDelete(id) {

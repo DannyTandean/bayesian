@@ -15,7 +15,7 @@ class Manage_user extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Aktivitas data > User","Aktivitas Data","User");
+		parent::headerTitle("Activity > User","Activity","User");
 		$breadcrumbs = array(
 							"Aktivitas"	=>	site_url('aktivitas/manage_user'),
 							"User"		=>	"",
@@ -32,12 +32,12 @@ class Manage_user extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,null,null,"nama","jenis_kelamin",null,"no_telp","email","transaction_limit","create_at");
-			$search = array("nama","jenis_kelamin","email");
+			$orderBy = array(null,null,null,"nama","jenis_kelamin",null,"no_telp");
+			$search = array("nama","jenis_kelamin");
 
 			$result = $this->userModel->findDataTable($orderBy,$search);
 			foreach ($result as $item) {
-				$btnAction = '<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->id_user.')"><i class="fa fa-pencil-square-o"></i>Periksa Detail</button>';
+				$btnAction = '<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->id_user.')"><i class="fa fa-pencil-square-o"></i>Detail</button>';
 
 				if($item->block == 0)
 				{
@@ -49,7 +49,7 @@ class Manage_user extends MY_Controller {
 					$item->block = '<label class="label label-danger">Block</label>';
 					$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlock('.$item->id_user.','."0".')"><i class="fa fa-trash-o"></i>Unblock</button>';
 				}
-				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnDelete('.$item->id_user.')"><i class="fa fa-trash-o"></i>Hapus</button>';
+				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnDelete('.$item->id_user.')"><i class="fa fa-trash-o"></i>Delete</button>';
 				$srcPhoto = base_url().'assets/images/default/no_user.png';
 				if ($item->image != "") {
 					$srcPhoto = base_url()."uploads/aktivitas	/orang/".$item->image;

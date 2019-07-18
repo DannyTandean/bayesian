@@ -36,8 +36,8 @@ $(document).ready(function() {
 						});
 
 						Toast.fire({
-							title: '<img src="' + base_url + '/assets/images/denya.jpeg" width="50" height="50">',
-							html: "<span style='color:red;'>Terjadi Kesalahan.</span><br><h5>Username & Password Salah / Tidak Sesuai !</h5>"
+							title: '<img src="' + base_url + '/assets/images/favicon.png" width="50" height="50">',
+							html: "<span style='color:red;'>Terjadi Kesalahan.</span><br><h5>Username & Password Salah!</h5>"
 						})
 					}
 
@@ -48,7 +48,7 @@ $(document).ready(function() {
 						$("#errorPassword").html("");
 						// $("#inputMessage").html("");
 						$("#btnLogin").attr("disabled",false);
-						$("#btnLogin").html(' Sign in');
+						$("#btnLogin").html('Login');
 					},1500);
 				}
 			}

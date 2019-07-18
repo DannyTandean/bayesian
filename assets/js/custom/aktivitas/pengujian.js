@@ -20,7 +20,7 @@ $(document).ready(function() {
 				},
 		//load data
 		ajax: {
-			url: base_url+'aktivitas/Detection/ajax_list',
+			url: base_url+'aktivitas/Pengujian/ajax_list',
 			type: 'POST',
 		},
 
@@ -31,18 +31,21 @@ $(document).ready(function() {
 				searchable:false,
 				orderable:false,
 			},
-			{ data:'nama' },
-			{ data:'email' },
-			{ data:'no_telp' },
-			{ data:'listTransaksi' },
-			{ data:'Fraudcase' },
-			{ data:'fraudProbability' },
-			// { data:'transaction_limit' },
+			{ data:'isFraud' },
+			{ data:'type' },
+			{ data:'amount' },
+			{ data:'nameOrig' },
+			{ data:'oldbalanceOrg' },
+			{ data:'newbalanceOrig' },
+			{ data:'nameDest' },
+			{ data:'oldbalanceDest' },
+			{ data:'newbalanceDest' },
+			{ data:'isFlaggedFraud'}
 		],
-		dom : "<'row' <'col-md-5'l> <'col-md-3'B> <'col-md-4'f>>" + "<'row' <'col-md-12't>r>" + "<'row' <'col-md-6'i> <'col-md-6'p>>",
-    buttons: [
-        'colvis','excel'
-    ],
+		// dom : "<'row' <'col-md-5'l> <'col-md-3'B> <'col-md-4'f>>" + "<'row' <'col-md-12't>r>" + "<'row' <'col-md-6'i> <'col-md-6'p>>",
+    // buttons: [
+    //     'colvis','excel'
+    // ],
 	});
 });
 

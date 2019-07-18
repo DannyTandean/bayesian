@@ -16,7 +16,6 @@
                 $uri5 = $this->uri->segment(5);
              ?>
 
-            <div class="pcoded-navigatio-lavel " data-i18n="nav.category.navigation" menu-title-theme="theme2">Menu Utama</div>
             <ul class="pcoded-item pcoded-left-item">
 
 
@@ -46,42 +45,42 @@
                   <li class="<?php echo $aktivitasTransaction; ?>">
                       <a href="<?php echo site_url('aktivitas/transaction') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                          <span class="pcoded-mtext" >Daftar Transaksi</span>
+                          <span class="pcoded-mtext" >Transaction</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
                   <li class="<?php echo $aktivitasDeteksi; ?>">
                       <a href="<?php echo site_url('aktivitas/detection') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                          <span class="pcoded-mtext" >Deteksi Transaksi</span>
+                          <span class="pcoded-mtext" >Fraud Detection</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
                   <li class="<?php echo $aktivitasProduk; ?>">
                       <a href="<?php echo site_url('aktivitas/manage_produk') ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                          <span class="pcoded-mtext" >Management Produk</span>
-                          <span class="pcoded-mcaret"></span>
-                      </a>
-                  </li>
-                  <li class="<?php echo $aktivitasIp; ?>">
-                      <a href="<?php echo site_url('aktivitas/manage_ip') ?>">
-                          <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                          <span class="pcoded-mtext" >Management IP</span>
-                          <span class="pcoded-mcaret"></span>
-                      </a>
-                  </li>
-                  <li class="<?php echo $aktivitasLaporan; ?>">
-                      <a href="<?php echo site_url('aktivitas/report') ?>">
-                          <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                          <span class="pcoded-mtext" >Laporan Pengguna</span>
+                          <span class="pcoded-mtext" >Product Management</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
                   <li class="<?php echo $aktivitasUser; ?>">
                       <a href="<?php echo site_url('aktivitas/manage_user'); ?>">
                           <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                          <span class="pcoded-mtext" >Management User</span>
+                          <span class="pcoded-mtext" >User Management</span>
+                          <span class="pcoded-mcaret"></span>
+                      </a>
+                  </li>
+                  <li class="<?php echo $aktivitasIp; ?>">
+                      <a href="<?php echo site_url('aktivitas/manage_ip') ?>">
+                          <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                          <span class="pcoded-mtext" >IP Management</span>
+                          <span class="pcoded-mcaret"></span>
+                      </a>
+                  </li>
+                  <li class="<?php echo $aktivitasLaporan; ?>">
+                      <a href="<?php echo site_url('aktivitas/report') ?>">
+                          <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                          <span class="pcoded-mtext" >User Report</span>
                           <span class="pcoded-mcaret"></span>
                       </a>
                   </li>
@@ -93,8 +92,6 @@
                       </a>
                   </li>
             </ul>
-
-            <div class="pcoded-navigatio-lavel" data-i18n="nav.category.support" >End Menu</div>
             <div class="">&nbsp;</div>
             <div class="">&nbsp;</div>
             <div class="">&nbsp;</div>

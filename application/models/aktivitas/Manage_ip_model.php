@@ -211,6 +211,13 @@ class Manage_ip_model extends CI_Model {
 		$query = $this->db->get($this->_table);
 		return $query->row();
 	}
+
+	public function block($id,$data)
+	{
+		$this->db->where($this->_primary_key,$id);
+		return $this->db->update($this->_table,$data);
+	}
+
 }
 
 /* End of file Dinas_model.php */

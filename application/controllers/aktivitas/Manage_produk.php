@@ -14,10 +14,10 @@ class Manage_produk extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Aktivitas Data > Produk","Aktivitas Data","Produk");
+		parent::headerTitle("Activity > Product","Activity","Product");
 		$breadcrumbs = array(
 							"Aktivitas"	=>	site_url('aktivitas/manage_produk'),
-							"Produk"		=>	"",
+							"Product"		=>	"",
 						);
 		parent::breadcrumbs($breadcrumbs);
 		parent::viewAktivitas();
@@ -30,8 +30,8 @@ class Manage_produk extends MY_Controller {
 		if ($this->isPost()) {
 			$data = array();
 
-			$orderBy = array(null,null,"product_name",null,"product_stock","product_description","product_price");
-			$search = array("product_name","product_description");
+			$orderBy = array(null,null,"product_name",null,"product_stock");
+			$search = array("product_name");
 
 			$result = $this->productModel->findDataTable($orderBy,$search);
 			foreach ($result as $item) {
@@ -43,7 +43,7 @@ class Manage_produk extends MY_Controller {
                     <img src="'.$srcPhoto.'" class="img-circle" style="height:60px; width:60px;" alt="photo "'.$item->product_name.'>
                 </a>';
 				$btnAction = '<button class="btn btn-warning  btn-mini" onclick="btnEdit('.$item->product_id.')"><i class="fa fa-pencil-square-o"></i>Edit</button>';
-				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-mini" onclick="btnDelete('.$item->product_id.')"><i class="fa fa-trash-o"></i>Hapus</button>';
+				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-mini" onclick="btnDelete('.$item->product_id.')"><i class="fa fa-trash-o"></i>Delete</button>';
 				$item->product_price = "Rp.".number_format($item->product_price,0,",",",");
 				$item->button_action = $btnAction;
 				$item->product_image = $dataPhoto;
@@ -75,7 +75,7 @@ class Manage_produk extends MY_Controller {
 			$deskripsi = $this->input->post('deskripsi');
 
 			$this->form_validation->set_rules('product_name', 'Nama Produk', 'trim|required');
-			$this->form_validation->set_rules('product_stock', 'Stok kProduk', 'trim|required');
+			$this->form_validation->set_rules('product_stock', 'Stok Produk', 'trim|required');
 			$this->form_validation->set_rules('product_price', 'Harga Produk', 'trim|required');
 			$this->form_validation->set_rules('deskripsi', 'Deskripsi', 'trim|required');
 

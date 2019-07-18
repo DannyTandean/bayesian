@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 
-	btnTambah = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-primary btn-sm' id='btnTambah'><i class='fa fa-plus'></i> Tambah</button>";
+	btnTambah = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-primary btn-sm' id='btnTambah'><i class='fa fa-plus'></i> Add</button>";
 
     btnRefresh = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-success btn-sm' id='btnRefresh'><i class='fa fa-refresh'></i> Refresh</button>";
 	$("#tblProduk").DataTable({
@@ -9,15 +9,15 @@ $(document).ready(function() {
 		responsive:true,
 		processing:true,
 		oLanguage: {
-            sZeroRecords: "<center>Data tidak ditemukan</center>",
-            sLengthMenu: "Tampilkan _MENU_ data   "+btnTambah+btnRefresh,
-            sSearch: "Cari data:",
-            sInfo: "Menampilkan: _START_ - _END_ dari total: _TOTAL_ data",
-            oPaginate: {
-                sFirst: "Awal", "sPrevious": "Sebelumnya",
-                sNext: "Selanjutnya", "sLast": "Akhir"
-            },
-        },
+						sZeroRecords: "<center>Data not found</center>",
+						sLengthMenu: "Show _MENU_ data   "+btnTambah+btnRefresh,
+						sSearch: "Search data:",
+						sInfo: "Show: _START_ - _END_ from total: _TOTAL_ data",
+						oPaginate: {
+								sFirst: "Start", "sPrevious": "Previous",
+								sNext: "Next", "sLast": "Last"
+						},
+				},
 		//load data
 		ajax: {
 			url: base_url+'aktivitas/manage_produk/ajax_list',
@@ -42,8 +42,8 @@ $(document).ready(function() {
 				orderable:false,
 			},
 			{ data:'product_stock' },
-			{ data:'product_description' },
-			{ data:'product_price' },
+			// { data:'product_description' },
+			// { data:'product_price' },
 			// { data:'status' },
 		],
 		dom : "<'row' <'col-md-5'l> <'col-md-3'B> <'col-md-4'f>>" + "<'row' <'col-md-12't>r>" + "<'row' <'col-md-6'i> <'col-md-6'p>>",

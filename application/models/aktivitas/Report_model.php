@@ -156,7 +156,7 @@ class Report_model extends CI_Model {
 		}
 	}
 
-	public function delete($id,$dataNotif)
+	public function delete($id)
 	{
 		$this->db->trans_start();
 

@@ -2,7 +2,7 @@
   <!-- Zero config.table start -->
     <div class="card">
         <div class="card-header">
-            <h5>Data Table Transaksi</h5>
+            <h5>Data Table Transaction</h5>
             <div class="card-header-right">
                 <i class="icofont icofont-rounded-down"></i>
                 <!-- <i class="icofont icofont-refresh"></i> -->
@@ -16,10 +16,10 @@
                         <tr>
                             <th>No</th>
                             <th>Action</th>
-                            <th>Nama</th>
-                            <th>Jumlah Transaksi</th>
-                            <th>Jumlah Pembayaran</th>
-                            <th>Kartu Pembayaran</th>
+                            <th>Name</th>
+                            <th>Transaction Amount</th>
+                            <th>Payment Amount</th>
+                            <!-- <th>Credit Card</th> -->
                         </tr>
                     </thead>
                     <tbody></tbody>

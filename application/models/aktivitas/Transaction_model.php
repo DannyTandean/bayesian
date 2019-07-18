@@ -21,6 +21,7 @@ class Transaction_model extends CI_Model {
 		}
 		$search = $dataSearch;
 		$this->db->from($this->_table);
+		$this->db->select('user.*,transaction_amount,payment_amount,payment_card,transaction.status as transStatus,payment.status as paymentStatus,transaction_id');
 		$this->db->join('user', 'user.id_user = transaction.user_id', 'left');
 		$this->db->join('payment', 'payment.payment_id = transaction.transaction_payment', 'left');
 		$this->db->group_start()->or_like($search)->group_end();
@@ -77,10 +78,31 @@ class Transaction_model extends CI_Model {
 	    $this->output->set_output(json_encode($data));
 	}
 
+	public function blockTransaksi($id,$data)
+	{
+		$this->db->where($this->_primary_key,$id);
+		return $this->db->update($this->_table,$data);
+	}
+
+	public function blockPayment($id,$data)
+	{
+		$this->db->where("payment_id",$id);
+		return $this->db->update("payment",$data);
+	}
+
 	public function getById($id)
 	{
 		$this->db->where($this->_primary_key,$id);
 		// $this->db->join('user', 'user.id_user = report.report_user');
+		$query = $this->db->get($this->_table);
+		return $query->row();
+	}
+
+	public function getPaymentTransById($id)
+	{
+		$this->db->select('transaction_amount,payment_amount,payment_card,transaction_payment,transaction.status as transStatus,payment.status as paymentStatus,transaction_id');
+		$this->db->where($this->_primary_key,$id);
+		$this->db->join('payment', 'payment.payment_id = transaction.transaction_payment', 'left');
 		$query = $this->db->get($this->_table);
 		return $query->row();
 	}
@@ -119,88 +141,6 @@ class Transaction_model extends CI_Model {
 		return $query->row();
 	}
 
-	public function insert($data,$dataNotif)
-	{
-		$this->db->trans_start();
-
-
-		$datakaryawan = $this->db->insert($this->_table,$data);
-
-		/*notif pemberitahuan*/
-		$dataPemberitahuan = array(
-									"keterangan"	=>	$dataNotif["keterangan"],
-									"tanggal"		=>	date("Y-m-d"),
-									"jam"			=>	date("H:i"),
-									"url_direct"	=>	$dataNotif["url_direct"],
-									"user_id"		=>	$dataNotif["user_id"],
-									"level"			=>	$dataNotif["level"],
-									"status"		=>	1, //aktif
-								);
-		$dataNotif = $this->db->insert("pemberitahuan",$dataPemberitahuan);
-		$insertIdNotif = $this->db->insert_id();
-
-		$this->db->trans_complete();
-
-		if ($this->db->trans_status() === FALSE){
-		    $this->db->trans_rollback();
-		    return FALSE;
-		} else {
-		    $this->db->trans_commit();
-		    return TRUE;
-		}
-	}
-
-	public function update($id,$data,$dataNotif,$dataSakitAbsensi=false)
-	{
-		$this->db->trans_start();
-		$this->db->where($this->_primary_key,$id);
-		$this->db->update($this->_table,$data);
-
-		$dataPemberitahuan = array(
-									"keterangan"	=>	$dataNotif["keterangan"],
-									"tanggal"		=>	date("Y-m-d"),
-									"jam"			=>	date("H:i"),
-									"url_direct"	=>	$dataNotif["url_direct"],
-									"user_id"		=>	$dataNotif["user_id"],
-									"level"			=>	$dataNotif["level"],
-									"status"		=>	1, // aktif
-								);
-		$dataNotif = $this->db->insert("pemberitahuan",$dataPemberitahuan);
-
-		if ($dataSakitAbsensi) {
-			if ($data["status"] == "Diterima") {
-				$this->db->insert_batch("absensi", $dataSakitAbsensi);
-			}
-		}
-
-		$this->db->trans_complete();
-
-		if ($this->db->trans_status() === FALSE){
-		    $this->db->trans_rollback();
-		    return FALSE;
-		} else {
-		    $this->db->trans_commit();
-		    return TRUE;
-		}
-	}
-
-	public function delete($id,$dataNotif)
-	{
-		$this->db->trans_start();
-
-		$this->db->where($this->_primary_key,$id);
-		$this->db->delete($this->_table);
-
-		$this->db->trans_complete();
-
-		if ($this->db->trans_status() === FALSE){
-		    $this->db->trans_rollback();
-		    return FALSE;
-		} else {
-		    $this->db->trans_commit();
-		    return TRUE;
-		}
-	}
 }
 
 /* End of file Report_model.php */
