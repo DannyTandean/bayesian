@@ -82,11 +82,11 @@ class Pengujian_model extends CI_Model {
 
 	public function getAll()
 	{
-		$data = array(
-										'type !=' => "CASH_IN",
-										'type !=' => "CASH_OUT"
-								 );
-		$this->db->where($data);
+		// $data = array(
+		// 								'type !=' => "CASH_IN",
+		// 								'type !=' => "CASH_OUT"
+		// 						 );
+		// $this->db->where($data);
 		$query = $this->db->get($this->_table);
 		return $query->result();
 	}
@@ -106,7 +106,7 @@ class Pengujian_model extends CI_Model {
 
 	public function getquery()
 	{
-		$query = $this->db->query("select nameDest,COUNT(nameDest) as countname from dataset GROUP by nameDest HAVING COUNT(nameDest)>1");
+		$query = $this->db->query("select nameDest,COUNT(nameDest) as countname,type,newbalanceOrig,oldbalanceDest,isFraud from dataset GROUP by nameDest HAVING COUNT(nameDest)>1");
 
 		return $query->result();
 	}

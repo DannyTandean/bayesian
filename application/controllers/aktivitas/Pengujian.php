@@ -85,7 +85,7 @@ class Pengujian extends MY_Controller {
 				}
 				$this->response->status = true;
 				$this->response->message = spanGreen("berhasil get data fraud.!");
-				$this->response->data = sizeof($fraudData);
+				$this->response->data = sizeof($dataFraud);
 			}
 			else {
 				$this->response->message = spanRed("data tidak ada.!");
@@ -97,18 +97,33 @@ class Pengujian extends MY_Controller {
 	public function getSimulation()
 	{
 		if ($this->isPost()) {
-			$get = $this->pengujianModel->getquery();
+			// $get = $this->pengujianModel->getquery();
+			$get = $this->pengujianModel->getAll();
 			$dataName = array();
 			$data = array();
+			$fraud = 0;
 			if ($get) {
 				foreach ($get as $key => $value) {
-					$data[$value->nameDest] = $this->pengujianModel->getByStep($value->nameDest);
+					// $data[$value->nameDest] = $this->pengujianModel->getByStep($value->nameDest);
+					if ($value->type != "PAYMENT" &&(intval($value->newbalanceOrig) == 0 && intval($value->oldbalanceDest) == 0 || intval($value->oldbalanceOrg) == 0)) {
+						$fraud++;
+					}
 				}
+
+				// foreach ($data as $key => $val) {
+				// 	foreach ($val as $key => $vals) {
+				// 		if (($vals->newbalanceOrig == 0 && $vals->oldbalanceDest == 0)) {
+				// 			$fraud++;
+				// 		}
+				// 	}
+				// }
 				// $insert = $this->pengujianModel->insert($data);
-				if ($data) {
+				if ($get) {
 					$this->response->status = true;
 					$this->response->message = spanGreen("berhasil get data fraud.!");
+					$this->response->fraud = $fraud;
 					$this->response->data = $data;
+
 				}
 			}
 			else {
