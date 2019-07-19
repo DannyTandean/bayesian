@@ -105,7 +105,7 @@ class Pengujian extends MY_Controller {
 			if ($get) {
 				foreach ($get as $key => $value) {
 					$data[] = $value;
-					if ($value->type != "PAYMENT" &&(intval($value->newbalanceOrig) == 0 && intval($value->oldbalanceDest) == 0 || intval($value->oldbalanceOrg) == 0)) {
+					if ($value->type != "PAYMENT" &(intval($value->newbalanceOrig) == 0 && intval($value->oldbalanceDest) == 0 )) {
 						$fraud++;
 					}
 				}
