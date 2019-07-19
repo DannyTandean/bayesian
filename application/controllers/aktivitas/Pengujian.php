@@ -104,7 +104,7 @@ class Pengujian extends MY_Controller {
 			$fraud = 0;
 			if ($get) {
 				foreach ($get as $key => $value) {
-					// $data[$value->nameDest] = $this->pengujianModel->getByStep($value->nameDest);
+					$data[] = $value;
 					if ($value->type != "PAYMENT" &&(intval($value->newbalanceOrig) == 0 && intval($value->oldbalanceDest) == 0 || intval($value->oldbalanceOrg) == 0)) {
 						$fraud++;
 					}
