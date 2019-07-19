@@ -102,11 +102,14 @@ class Pengujian extends MY_Controller {
 			$dataName = array();
 			$data = array();
 			$fraud = 0;
+			$total = 0;
 			if ($get) {
 				foreach ($get as $key => $value) {
-					$data[] = $value;
-					if ($value->type != "PAYMENT" &(intval($value->newbalanceOrig) == 0 && intval($value->oldbalanceDest) == 0 )) {
+					if ($value->type != "PAYMENT" &&(intval($value->newbalanceOrig) == 0 && intval($value->oldbalanceDest) == 0 )) {
 						$fraud++;
+					}
+					if ($value->isFraud == 1) {
+						$total++;
 					}
 				}
 
@@ -122,7 +125,7 @@ class Pengujian extends MY_Controller {
 					$this->response->status = true;
 					$this->response->message = spanGreen("berhasil get data fraud.!");
 					$this->response->fraud = $fraud;
-					$this->response->data = $data;
+					$this->response->originFraud = $total;
 
 				}
 			}
