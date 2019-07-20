@@ -103,6 +103,8 @@ class Pengujian extends MY_Controller {
 			$data = array();
 			$fraud = 0;
 			$total = 0;
+			$fraudFP = 0;
+			$fraudFN = 0;
 			if ($get) {
 				foreach ($get as $key => $value) {
 					if ($value->type != "PAYMENT" &&(intval($value->newbalanceOrig) == 0 && intval($value->oldbalanceDest) == 0 )) {
@@ -111,6 +113,11 @@ class Pengujian extends MY_Controller {
 					if ($value->isFraud == 1) {
 						$total++;
 					}
+					if (($value->type != "PAYMENT" &&(intval($value->newbalanceOrig) == 0 && intval($value->oldbalanceDest) == 0 )) && $value->isFraud == 1) {
+						$fraudFP++;
+					}
+
+					$fraudFN = $total - $fraudFP;
 				}
 
 				// foreach ($data as $key => $val) {
@@ -126,6 +133,8 @@ class Pengujian extends MY_Controller {
 					$this->response->message = spanGreen("berhasil get data fraud.!");
 					$this->response->fraud = $fraud;
 					$this->response->originFraud = $total;
+					$this->response->fraudFP = $fraudFP;
+					$this->response->fraudFN = $fraudFN;
 
 				}
 			}
