@@ -64,3 +64,18 @@ $(document).on('click', '#btnRefresh', function(e) {
 	  $("#btnRefresh").children().removeClass("fa-spin");
 	}, 1000);
 });
+
+$(document).ready(function() {
+	$.post(base_url+"/aktivitas/pengujian/getSimulation",function(json) {
+    if(json.status == true){
+          $('#tp').html(json.tp);
+					$('#tn').html(json.tn);
+					$('#fp').html(json.fp);
+					$('#fn').html(json.fn);
+					$('#accuracy').html(json.tp +"+"+ json.tn +"/ ("+ json.tp +"+"+ json.tn +json.fp +"+"+ json.fn +")" );
+					$('#resultTrial').html(parseInt(((json.tp + json.tn) / (json.tp + json.tn + json.fp + json.fn)) * 100) + "%");
+    } else {
+      console.log("error");
+    }
+  });
+});

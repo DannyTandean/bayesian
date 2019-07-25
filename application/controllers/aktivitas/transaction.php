@@ -7,7 +7,7 @@ class Transaction extends MY_Controller {
 	{
 		parent::__construct();
 		$this->load->model('aktivitas/Transaction_model',"transactionModel");
-
+		$this->load->model('Users_model',"usersModel");
 	}
 
 	public function index()
@@ -188,6 +188,7 @@ class Transaction extends MY_Controller {
 			$dataUpdate = array(
 														'status' => $status,
 												 );
+			$getById = $this->transactionModel->getById($id);
 			if ($data) {
 				if ($tipe == "payment") {
 					if ($data->transaction_payment == null) {
@@ -196,6 +197,10 @@ class Transaction extends MY_Controller {
 					else {
 						$payment = $this->transactionModel->blockPayment($data->transaction_payment,$dataUpdate);
 						if ($payment) {
+							$token = $this->usersModel->getByIdUser($getById->user_id);
+							if (($token->key_notif != null || $token->key_notif != "") && $status == 2) {
+								parent::pushnotif($token->key_notif,$token->nama,"Pembayaran anda dicurigai fraud");
+							}
 							$this->response->status = true;
 							$this->response->message = spanGreen("berhasil update data pembayaran.");
 						}
@@ -207,6 +212,10 @@ class Transaction extends MY_Controller {
 				else if ($tipe == "transaksi") {
 					$transaksi = $this->transactionModel->blockTransaksi($data->transaction_id,$dataUpdate);
 					if ($transaksi) {
+						$token = $this->usersModel->getByIdUser(array("id_user" => $getById->user_id));
+						if (($token->key_notif != null || $token->key_notif != "") && $status == 2) {
+							parent::pushnotif($token->key_notif,$token->nama,"Transaksi anda dicurigai fraud");
+						}
 						$this->response->status = true;
 						$this->response->message = spanGreen("berhasil update data transaksi.");
 					}

@@ -13,7 +13,7 @@ use Kreait\Firebase\Messaging\MessageToRegistrationToken;
  */
 class Db_firebase
 {
-  public function pushNotif($token,$title,$body,$kode)
+  public function pushNotif($token,$title,$body)
   {
     $serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/vendor/poihrd-418d3-ee60601e5cad.json');
     $firebase = (new Factory)
@@ -27,11 +27,8 @@ class Db_firebase
     ]);
 
     $data = [
-      'kode' => $kode,
       'title' => $title,
       'content' => $body,
-      'sound' => 'quite_impressed.mp3',
-      'port' => "4000"
     ];
 
     $message = CloudMessage::withTarget('token', $token)

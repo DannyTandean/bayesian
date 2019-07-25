@@ -83,34 +83,6 @@ class MY_Controller extends CI_Controller {
         }
     }
 
-    public function viewMaster($directory=true,$use_layout=true)
-    {
-    	$folder = "master";
-    	if ($directory) {
-    		if (is_string($directory)) {
-    			$folder = $directory;
-    		}
-    	} else {
-    		$folder = "";
-    	}
-
-    	self::view($folder,$use_layout);
-    }
-
-    public function viewAktivitasowner($directory=true,$use_layout=true)
-    {
-        $folder = "aktivitasowner";
-        if ($directory) {
-            if (is_string($directory)) {
-                $folder = $directory;
-            }
-        } else {
-            $folder = "";
-        }
-
-        self::view($folder,$use_layout);
-    }
-
     public function viewAktivitas($directory=true,$use_layout=true)
     {
         $folder = "aktivitas";
@@ -124,79 +96,6 @@ class MY_Controller extends CI_Controller {
 
         self::view($folder,$use_layout);
     }
-
-     public function viewPekerjaBorongan($directory=true,$use_layout=true)
-    {
-        $folder = "pekerjaborongan";
-        if ($directory) {
-            if (is_string($directory)) {
-                $folder = $directory;
-            }
-        } else {
-            $folder = "";
-        }
-
-        self::view($folder,$use_layout);
-    }
-
-    public function viewApproval($directory=true,$use_layout=true)
-    {
-        $folder = "approval";
-        if ($directory) {
-            if (is_string($directory)) {
-                $folder = $directory;
-            }
-        } else {
-            $folder = "";
-        }
-
-        self::view($folder,$use_layout);
-    }
-
-
-    public function viewApprovalOwner($directory=true,$use_layout=true)
-    {
-        $folder = "approvalowner";
-        if ($directory) {
-            if (is_string($directory)) {
-                $folder = $directory;
-            }
-        } else {
-            $folder = "";
-        }
-
-        self::view($folder,$use_layout);
-    }
-
-    public function viewRwd($directory=true,$use_layout=true)
-    {
-        $folder = "rwd";
-        if ($directory) {
-            if (is_string($directory)) {
-                $folder = $directory;
-            }
-        } else {
-            $folder = "";
-        }
-
-        self::view($folder,$use_layout);
-    }
-
-    public function viewStatistik($directory=true,$use_layout=true)
-    {
-        $folder = "statistik";
-        if ($directory) {
-            if (is_string($directory)) {
-                $folder = $directory;
-            }
-        } else {
-            $folder = "";
-        }
-
-        self::view($folder,$use_layout);
-    }
-
-
 
     public function viewContent($content=false)
     {
@@ -281,11 +180,11 @@ class MY_Controller extends CI_Controller {
         return $data;
     }
 
-	public function pushnotif($token,$title,$body,$kode)
+	public function pushnotif($token,$title,$body)
 	{
 		$this->load->library('Db_firebase');
 
-		$notif = $this->db_firebase->pushNotif($token,$title,$body,$kode);
+		$notif = $this->db_firebase->pushNotif($token,$title,$body);
 
 		return $notif;
 	}

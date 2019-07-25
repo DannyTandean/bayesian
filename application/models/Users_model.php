@@ -94,6 +94,13 @@ class Users_model extends CI_Model {
 		return $query->row();
 	}
 
+	public function getByIdUser($id)
+	{
+		$this->db->where("id_user",$id);
+		$query = $this->db->get("user");
+		return $query->row();
+	}
+
 	public function update($id,$data)
 	{
 		$this->db->where($this->_primary_key,$id);
