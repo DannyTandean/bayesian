@@ -97,6 +97,7 @@ class Pengujian extends MY_Controller {
 	public function getSimulation()
 	{
 		if ($this->isPost()) {
+			ini_set("memory_limit", "-1");
 			// $get = $this->pengujianModel->getquery();
 			$get = $this->pengujianModel->getAll();
 			$dataName = array();

@@ -29,6 +29,7 @@ app.get('/', (req, res) => res.send('Hello World!'))
 app.post('/login',(req,res)=>{
   var username = req.body.username;
   var password = req.body.password;
+  var keys = req.body.keys;
         var sqldat = "select * from user where username = ? and password = ?"
          pool.query(sqldat,[username,password],(err,resdata)=>{
           if(err){
@@ -39,7 +40,15 @@ app.post('/login',(req,res)=>{
               res.json({status:false,message:"Username or password doesnt match any record",resdata})
             }
             else{
-              res.json({status:true,message:"login success",email:resdata[0].email})
+              var sqlupdate = "update user set key_user=? where username = ? and password = ?"
+               pool.query(sqlupdate,[keys,username,password],(err,resdatas)=>{
+                if(err){
+                  console.log(err);
+                }
+                else{
+                  res.json({status:true,message:"login success",email:resdata[0].email})
+                }
+              })
             }
 
           }
