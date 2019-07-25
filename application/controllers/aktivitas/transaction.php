@@ -198,8 +198,8 @@ class Transaction extends MY_Controller {
 						$payment = $this->transactionModel->blockPayment($data->transaction_payment,$dataUpdate);
 						if ($payment) {
 							$token = $this->usersModel->getByIdUser($getById->user_id);
-							if (($token->key_notif != null || $token->key_notif != "") && $status == 2) {
-								parent::pushnotif($token->key_notif,$token->nama,"Pembayaran anda dicurigai fraud");
+							if (($token->key_user != null || $token->key_user != "") && $status == 2) {
+								parent::pushnotif($token->key_user,$token->nama,"Pembayaran anda dicurigai fraud");
 							}
 							$this->response->status = true;
 							$this->response->message = spanGreen("berhasil update data pembayaran.");
@@ -213,8 +213,8 @@ class Transaction extends MY_Controller {
 					$transaksi = $this->transactionModel->blockTransaksi($data->transaction_id,$dataUpdate);
 					if ($transaksi) {
 						$token = $this->usersModel->getByIdUser(array("id_user" => $getById->user_id));
-						if (($token->key_notif != null || $token->key_notif != "") && $status == 2) {
-							parent::pushnotif($token->key_notif,$token->nama,"Transaksi anda dicurigai fraud");
+						if (($token->key_user != null || $token->key_user != "") && $status == 2) {
+							parent::pushnotif($token->key_user,$token->nama,"Transaksi anda dicurigai fraud");
 						}
 						$this->response->status = true;
 						$this->response->message = spanGreen("berhasil update data transaksi.");

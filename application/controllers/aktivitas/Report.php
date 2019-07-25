@@ -87,8 +87,8 @@ class Report extends MY_Controller {
 				$update = $this->reportModel->block($id,$data);
 				if ($update) {
 					$token = $this->usersModel->getByIdUser($user_id->id_user);
-					if (($token->key_notif != null || $token->key_notif != "") && $status == 2) {
-						// parent::pushnotif($token->key_notif,$token->nama,"IP anda dicurigai fraud");
+					if (($token->key_user != null || $token->key_user != "") && $status == 2) {
+						parent::pushnotif($token->key_user,$token->nama,"anda terlapor fraud");
 					}
 					$this->response->status = true;
 					$this->response->message = "<span style='color:green'>berhasil update data Laporan.!</span>";
