@@ -31,6 +31,35 @@
                 </table>
             </div>
         </div>
+
+        <div class="card-block">
+          <div class="row">
+            <div class="col-md-6">
+              <table class="table table-striped table-bordered table-sm nowrap" style="width: 100%;">
+                <tr>
+                  <td>&nbsp;</td>
+                  <td>True</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <td>Positive</td>
+                  <td id="tp"></td>
+                  <td id="fp"></td>
+                </tr>
+                <tr>
+                  <td>Negative</td>
+                  <td id="tn"></td>
+                  <td id="fn"></td>
+                </tr>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <p>Accuracy = (TP + TN) / (TP + TN + FP + FN)</p>
+              <p>Accuracy = <span id="accuracy"></span> </p>
+              <p>Accuracy = <span id="resultTrial"></span> </p>
+            </div>
+          </div>
+        </div>
     </div>
     <!-- Zero config.table end -->
 </div>

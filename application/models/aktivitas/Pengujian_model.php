@@ -10,7 +10,7 @@ class Pengujian_model extends CI_Model {
 	{
 		parent::__construct();
 		$this->_table = "dataset";
-		$this->_primary_key = "number";
+		$this->_primary_key = "no";
 	}
 
 	public function setQueryDataTable($search,$after=null,$before=null)
@@ -21,11 +21,14 @@ class Pengujian_model extends CI_Model {
 		}
 		$search = $dataSearch;
 		$this->db->from($this->_table);
-		$data = array(
-										'type !=' => "CASH_IN",
-										'type !=' => "CASH_OUT"
-								 );
-		$this->db->where($data);
+		$this->db->select('COUNT(nameDest) as countname,isFraud,type,amount,nameOrig,oldbalanceOrg,newbalanceOrig,nameDest,oldbalanceDest,newbalanceDest,isFlaggedFraud');
+		$this->db->group_by("nameDest");
+		$this->db->having('countname > 1');
+		// $data = array(
+		// 								'type !=' => "CASH_IN",
+		// 								'type !=' => "CASH_OUT"
+		// 						 );
+		// $this->db->where($data);
 		$this->db->group_start()->or_like($search)->group_end();
 
 	}
@@ -107,6 +110,20 @@ class Pengujian_model extends CI_Model {
 	public function getquery()
 	{
 		$query = $this->db->query("select nameDest,COUNT(nameDest) as countname,type,newbalanceOrig,oldbalanceDest,isFraud from dataset GROUP by nameDest HAVING COUNT(nameDest)>1");
+
+		return $query->result();
+	}
+
+	public function getqueryFraud()
+	{
+		$query = $this->db->query("select nameDest,COUNT(nameDest) as countname,type,newbalanceOrig,oldbalanceDest,isFraud from dataset GROUP by nameDest HAVING COUNT(nameDest)>1 and isFraud = 1");
+
+		return $query->result();
+	}
+
+	public function getqueryNonFraud()
+	{
+		$query = $this->db->query("select nameDest,COUNT(nameDest) as countname,type,newbalanceOrig,oldbalanceDest,isFraud from dataset GROUP by nameDest HAVING COUNT(nameDest)>1 and isFraud = 0");
 
 		return $query->result();
 	}

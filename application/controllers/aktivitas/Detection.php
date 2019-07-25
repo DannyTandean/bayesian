@@ -61,25 +61,25 @@ class Detection extends MY_Controller {
 				// var_dump($persenPayment." ".$persenTransaction." ". $persenReport);
 				// IP = IP & ip,bulkbuy,payment
 
-				$ipTTT = 0.9;
-				$ipTTF = 0.5;
-				$ipTFT = 0.5;
-				$ipTFF = 0.1;
-				$ipFTT = 0.1;
-				$ipFTF = 0.5;
-				$ipFFT = 0.5;
-				$ipFFF = 0.9;
+				$ipTTT = 1;
+				$ipTTF = 0;
+				$ipTFT = 1;
+				$ipTFF = 0;
+				$ipFTT = 0;
+				$ipFTF = 0.1;
+				$ipFFT = 0.9;
+				$ipFFF = 1;
 
 				//Trans = Transaksi  & transaksi,ip,report
 
-				$transTTT = 0.9;
-				$transTTF = 0.5;
-				$transTFT = 0.5;
-				$transTFF = 0.1;
-				$transFTT = 0.1;
-				$transFTF = 0.5;
-				$transFFT = 0.5;
-				$transFFF = 0.9;
+				$transTTT = 1;
+				$transTTF = 0;
+				$transTFT = 1;
+				$transTFF = 0;
+				$transFTT = 0;
+				$transFTF = 0.1;
+				$transFFT = 0.9;
+				$transFFF = 1;
 
 				//P(bb,p,ip,ur,t) = P (BB) x P (p) x P (ur) x P (ip | p , b) x P ( t |ur , ip )
 

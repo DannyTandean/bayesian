@@ -368,7 +368,37 @@ app.post('/checkout',(req,res)=>{
                 console.log(err);
               }
               else{
-                res.json({status:true,message:"Processing"})
+                var sqlselip = "select * from ip where user_id = ? and ip_address = ?"
+                pool.query(sqlselip,[resdata[0].id_user,ipaddress],(err,resselip)=>{
+                  if (err) {
+                    console.log(err);
+                  }
+                  else {
+                    var sqlselip = "select * from ip where user_id = ? and ip_address = ?"
+                    pool.query(sqlselip,[resdata[0].id_user,ipaddress],(err,resselip)=>{
+                      if (err) {
+                        console.log(err);
+                      }
+                      else {
+                        if (resselip.length == 0) {
+                          var sqlip = "insert into ip (user_id,ip_address,tipe,status) values (?,?,?,?)"
+                          pool.query(sqlip,[resdata[0].id_user,ipaddress,0,0],(err,resIp)=>{
+                            if (err) {
+                              console.log(err);
+                            }
+                            else {
+                              res.json({status:true,message:"Processing"})
+                            }
+                          })
+                        }
+                        else {
+                          console.log("data ip sudah ada");
+                          res.json({status:true,message:"Processing"})
+                        }
+                      }
+                    })
+                  }
+                })
               }
             })
           }
@@ -396,7 +426,29 @@ app.post('/checkout',(req,res)=>{
                 console.log(err);
               }
               else{
-                res.json({status:true,message:"Processing"})
+                var sqlselip = "select * from ip where user_id = ? and ip_address = ?"
+                pool.query(sqlselip,[resdata[0].id_user,ipaddress],(err,resselip)=>{
+                  if (err) {
+                    console.log(err);
+                  }
+                  else {
+                    if (resselip.length == 0) {
+                      var sqlip = "insert into ip (user_id,ip_address,tipe,status) values (?,?,?,?)"
+                      pool.query(sqlip,[resdata[0].id_user,ipaddress,0,0],(err,resIp)=>{
+                        if (err) {
+                          console.log(err);
+                        }
+                        else {
+                          res.json({status:true,message:"Processing"})
+                        }
+                      })
+                    }
+                    else {
+                      console.log("data ip sudah ada");
+                      res.json({status:true,message:"Processing"})
+                    }
+                  }
+                })
               }
             })
           }
@@ -460,7 +512,29 @@ app.post('/checkoutn',(req,res)=>{
                                 console.log(err);
                               }
                               else{
-                                res.json({status:true,message:"Processing"})
+                                var sqlselip = "select * from ip where user_id = ? and ip_address = ?"
+                                pool.query(sqlselip,[resdata[0].id_user,ipaddress],(err,resselip)=>{
+                                  if (err) {
+                                    console.log(err);
+                                  }
+                                  else {
+                                    if (resselip.length == 0) {
+                                      var sqlip = "insert into ip (user_id,ip_address,tipe,status) values (?,?,?,?)"
+                                      pool.query(sqlip,[resdata[0].id_user,ipaddress,0,0],(err,resIp)=>{
+                                        if (err) {
+                                          console.log(err);
+                                        }
+                                        else {
+                                          res.json({status:true,message:"Processing"})
+                                        }
+                                      })
+                                    }
+                                    else {
+                                      console.log("data ip sudah ada");
+                                      res.json({status:true,message:"Processing"})
+                                    }
+                                  }
+                                })
                               }
                             })
                           }
@@ -520,7 +594,29 @@ app.post('/checkoutn',(req,res)=>{
                                 console.log(err);
                               }
                               else{
-                                res.json({status:true,message:"Processing"})
+                                var sqlselip = "select * from ip where user_id = ? and ip_address = ?"
+                                pool.query(sqlselip,[resdata[0].id_user,ipaddress],(err,resselip)=>{
+                                  if (err) {
+                                    console.log(err);
+                                  }
+                                  else {
+                                    if (resselip.length == 0) {
+                                      var sqlip = "insert into ip (user_id,ip_address,tipe,status) values (?,?,?,?)"
+                                      pool.query(sqlip,[resdata[0].id_user,ipaddress,1,0],(err,resIp)=>{
+                                        if (err) {
+                                          console.log(err);
+                                        }
+                                        else {
+                                          res.json({status:true,message:"Processing"})
+                                        }
+                                      })
+                                    }
+                                    else {
+                                      console.log("data ip sudah ada");
+                                      res.json({status:true,message:"Processing"})
+                                    }
+                                  }
+                                })
                               }
                             })
                           }
@@ -578,7 +674,29 @@ app.post('/checkoutp',(req,res)=>{
                           console.log(err);
                         }
                         else{
-                          res.json({status:true,message:"Processing"})
+                          var sqlselip = "select * from ip where user_id = ? and ip_address = ?"
+                          pool.query(sqlselip,[resuser[0].id_user,ipaddress],(err,resselip)=>{
+                            if (err) {
+                              console.log(err);
+                            }
+                            else {
+                              if (resselip.length == 0) {
+                                var sqlip = "insert into ip (user_id,ip_address,tipe,status) values (?,?,?,?)"
+                                pool.query(sqlip,[resuser[0].id_user,ipaddress,1,0],(err,resIp)=>{
+                                  if (err) {
+                                    console.log(err);
+                                  }
+                                  else {
+                                    res.json({status:true,message:"Processing"})
+                                  }
+                                })
+                              }
+                              else {
+                                console.log("data ip sudah ada");
+                                res.json({status:true,message:"Processing"})
+                              }
+                            }
+                          })
                         }
                       })
                     }

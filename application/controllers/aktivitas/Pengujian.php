@@ -14,10 +14,10 @@ class Pengujian extends MY_Controller {
 	{
 		parent::checkLoginUser(); // user login autentic checking
 
-		parent::headerTitle("Activity > Detection Fraud","Activity","Detection Fraud");
+		parent::headerTitle("Activity > Pengujian","Activity","Pengujian");
 		$breadcrumbs = array(
 							"Activity"	=>	site_url('aktivitas/Pengujian'),
-							"Detection Fraud"		=>	"",
+							"Pengujian"		=>	"",
 						);
 		parent::breadcrumbs($breadcrumbs);
 		parent::viewAktivitas();
@@ -34,6 +34,8 @@ class Pengujian extends MY_Controller {
 
 			$result = $this->pengujianModel->findDataTable($orderBy,$search);
 			foreach ($result as $item) {
+				// if ($item->countname > 1) {
+				// }
 				$data[] = $item;
 			}
 			return $this->pengujianModel->findDataTableOutput($data,$search);
@@ -98,26 +100,48 @@ class Pengujian extends MY_Controller {
 	{
 		if ($this->isPost()) {
 			// $get = $this->pengujianModel->getquery();
-			$get = $this->pengujianModel->getAll();
-			$dataName = array();
-			$data = array();
+			$get = $this->pengujianModel->getquery();
+			$getFraud = $this->pengujianModel->getqueryFraud();
+			$getNonFraud = $this->pengujianModel->getqueryNonFraud();
+			// $dataName = array();
+			// $data = array();
 			$fraud = 0;
 			$total = 0;
 			$fraudFP = 0;
 			$fraudFN = 0;
+			$tp=0;
+			$tn=0;
+			$fp=0;
+			$fn=0;
 			if ($get) {
 				foreach ($get as $key => $value) {
-					if ($value->type != "PAYMENT" &&(intval($value->newbalanceOrig) == 0 && intval($value->oldbalanceDest) == 0 )) {
-						$fraud++;
+					// if ($value->type != "PAYMENT" &&(intval($value->newbalanceOrig) == 0 && intval($value->oldbalanceDest) == 0 )) {
+					// 	$fraud++;
+					// }
+					// if ($value->isFraud == 1) {
+					// 	$total++;
+					// }
+					// if (($value->type != "PAYMENT" &&(intval($value->newbalanceOrig) == 0 && intval($value->oldbalanceDest) == 0 )) && $value->isFraud == 1) {
+					// 	$fraudFP++;
+					// }
+					//
+					// $fraudFN = $total - $fraudFP;
+					if (intval($value->newbalanceOrig) == 0 && intval($value->oldbalanceDest) == 0 ) {
+						if (in_array($value,$getFraud)) {
+							$tp++;
+						}
+						else {
+							$fp++;
+						}
 					}
-					if ($value->isFraud == 1) {
-						$total++;
+					else {
+						if (in_array($value,$getNonFraud)) {
+							$tn++;
+						}
+						else {
+							$fn++;
+						}
 					}
-					if (($value->type != "PAYMENT" &&(intval($value->newbalanceOrig) == 0 && intval($value->oldbalanceDest) == 0 )) && $value->isFraud == 1) {
-						$fraudFP++;
-					}
-
-					$fraudFN = $total - $fraudFP;
 				}
 
 				// foreach ($data as $key => $val) {
@@ -131,10 +155,15 @@ class Pengujian extends MY_Controller {
 				if ($get) {
 					$this->response->status = true;
 					$this->response->message = spanGreen("berhasil get data fraud.!");
-					$this->response->fraud = $fraud;
-					$this->response->originFraud = $total;
-					$this->response->fraudFP = $fraudFP;
-					$this->response->fraudFN = $fraudFN;
+					$this->response->data = sizeof($get)." ".($tp+$tn+$fp+$fn)." ".(sizeof($getFraud) + sizeof($getNonFraud));
+					$this->response->tp = $tp;
+					$this->response->tn = $tn;
+					$this->response->fp = $fp;
+					$this->response->fn = $fn;
+					// $this->response->fraud = $fraud;
+					// $this->response->originFraud = $total;
+					// $this->response->fraudFP = $fraudFP;
+					// $this->response->fraudFN = $fraudFN;
 
 				}
 			}
