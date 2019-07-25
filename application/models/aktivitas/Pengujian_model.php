@@ -109,21 +109,21 @@ class Pengujian_model extends CI_Model {
 
 	public function getquery()
 	{
-		$query = $this->db->query("select nameDest,COUNT(nameDest) as countname,type,newbalanceOrig,oldbalanceDest,isFraud from dataset GROUP by nameDest HAVING COUNT(nameDest)>1");
+		$query = $this->db->query("select nameDest,COUNT(nameDest) as countname,type,newbalanceOrig,oldbalanceDest,isFraud,amount,oldbalanceOrg from dataset GROUP by nameDest HAVING COUNT(nameDest)>1");
 
 		return $query->result();
 	}
 
 	public function getqueryFraud()
 	{
-		$query = $this->db->query("select nameDest,COUNT(nameDest) as countname,type,newbalanceOrig,oldbalanceDest,isFraud from dataset GROUP by nameDest HAVING COUNT(nameDest)>1 and isFraud = 1");
+		$query = $this->db->query("select nameDest,COUNT(nameDest) as countname,type,newbalanceOrig,oldbalanceDest,isFraud,amount,oldbalanceOrg from dataset GROUP by nameDest HAVING COUNT(nameDest)>1 and isFraud = 1");
 
 		return $query->result();
 	}
 
 	public function getqueryNonFraud()
 	{
-		$query = $this->db->query("select nameDest,COUNT(nameDest) as countname,type,newbalanceOrig,oldbalanceDest,isFraud from dataset GROUP by nameDest HAVING COUNT(nameDest)>1 and isFraud = 0");
+		$query = $this->db->query("select nameDest,COUNT(nameDest) as countname,type,newbalanceOrig,oldbalanceDest,isFraud,amount,oldbalanceOrg from dataset GROUP by nameDest HAVING COUNT(nameDest)>1 and isFraud = 0");
 
 		return $query->result();
 	}
