@@ -7,7 +7,7 @@ class Report extends MY_Controller {
 	{
 		parent::__construct();
 		$this->load->model('aktivitas/Report_model',"reportModel");
-
+		$this->load->model('Users_model',"usersModel");
 	}
 
 	public function index()
@@ -82,8 +82,14 @@ class Report extends MY_Controller {
 				$data = array(
 												'status' => $status,
 										 );
+				$user_id = $this->reportModel->getById($id);
+
 				$update = $this->reportModel->block($id,$data);
 				if ($update) {
+					$token = $this->usersModel->getByIdUser($user_id->id_user);
+					if (($token->key_notif != null || $token->key_notif != "") && $status == 2) {
+						// parent::pushnotif($token->key_notif,$token->nama,"IP anda dicurigai fraud");
+					}
 					$this->response->status = true;
 					$this->response->message = "<span style='color:green'>berhasil update data Laporan.!</span>";
 				}
