@@ -55,6 +55,32 @@ app.post('/login',(req,res)=>{
         })
 })
 
+app.post('/getreport',(req,res)=>{
+  var username = req.body.username;
+        var sqldat = "select * from user where username = ? and password = ?"
+         pool.query(sqldat,[username,password],(err,resdata)=>{
+          if(err){
+            console.log(err);
+          }
+          else{
+            if(resdata.length==0){
+              res.json({status:false,message:"Username or password doesnt match any record",resdata})
+            }
+            else{
+              var sqlupdate = "select * from report where user_id=?"
+               pool.query(sqlupdate,[resdata[0].user_id],(err,resdatas)=>{
+                if(err){
+                  console.log(err);
+                }
+                else{
+                  res.json({status:true,message:"login success",email:resdata[0].email})
+                }
+              })
+            }
+
+          }
+        })
+})
 
 app.post('/register',(req,res)=>{
   var username = req.body.username;
@@ -733,6 +759,46 @@ app.post('/payment',(req,res)=>{
             res.json({status:true,message:"succes transactions",data:resdata})
           }
         })
+})
+
+app.post("/userreporttest",(req,res)=>{
+     var em = req.body.email;
+     var fn = req.body.fullname;
+     var msg = req.body.message;
+     var type = req.body.type;
+     var username = req.body.username;
+     console.log(req.file);
+       var getuser = "select * from user where username = ?"
+       pool.query(getuser,[username],(err,datauser)=>{
+           if(err){
+             console.log(err);
+           }
+           else{
+             if(datauser.length==0){
+               res.json({status:false,message:"data not found"});
+             }
+             else{
+               var getpembagi = "insert into reporttest(user_id,email,type,report_message) values (?,?,?,?)"
+               pool.query(getpembagi,[datauser[0].id_user,em,type,msg],(err,datanumber)=>{
+                   if(err){
+                     console.log(err);
+                   }
+                   else{
+                     if(datanumber.length==0){
+                       res.json({status:false,message:"data not found"});
+                     }
+                     else{
+                       res.json({status:true,message:"Success Reporting"});
+                     }
+                   }
+               })
+             }
+           }
+       })
+
+
+
+
 })
 
 app.post("/userreport",facestorage.single('image'),(req,res)=>{
