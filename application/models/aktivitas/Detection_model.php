@@ -101,6 +101,15 @@ class Detection_model extends CI_Model {
 		return $query->num_rows();
 	}
 
+	public function getCreditCardFraud($id)
+	{
+		$this->db->where('card_user', $id);
+
+		$query = $this->db->get('credit_card');
+
+		return $query->result();
+	}
+
 	public function getAllPayment()
 	{
 		$query = $this->db->get("payment");

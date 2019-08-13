@@ -36,12 +36,12 @@ class Report extends MY_Controller {
 			$result = $this->reportModel->findDataTable($orderBy,$search);
 			foreach ($result as $item) {
 				$btnAction = "";
-				if ($item->status == 0 || $item->status == 1) {
-					$btnAction .='&emsp;&emsp;&emsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlock('.$item->report_id.','."2".')"><i class="fa fa-times"></i>Valid</button><br><br>';
-				}
-				else if ($item->status == 2) {
-					$btnAction .='&emsp;&emsp;&emsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlock('.$item->report_id.','."0".')"><i class="fa fa-times"></i>Invalid</button><br><br>';
-				}
+				// if ($item->status == 0 || $item->status == 1) {
+				// 	$btnAction .='&emsp;&emsp;&emsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlock('.$item->report_id.','."2".')"><i class="fa fa-times"></i>Valid</button><br><br>';
+				// }
+				// else if ($item->status == 2) {
+				// 	$btnAction .='&emsp;&emsp;&emsp;<button class="btn btn-warning btn-warning btn-mini" onclick="btnBlock('.$item->report_id.','."0".')"><i class="fa fa-times"></i>Invalid</button><br><br>';
+				// }
 				$btnAction .= '<button class="btn btn-info btn-info btn-mini" onclick="btnDetail('.$item->report_id.')"><i class="fa fa-pencil-square-o"></i>Detail</button>';
 				$btnAction .= '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger btn-danger btn-mini" onclick="btnDelete('.$item->report_id.')"><i class="fa fa-trash-o"></i>Delete</button>';
 				$item->transaction_limit = "Rp.".number_format($item->transaction_limit,0,",",",");
