@@ -146,6 +146,15 @@ class Detection_model extends CI_Model {
 		return $query->num_rows();
 	}
 
+	public function getUserFraud($id)
+	{
+		$this->db->where('id_user', $id);
+
+		$query = $this->db->get('user');
+
+		return $query->row();
+	}
+
 }
 
 /* End of file Detection_model.php */

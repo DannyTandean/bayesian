@@ -50,15 +50,17 @@ class Detection extends MY_Controller {
 				$creditName = 0;
 				$creditDelete = 0;
 				$creditFraudUser = 0;
+
+				$fraudUser = $this->detectionModel->getUserFraud($item->id_user);
+				if ($fraudUser->status == 2) {
+					$creditFraudUser = 0.33;
+				}
 				foreach ($crediCardFraud as $key => $credit) {
 					if (strpos($credit->card_user, $credit->card_name) !== true) {
 					    $creditName = 0.33;
 					}
-					if ($credit->status == 0) {
+					if ($credit->status == 0 && $credit->card_fraud_user != 0) {
 						$creditDelete = 0.33;
-					}
-					if ($credit->card_fraud_user != 0) {
-						$creditFraudUser = 0.33;
 					}
 				}
 				$persenUserbehaviorT = $creditName + $creditDelete + $creditFraudUser;
