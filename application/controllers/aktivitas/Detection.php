@@ -95,7 +95,8 @@ class Detection extends MY_Controller {
 				$fraudTT010 = $transFTF * $persenPaymentFraud * $persenUserbehaviorF;
 				$fraudTT011 = $transTTF * $persenPaymentFraud * $persenUserbehaviorT;
 
-				$total1 = $fraudTT000 + $fraudTT001 + $fraudTT010 + $fraudTT011;
+				$total1 = $fraudTT000 + $fraudTT001;
+				$total2 = $fraudTT010 + $fraudTT011;
 
 				$listTransaksi = $this->detectionModel->listTransaction($item->id_user);
 				$stringTrans = "";
@@ -128,7 +129,7 @@ class Detection extends MY_Controller {
 					$total3 = 0;
 				}
 				else {
-					$total3 = $total1;
+					$total3 = $total1 / ($total1 + $total2);
 				}
 				$item->transaction_limit = "Rp.".number_format($item->transaction_limit,0,",",",");
 				$item->Fraudcase = $stringFraudcase;
