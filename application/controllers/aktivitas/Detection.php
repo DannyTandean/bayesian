@@ -70,9 +70,8 @@ class Detection extends MY_Controller {
 				$totalTransaction = $transaction + $transactionFraud;
 				// $totalReport = $report + $reportFraud;
 				// persentase
-				// $persenPayment = $payment / $totalPayment;
-				$persenPaymentFraudT = $paymentFraud / $payment;
-				$persenPaymentFraudF = 1- ($paymentFraud / $payment);
+				$persenPayment = $payment / $totalPayment;
+				$persenPaymentFraud = $paymentFraud / $totalPayment;
 
 				$transTTT = 0.9;
 				$transTTF = 0.1;
@@ -85,10 +84,10 @@ class Detection extends MY_Controller {
 
 				//P(bb,p,ip,ur,t) = P (BB) x P (p) x P (ur) x P (ip | p , b) x P ( t |ur , ip )
 
-				$fraudTT000 = $transFTT * $persenPaymentFraudT * $persenUserbehaviorF;
-				$fraudTT001 = $transTTT * $persenPaymentFraudT * $persenUserbehaviorT;
-				$fraudTT010 = $transFTF * $persenPaymentFraudF * $persenUserbehaviorF;
-				$fraudTT011 = $transTTF * $persenPaymentFraudF * $persenUserbehaviorT;
+				$fraudTT000 = $transFTT * $persenPaymentFraud * $persenUserbehaviorF;
+				$fraudTT001 = $transTTT * $persenPaymentFraud * $persenUserbehaviorT;
+				$fraudTT010 = $transFTF * $persenPaymentFraud * $persenUserbehaviorF;
+				$fraudTT011 = $transTTF * $persenPaymentFraud * $persenUserbehaviorT;
 
 				$total1 = $fraudTT000 + $fraudTT001;
 				$total2 = $fraudTT010 + $fraudTT011;
