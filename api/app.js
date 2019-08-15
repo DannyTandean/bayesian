@@ -71,13 +71,28 @@ var facestorage = multer({
                            })
                          }
                          else{
-                           var sqlup = "update user set product_id = ?,treshold=? where id_user=?"
-                           pool.query(sqlup,[rescart[0].product_id,1,iduser],(err,resup)=>{
-                             if(err){
-                               console.log(err);
-                             }
-                               console.log("done2");
-                           })
+                           if(trueproduct==0){
+                             var sqlup = "update user set user.product_id = ?,treshold=1 where user.id_user=?"
+                             pool.query(sqlup,[rescart[0].product_id,iduser],(err,resup)=>{
+                               if(err){
+                                 console.log(err);
+                               }
+                                 console.log("done2");
+                             })
+                           }
+                           else{
+
+                             var sqlup = "update user join product as p on p.product_id=user.product_id set user.product_id = ?,user.status=if(treshold<(20000000/p.product_price),1,2),user.treshold=? where user.id_user=?"
+                             console.log(sqlup);
+                             console.log(rescart[0].product_id+" aw "+iduser);
+                             pool.query(sqlup,[rescart[0].product_id,1,iduser],(err,resup)=>{
+                               if(err){
+                                 console.log(err);
+                               }
+                                 console.log("done2");
+                             })
+                           }
+
                          }
                        }
                      }
@@ -483,33 +498,99 @@ app.post('/checkout',(req,res)=>{
   var ipaddress = req.body.ipaddress
   var total= req.body.amount
 
-  var sqldat = "select * from cart where status=0 and id_user in (select id_user from user where username = ?)"
-  pool.query(sqldat,[cart_username],(err,resdata)=>{
-    if(err){
-      console.log(err);
+  var sqlceku = "select * from user where username=?"
+  pool.query(sqlceku,[cart_username],(err,resceku)=>{
+
+    if(resceku.length==0){
+
     }
     else{
-      if(resdata.length==1){
+      var status = 0 ;
+      if(resceku[0].status==2){
+        status = 2;
+      }
+      else{
+        status = 0;
+      }
+      var sqldat = "select * from cart where status=0 and id_user in (select id_user from user where username = ?)"
+      pool.query(sqldat,[cart_username],(err,resdata)=>{
+        if(err){
+          console.log(err);
+        }
+        else{
+          if(resdata.length==1){
 
-        console.log();
-        var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status) values (?,?,?,?,?,?,?,?)"
-        pool.query(sqlpay,[resdata[0].cart_id,resdata[0].id_user,total,"",null,0,ipaddress,0],(err,respay)=>{
-          if(err){
-            console.log(err);
-          }
-          else{
-            var sqlcleancart = "update cart set status = 1 where id_user=?"
-            pool.query(sqlcleancart,[resdata[0].id_user],(err,restry)=>{
+            console.log();
+            var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status) values (?,?,?,?,?,?,?,?)"
+            pool.query(sqlpay,[resdata[0].cart_id,resdata[0].id_user,total,"",null,0,ipaddress,status],(err,respay)=>{
               if(err){
                 console.log(err);
               }
               else{
-                var sqlselip = "select * from ip where user_id = ? and ip_address = ?"
-                pool.query(sqlselip,[resdata[0].id_user,ipaddress],(err,resselip)=>{
-                  if (err) {
+                var sqlcleancart = "update cart set status = 1 where id_user=?"
+                pool.query(sqlcleancart,[resdata[0].id_user],(err,restry)=>{
+                  if(err){
                     console.log(err);
                   }
-                  else {
+                  else{
+                    var sqlselip = "select * from ip where user_id = ? and ip_address = ?"
+                    pool.query(sqlselip,[resdata[0].id_user,ipaddress],(err,resselip)=>{
+                      if (err) {
+                        console.log(err);
+                      }
+                      else {
+                        var sqlselip = "select * from ip where user_id = ? and ip_address = ?"
+                        pool.query(sqlselip,[resdata[0].id_user,ipaddress],(err,resselip)=>{
+                          if (err) {
+                            console.log(err);
+                          }
+                          else {
+                            if (resselip.length == 0) {
+                              var sqlip = "insert into ip (user_id,ip_address,tipe,status) values (?,?,?,?)"
+                              pool.query(sqlip,[resdata[0].id_user,ipaddress,0,0],(err,resIp)=>{
+                                if (err) {
+                                  console.log(err);
+                                }
+                                else {
+                                  res.json({status:true,message:"Processing"})
+                                }
+                              })
+                            }
+                            else {
+                              console.log("data ip sudah ada");
+                              res.json({status:true,message:"Processing"})
+                            }
+                          }
+                        })
+                      }
+                    })
+                  }
+                })
+              }
+            })
+          }
+          else if(resdata.length>1){
+            var string="";
+            for(var i=0; i < resdata.length;i++){
+              if(i==0){
+                string = resdata[i].cart_id ;
+              }
+              else{
+                string = string + "," + resdata[i].cart_id;
+              }
+            }
+            var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status) values (?,?,?,?,?,?,?,?)"
+            pool.query(sqlpay,[string,resdata[0].id_user,total,"",null,0,ipaddress,status],(err,respay)=>{
+              if(err){
+                console.log(err);
+              }
+              else{
+                var sqlcleancart = "update cart set status = 1 where id_user=?"
+                pool.query(sqlcleancart,[resdata[0].id_user],(err,restry)=>{
+                  if(err){
+                    console.log(err);
+                  }
+                  else{
                     var sqlselip = "select * from ip where user_id = ? and ip_address = ?"
                     pool.query(sqlselip,[resdata[0].id_user,ipaddress],(err,resselip)=>{
                       if (err) {
@@ -518,7 +599,7 @@ app.post('/checkout',(req,res)=>{
                       else {
                         if (resselip.length == 0) {
                           var sqlip = "insert into ip (user_id,ip_address,tipe,status) values (?,?,?,?)"
-                          pool.query(sqlip,[resdata[0].id_user,ipaddress,0,0],(err,resIp)=>{
+                          pool.query(sqlip,[resdata[0].id_user,ipaddress,0,status],(err,resIp)=>{
                             if (err) {
                               console.log(err);
                             }
@@ -538,62 +619,14 @@ app.post('/checkout',(req,res)=>{
               }
             })
           }
-        })
-      }
-      else if(resdata.length>1){
-        var string="";
-        for(var i=0; i < resdata.length;i++){
-          if(i==0){
-            string = resdata[i].cart_id ;
-          }
           else{
-            string = string + "," + resdata[i].cart_id;
+            res.json({status:false,message:"no data",resdata})
           }
         }
-        var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status) values (?,?,?,?,?,?,?,?)"
-        pool.query(sqlpay,[string,resdata[0].id_user,total,"",null,0,ipaddress,0],(err,respay)=>{
-          if(err){
-            console.log(err);
-          }
-          else{
-            var sqlcleancart = "update cart set status = 1 where id_user=?"
-            pool.query(sqlcleancart,[resdata[0].id_user],(err,restry)=>{
-              if(err){
-                console.log(err);
-              }
-              else{
-                var sqlselip = "select * from ip where user_id = ? and ip_address = ?"
-                pool.query(sqlselip,[resdata[0].id_user,ipaddress],(err,resselip)=>{
-                  if (err) {
-                    console.log(err);
-                  }
-                  else {
-                    if (resselip.length == 0) {
-                      var sqlip = "insert into ip (user_id,ip_address,tipe,status) values (?,?,?,?)"
-                      pool.query(sqlip,[resdata[0].id_user,ipaddress,0,0],(err,resIp)=>{
-                        if (err) {
-                          console.log(err);
-                        }
-                        else {
-                          res.json({status:true,message:"Processing"})
-                        }
-                      })
-                    }
-                    else {
-                      console.log("data ip sudah ada");
-                      res.json({status:true,message:"Processing"})
-                    }
-                  }
-                })
-              }
-            })
-          }
-        })
-      }
-      else{
-        res.json({status:false,message:"no data",resdata})
-      }
+      })
     }
+
+
   })
 })
 
@@ -605,140 +638,175 @@ app.post('/checkoutn',(req,res)=>{
 
   var sqlceku = "select * from user where username=?"
   pool.query(sqlceku,[cart_username],(err,resceku)=>{
-    var sqldat = "select * from cart where status=0 and id_user in (select id_user from user where username = ?)"
-    pool.query(sqldat,[cart_username],(err,resdata)=>{
-      if(err){
-        console.log(err);
+    if(resceku.length==0){
+
+    }
+    else{
+      var status = 0;
+      if(resceku[0].status==2){
+        status = 2;
       }
       else{
-        if(resdata.length>0){
-          var string = "";
-          if(resdata.length==1){
-            console.log();
-            string = resdata[0].cart_id;
-          }
-          else if(resdata.length>1){
-            for(var i=0; i < resdata.length;i++){
-              if(i==0){
-                string = resdata[i].cart_id ;
-              }
-              else{
-                string = string + "," + resdata[i].cart_id;
-              }
+        status = 0;
+      }
+      var sqldat = "select * from cart where status=0 and id_user in (select id_user from user where username = ?)"
+      pool.query(sqldat,[cart_username],(err,resdata)=>{
+        if(err){
+          console.log(err);
+        }
+        else{
+          if(resdata.length>0){
+            var string = "";
+            if(resdata.length==1){
+              console.log();
+              string = resdata[0].cart_id;
             }
-          }
-          var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status) values (?,?,?,?,?,?,?,?)"
-          pool.query(sqlpay,[string,resdata[0].id_user,total,idcc,null,1,ipaddress,0],(err,respay)=>{
-            if(err){
-              console.log(err);
-            }
-            else{
-              var sqladdpayment = "insert into payment(payment_amount,payment_card,payment_type,payment_status,status,id_user,ip_payment) values (?,?,?,?,?,?,?)"
-              pool.query(sqladdpayment,[total,idcc,0,1,0,resdata[0].id_user,ipaddress],(err,respaids)=>{
-                if(err){
-                  console.log(err);
+            else if(resdata.length>1){
+              for(var i=0; i < resdata.length;i++){
+                if(i==0){
+                  string = resdata[i].cart_id ;
                 }
                 else{
-                  var sqlgetpay = "select * from payment where id_user=? and status = 0 order by payment_period desc"
-                  pool.query(sqlgetpay,[resdata[0].id_user],(err,resgetpay)=>{
-                    if(err){
-                      console.log(err);
-                    }
-                    else{
-                      var sqlgettrans = "select * from transaction where user_id=? and status = 0 order by create_at desc"
-                      pool.query(sqlgettrans,[resdata[0].id_user],(err,resgettrans)=>{
-                        if(err){
-                          console.log(err);
-                        }
-                        else{
-                          var sqlcredit = "select * from credit_card where card_id = ?"
-                          pool.query(sqlcredit,[idcc],(err,rescredit)=>{
-                            if (err) {
-                              console.log(err);
-                            }
-                            else {
-                              if(rescredit.length==0){
-
+                  string = string + "," + resdata[i].cart_id;
+                }
+              }
+            }
+            var sqlpay = "insert into transaction (cart_id,user_id,transaction_amount,transaction_card,transaction_payment,transaction_process,ip_transaction,status) values (?,?,?,?,?,?,?,?)"
+            pool.query(sqlpay,[string,resdata[0].id_user,total,idcc,null,1,ipaddress,status],(err,respay)=>{
+              if(err){
+                console.log(err);
+              }
+              else{
+                var sqladdpayment = "insert into payment(payment_amount,payment_card,payment_type,payment_status,status,id_user,ip_payment) values (?,?,?,?,?,?,?)"
+                pool.query(sqladdpayment,[total,idcc,0,1,status,resdata[0].id_user,ipaddress],(err,respaids)=>{
+                  if(err){
+                    console.log(err);
+                  }
+                  else{
+                    var sqlgetpay = "select * from payment where id_user=? and status = 0 order by payment_period desc"
+                    pool.query(sqlgetpay,[resdata[0].id_user],(err,resgetpay)=>{
+                      if(err){
+                        console.log(err);
+                      }
+                      else{
+                        var sqlgettrans = "select * from transaction where user_id=? and status = 0 order by create_at desc"
+                        pool.query(sqlgettrans,[resdata[0].id_user],(err,resgettrans)=>{
+                          if(err){
+                            console.log(err);
+                          }
+                          else{
+                            var sqlcredit = "select * from credit_card where card_id = ?"
+                            pool.query(sqlcredit,[idcc],(err,rescredit)=>{
+                              if (err) {
+                                console.log(err);
                               }
-                              else{
-                                var sqlcreditc = "select * from credit_card where card_number = ? and status=0"
-                                pool.query(sqlcreditc,[rescredit[0].card_number],(err,rescreditc)=>{
-                                  if (err) {
-                                    console.log(err);
-                                  }
-                                  else {
-                                    var fraud = 1;
-                                    for(var i = 0 ; i < rescreditc.length;i++){
-                                      if(rescredit[0].cardname.includes(resdata[0].nama)){
-                                        fraud= 1;
-                                      }
-                                      else{
-                                        fraud=2;
-                                        break;
-                                      }
+                              else {
+                                if(rescredit.length==0){
+
+                                }
+                                else{
+                                  var sqlcreditc = "select * from credit_card where card_number = ?"
+                                  pool.query(sqlcreditc,[rescredit[0].card_number],(err,rescreditc)=>{
+                                    if (err) {
+                                      console.log(err);
                                     }
-                                    var sqlupdatetrans = "update transaction set transaction_payment=?,status=? where transaction_id=?"
-                                    pool.query(sqlupdatetrans,[resgetpay[0].payment_id,fraud,resgettrans[0].transaction_id],(err,resgetpay)=>{
-                                      if(err){
-                                        console.log(err);
+                                    else {
+                                      var fraud = 1;
+                                      console.log(rescreditc);
+                                      for(var i = 0 ; i < rescreditc.length;i++){
+                                        console.log(rescreditc[i].card_name+" desk "+resceku[0].nama);
+                                        if((rescreditc[i].card_name.toLowerCase()).includes(resceku[0].nama.toLowerCase())){
+                                          fraud= 1;
+                                        }
+                                        else{
+                                          fraud=2;
+                                          break;
+                                        }
                                       }
-                                      else{
-                                        var sqlcleancart = "update cart set status = 1 where id_user=?"
-                                        pool.query(sqlcleancart,[resdata[0].id_user],(err,restry)=>{
-                                          if(err){
-                                            console.log(err);
-                                          }
-                                          else{
-                                            console.log("babi");
-                                            console.log(resceku[0].id_user);
-                                            updateproduct(resceku[0].id_user);
-                                            var sqlselip = "select * from ip where user_id = ? and ip_address = ?"
-                                            pool.query(sqlselip,[resdata[0].id_user,ipaddress],(err,resselip)=>{
-                                              if (err) {
-                                                console.log(err);
-                                              }
-                                              else {
-                                                if (resselip.length == 0) {
-                                                  var sqlip = "insert into ip (user_id,ip_address,tipe,status) values (?,?,?,?)"
-                                                  pool.query(sqlip,[resdata[0].id_user,ipaddress,0,0],(err,resIp)=>{
-                                                    if (err) {
+                                      var sqlupdatetrans = "update transaction set transaction_payment=?,status=? where transaction_id=?"
+                                      pool.query(sqlupdatetrans,[resgetpay[0].payment_id,fraud,resgettrans[0].transaction_id],(err,resgetpay)=>{
+                                        if(err){
+                                          console.log(err);
+                                        }
+                                        else{
+                                          sqlgettrans = "select * from transaction where transaction_id=?"
+                                          pool.query(sqlgettrans,[resgettrans[0].transaction_id],(err,resgettrans)=>{
+                                            if(err){
+                                              console.log(err);
+                                            }
+                                            else{
+                                              var sqluppay = "update payment set status=? where payment_id=?"
+                                              pool.query(sqluppay,[fraud,resgettrans[0].transaction_payment],(err,resspay)=>{
+                                                if(err){
+                                                  console.log(err);
+                                                }
+                                                else{
+                                                  var sqlcleancart = "update cart set status = 1 where id_user=?"
+                                                  pool.query(sqlcleancart,[resdata[0].id_user],(err,restry)=>{
+                                                    if(err){
                                                       console.log(err);
                                                     }
-                                                    else {
-                                                      res.json({status:true,message:"Processing"})
+                                                    else{
+                                                      console.log("babi");
+                                                      console.log(resceku[0].id_user);
+                                                      updateproduct(resceku[0].id_user);
+                                                      var sqlselip = "select * from ip where user_id = ? and ip_address = ?"
+                                                      pool.query(sqlselip,[resdata[0].id_user,ipaddress],(err,resselip)=>{
+                                                        if (err) {
+                                                          console.log(err);
+                                                        }
+                                                        else {
+                                                          if (resselip.length == 0) {
+                                                            var sqlip = "insert into ip (user_id,ip_address,tipe,status) values (?,?,?,?)"
+                                                            pool.query(sqlip,[resdata[0].id_user,ipaddress,0,0],(err,resIp)=>{
+                                                              if (err) {
+                                                                console.log(err);
+                                                              }
+                                                              else {
+                                                                res.json({status:true,message:"Processing"})
+                                                              }
+                                                            })
+                                                          }
+                                                          else {
+                                                            console.log("data ip sudah ada");
+                                                            res.json({status:true,message:"Processing"})
+                                                          }
+                                                        }
+                                                      })
                                                     }
                                                   })
                                                 }
-                                                else {
-                                                  console.log("data ip sudah ada");
-                                                  res.json({status:true,message:"Processing"})
-                                                }
-                                              }
-                                            })
-                                          }
-                                        })
-                                      }
-                                    })
-                                  }
-                                })
-                              }
-                            }
-                          })
+                                              })
+                                            }
+                                          })
 
-                        }
-                      })
-                    }
-                  })
-                }
-              })
-            }
-          })
+
+                                        }
+                                      })
+
+
+                                    }
+                                  })
+                                }
+                              }
+                            })
+
+                          }
+                        })
+                      }
+                    })
+                  }
+                })
+              }
+            })
+          }
+          else{
+            res.json({status:false,message:"no data",resdata})
+          }
         }
-        else{
-          res.json({status:false,message:"no data",resdata})
-        }
-      }
-    })
+      })
+    }
+
   })
 
 
@@ -757,8 +825,17 @@ app.post('/checkoutp',(req,res)=>{
       console.log(err);
     }
     else{
+
+      var status = 0;
+      if(resuser[0].status==2){
+        status = 2;
+      }
+      else{
+        status = 0;
+      }
+
       var sqladdpayment = "insert into payment(payment_amount,payment_card,payment_type,payment_status,status,id_user,ip_payment) values (?,?,?,?,?,?,?)"
-      pool.query(sqladdpayment,[total,idcc,0,1,0,resuser[0].id_user,ipaddress],(err,respaids)=>{
+      pool.query(sqladdpayment,[total,idcc,0,1,status,resuser[0].id_user,ipaddress],(err,respaids)=>{
         if(err){
           console.log(err);
         }
@@ -793,7 +870,7 @@ app.post('/checkoutp',(req,res)=>{
                           else {
                               var fraud = 1;
                               for(var i = 0 ; i < rescreditc.length;i++){
-                                if(rescredit[i].cardname.includes(resdata[0].nama)){
+                                if(rescredit[i].cardname.toLowerCase().includes(resuser[0].nama.toLowerCase())){
                                   fraud=1;
                                 }
                                 else{
@@ -851,8 +928,6 @@ app.post('/checkoutp',(req,res)=>{
     }
   })
 })
-
-
 
 app.post('/payment',(req,res)=>{
   var trans_id = req.body.trans_id;
