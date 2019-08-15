@@ -21,7 +21,7 @@ class Transaction_model extends CI_Model {
 		}
 		$search = $dataSearch;
 		$this->db->from($this->_table);
-		$this->db->select('user.*,transaction_amount,payment_amount,payment_card,transaction.status as transStatus,payment.status as paymentStatus,transaction_id');
+		$this->db->select('user.*,transaction.transaction_id,transaction_amount,payment_amount,payment_card,transaction.status as transStatus,payment.status as paymentStatus,transaction_id');
 		$this->db->join('user', 'user.id_user = transaction.user_id', 'left');
 		$this->db->join('payment', 'payment.payment_id = transaction.transaction_payment', 'left');
 		$this->db->group_start()->or_like($search)->group_end();

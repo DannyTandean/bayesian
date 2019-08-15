@@ -16,6 +16,7 @@
                         <tr>
                             <th>No</th>
                             <th>Action</th>
+                            <th>ID Transaction</th>
                             <th>Name</th>
                             <th>Transaction Amount</th>
                             <th>Payment Amount</th>

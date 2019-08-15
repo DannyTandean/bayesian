@@ -24,7 +24,7 @@ $(document).ready(function() {
 			type: 'POST',
 		},
 
-		order:[[2,'DESC']],
+		order:[[3,'ASC']],
 		columns:[
 			{
 				data:'no',
@@ -33,6 +33,11 @@ $(document).ready(function() {
 			},
 			{
 				data:'button_action',
+				searchable:false,
+				orderable:false,
+			},
+			{
+				data:'transaction_id',
 				searchable:false,
 				orderable:false,
 			},
